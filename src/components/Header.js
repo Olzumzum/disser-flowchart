@@ -49,6 +49,6 @@ export default class Header extends Component {
                     </Switch>
                 </Router>
             </>
-        )
+        );
     }
 }

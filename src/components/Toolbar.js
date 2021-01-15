@@ -11,7 +11,7 @@ export default class Toolbar extends Component{
                 <Button className={"mr-2"}>Запуск</Button>
                 <Button className={"mr-2"}>Отладка</Button>
             </div>
-        )
+        );
     }
 
 }

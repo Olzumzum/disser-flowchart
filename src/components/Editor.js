@@ -1,23 +1,24 @@
 import React, {Component} from "react";
 import Toolbar from "./Toolbar";
-import {Col, Container} from "react-bootstrap";
+import {Container, Row} from "react-bootstrap";
+import Component_panel from "./Component_panel";
+import Edit_panel from "./Edit_panel";
 
-export default class Editor extends Component{
+export default class Editor extends Component {
     render() {
-        return(
-            <Toolbar/>,
+        return (
             <Container fluid>
-                <Col sm={4}>
-                    <h1>Компоненты</h1>
-                    <h1>Компоненты</h1>
-                    <h1>Компоненты</h1>
-                    <h1>Компоненты</h1>
-                </Col>
-                <Col sm={8}>
-                    <h1>Доска</h1>
-                </Col>
+                <Row>
+                    <Toolbar/>
+                </Row>
+                <Row>
+                    <Component_panel/>
+                    <Edit_panel/>
+                </Row>
+
             </Container>
-        )
+
+        );
     }
 
 }
