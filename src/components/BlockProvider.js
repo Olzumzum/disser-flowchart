@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {Component, useState} from "react";
 import {Block} from "./blocks/Block";
 import {ConditionBlock} from "./blocks/ConditionBlock";
 import {InOutputBlock} from "./blocks/InOutputBlock";
@@ -8,6 +8,7 @@ import {ActionBlock} from "./blocks/ActionBlock";
 import {SubProgramBlock} from "./blocks/SubProgramBlock";
 import {LoopBlock} from "./blocks/LoopBlock";
 
+import image_block from "../images/block.png";
 
 const BlockList = () => {
     const [blockList, setBlockList] = useState([
@@ -65,11 +66,15 @@ const BlockList = () => {
                     //карточка становится передвигаемой
                     draggable={true}>
                     {b.text}
+                    <img src={image_block}/>
                 </div>
             )}
         </div>
     );
-};
+}
 
 export default BlockList;
+
+
+
 
