@@ -1,10 +1,24 @@
 import {useState} from "react";
+import {Block} from "./blocks/Block";
+import {ConditionBlock} from "./blocks/ConditionBlock";
+import {InOutputBlock} from "./blocks/InOutputBlock";
+import {StartBlock} from "./blocks/StartBlock";
+import {EndBlock} from "./blocks/EndBlock";
+import {ActionBlock} from "./blocks/ActionBlock";
+import {SubProgramBlock} from "./blocks/SubProgramBlock";
+import {LoopBlock} from "./blocks/LoopBlock";
 
-const Block = () => {
+
+const BlockList = () => {
     const [blockList, setBlockList] = useState([
-        {id: 0, order: 3, text: "Блок-условие"},
-        {id: 1, order: 0, text: "Блок-ввода/вывода"},
-        {id: 2, order: 2, text: "Блок"},
+        new StartBlock,
+        new EndBlock(),
+        new ActionBlock(),
+        new ConditionBlock(),
+        new InOutputBlock(),
+        new SubProgramBlock(),
+        new LoopBlock(),
+        new Block()
     ])
 
     const [currentCard, setCurrentCard] = useState(null)
@@ -15,7 +29,7 @@ const Block = () => {
     }
 
     function dragLeaveHandler(e) {
-        return undefined;
+        console.log(("leve handler"))
     }
 
     function dragEndHandler(e) {
@@ -30,6 +44,7 @@ const Block = () => {
     function dragDropHandler(e, b) {
         e.preventDefault()
         console.log("drag", b);
+        // if()
     }
 
     return (
@@ -48,7 +63,7 @@ const Block = () => {
                     onDrop={(e) => dragDropHandler(e, b)}
                     className={"block"}
                     //карточка становится передвигаемой
-                     draggable={true}>
+                    draggable={true}>
                     {b.text}
                 </div>
             )}
@@ -56,4 +71,5 @@ const Block = () => {
     );
 };
 
-export default Block;
+export default BlockList;
+
