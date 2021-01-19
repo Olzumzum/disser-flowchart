@@ -19,8 +19,7 @@ const BlockList = () => {
         new ConditionBlock(),
         new InOutputBlock(),
         new SubProgramBlock(),
-        new LoopBlock(),
-        // new Block()
+        new LoopBlock()
     ])
 
     const [currentCard, setCurrentCard] = useState(null)
@@ -68,7 +67,7 @@ const BlockList = () => {
 
                     {b.text}
 
-                    <img src={b.block.image}/>
+                    <img src={b.block.image} className={"block"}/>
                 </div>
             )}
         </div>

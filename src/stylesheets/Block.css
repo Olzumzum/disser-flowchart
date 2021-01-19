@@ -1,12 +1,8 @@
 .block {
-    width: 50px;
-    height: 50px;
-    /*border-radius: 12px;*/
-    /*border: 5px solid;*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-    /*margin: 20px;*/
-    /*cursor: grab;*/
-
+    width: 80px;
+    height: 80px;
+    margin: 20px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
