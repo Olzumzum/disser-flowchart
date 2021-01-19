@@ -7,6 +7,7 @@ import {EndBlock} from "./blocks/EndBlock";
 import {ActionBlock} from "./blocks/ActionBlock";
 import {SubProgramBlock} from "./blocks/SubProgramBlock";
 import {LoopBlock} from "./blocks/LoopBlock";
+import '../stylesheets/Block.css'
 
 import image_block from "../images/block.png";
 
@@ -19,7 +20,7 @@ const BlockList = () => {
         new InOutputBlock(),
         new SubProgramBlock(),
         new LoopBlock(),
-        new Block()
+        // new Block()
     ])
 
     const [currentCard, setCurrentCard] = useState(null)
@@ -34,18 +35,17 @@ const BlockList = () => {
     }
 
     function dragEndHandler(e) {
-        e.target.style.background = "white"
+        e.target.style.background = "white";
     }
 
     function dragOverHandler(e) {
         e.preventDefault()
-        e.target.style.background = "lightgray "
+        e.target.style.background = "lightgray ";
     }
 
     function dragDropHandler(e, b) {
         e.preventDefault()
         console.log("drag", b);
-        // if()
     }
 
     return (
@@ -65,8 +65,10 @@ const BlockList = () => {
                     className={"block"}
                     //карточка становится передвигаемой
                     draggable={true}>
+
                     {b.text}
-                    <img src={image_block}/>
+
+                    <img src={b.block.image}/>
                 </div>
             )}
         </div>
