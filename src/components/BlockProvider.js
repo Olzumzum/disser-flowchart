@@ -10,9 +10,10 @@ import {LoopBlock} from "./blocks/LoopBlock";
 import '../stylesheets/Block.css'
 
 import image_block from "../images/block.png";
+import {useDrag} from "react-dnd";
 
 const BlockList = () => {
-    const [blockList, setBlockList] = useState([
+    const [blockList, setBlockList] = useDrag([
         new StartBlock,
         new EndBlock(),
         new ActionBlock(),
@@ -50,7 +51,7 @@ const BlockList = () => {
     return (
         <div className={'blocks'}>
             {blockList.map(b =>
-                <div
+                <div ref={"drag"}
                     //когда взяли кароточку
                     onDragStart={(e) => dragStartHandler(e, b)}
                     //вышли за пределы другой карточки

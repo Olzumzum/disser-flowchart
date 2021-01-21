@@ -1,12 +1,18 @@
 import {Col} from "react-bootstrap";
-import React, {Component} from "react";
 
-export default class Edit_panel extends Component {
-    render() {
+import {useDrop} from "react-dnd";
+
+function Edit_panel(props){
+    const [collectedProps, drop] = useDrop({
+        accept
+    })
+
         return (
             <Col sm={9} className={"bg-warning"}>
+                <div ref={"drop"}>
+                    Drop Target
+                </div>
 
             </Col>
         )
-    }
 }
