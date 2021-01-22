@@ -7,9 +7,9 @@ import {EndBlock} from "./blocks/EndBlock";
 import {ActionBlock} from "./blocks/ActionBlock";
 import {SubProgramBlock} from "./blocks/SubProgramBlock";
 import {LoopBlock} from "./blocks/LoopBlock";
-import '../stylesheets/Block.css'
+import '../../assets/stylesheets/Block.css'
 
-import image_block from "../images/block.png";
+import image_block from "../../assets/images/block.png";
 import {useDrag} from "react-dnd";
 
 const BlockList = () => {

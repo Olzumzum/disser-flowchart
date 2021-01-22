@@ -1,16 +1,18 @@
 import React, {Component} from "react";
 import {Button, Container} from "react-bootstrap";
 
-export default class Toolbar extends Component{
+export default class Toolbar extends Component {
     render() {
-        return(
-            <div className={"p-3 mb-2 bg-secondary"}>
-                <Button className={"mr-2"}>Кнопка назад</Button>
-                <Button className={"mr-2"}>Кнопка вперед</Button>
-                <Button className={"mr-2"}>Сохранить</Button>
-                <Button className={"mr-2"}>Запуск</Button>
-                <Button className={"mr-2"}>Отладка</Button>
-            </div>
+        return (
+            <Container fluid>
+                <div className={"p-3 mb-2 bg-secondary"} >
+                    <Button className={"mr-2"} size={"sm"}>Кнопка назад</Button>
+                    <Button className={"mr-2"} size={"sm"}>Кнопка вперед</Button>
+                    <Button className={"mr-2"} size={"sm"}>Сохранить</Button>
+                    <Button className={"mr-2"} size={"sm"}>Запуск</Button>
+                    <Button className={"mr-2"} size={"sm"}>Отладка</Button>
+                </div>
+            </Container>
         );
     }
 

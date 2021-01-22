@@ -1,4 +1,4 @@
-import image_block from "../../images/block.png";
+import image_block from "../../../assets/images/block.png";
 
 export class Block {
     constructor() {
