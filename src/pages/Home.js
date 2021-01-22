@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Editor from "../components/containers/Editor";
+import Editor from "../components/containers/editor/Editor";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
 
