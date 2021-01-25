@@ -1,10 +1,6 @@
 import image_block from "../../../assets/images/block.png";
 
-export class Block {
-    constructor() {
-        this.x = 13;
-        this.y = 15;
-        this.image = image_block;
-    }
-
+export default function Block() {
+    return <img src={image_block} height={50}/>;
+    // return <span>♘</span>
 }

@@ -6,9 +6,9 @@ import {DndProvider} from "react-dnd";
 export default class Home extends Component {
     render() {
         return (
-            <DndProvider backend={HTML5Backend}>
+            // <DndProvider backend={HTML5Backend}>
                 <Editor/>
-            </DndProvider>
+            // </DndProvider>
 
         )
     }
