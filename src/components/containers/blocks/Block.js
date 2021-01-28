@@ -1,10 +1,15 @@
 import image_block from "../../../assets/images/block.png";
-import {Component} from "react";
+import React, { useState, Component } from 'react';
+import uuid from 'react-uuid';
+
+
 
 class Block extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {id: uuid()};
     }
 
 
@@ -23,5 +28,8 @@ class Block extends Component {
     // return <span>♘</span>
 
 }
+
+
+
 
 export default Block;
