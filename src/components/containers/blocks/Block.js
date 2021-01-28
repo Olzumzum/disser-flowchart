@@ -5,15 +5,11 @@ class Block extends Component {
 
     constructor(props) {
         super(props);
-
-        console.log("cordinates " + this.props.x + ", " +   this.props.y);
     }
-
 
 
     render() {
         const position = [this.props.x, this.props.y];
-
 
         return <img src={image_block} height={50} posetion={"absolute"}
                     style={{

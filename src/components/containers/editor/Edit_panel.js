@@ -5,7 +5,6 @@ import React from 'react';
 
 class Edit_panel extends Component {
 
-
     onClick = (e) => {
         this.state.x = e.screenX;
         this.state.y = e.screenY;
@@ -15,12 +14,7 @@ class Edit_panel extends Component {
         super(props);
         this.state = {x: undefined, y: undefined};
 
-        this.handlePositionChanged = this.handlePositionChanged.bind(this);
-        { console.log("states " + this.state.x + ", " +  this.state.y)}
-
     }
-
-
 
     render() {
         return (
@@ -32,24 +26,13 @@ class Edit_panel extends Component {
                 }}
                      onClick={this.onClick}
                 >
-
-
                     <Block x={this.state.x}
-                           y={this.state.y}
-                           onPositionChanged={this.handlePositionChanged}
-                    />
+                           y={this.state.y}/>
 
                 </div>
 
             </Col>
         )
-    }
-
-
-
-
-    handlePositionChanged(x, y) {
-        this.setState({x: x, y: y});
     }
 
 }

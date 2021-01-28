@@ -3,24 +3,8 @@ import {moveBlock} from "../Game";
 import {Container, Row} from "react-bootstrap";
 import Edit_panel from "./Edit_panel";
 import ComponentPanel from "../ComponentPanel";
-import Block from "../blocks/Block";
 
-function handleBlockClick(toX, toY) {
-    moveBlock(toX, toY)
-}
-
-function renderEditPanel(i, blockPosition) {
-    const x = i % 8
-    const y = Math.floor(i / 8)
-
-    return <div onClick={() => handleBlockClick(x, y)}>
-        const f =
-        <Block/>
-    </div>
-}
-
-
-function Editor({blockPosition}) {
+function Editor() {
 
     return (
 
