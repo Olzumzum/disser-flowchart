@@ -14,6 +14,7 @@ function renderEditPanel(i, blockPosition) {
     const y = Math.floor(i / 8)
 
     return <div onClick={() => handleBlockClick(x, y)}>
+        const f =
         <Block/>
     </div>
 }
@@ -30,10 +31,8 @@ function Editor({blockPosition}) {
             <Row style={{
                 height: 300
             }}>
-
-                <Edit_panel>
-                    <ComponentPanel/>
-                </Edit_panel>
+                <ComponentPanel/>
+                <Edit_panel/>
             </Row>
 
         </Container>
