@@ -5,23 +5,17 @@ class Block extends Component {
 
     constructor(props) {
         super(props);
-        this.handle = this.handle.bind(this);
-        // this.state = {x: 0, y: 0};
 
-        // console.log(this.state.x = " adddd" + this.state.y);
+        console.log("cordinates " + this.props.x + ", " +   this.props.y);
     }
 
-    handle(e){
-        this.props.onPositionChanged({x: e.target.x, y: e.target.y});
-
-        console.log(this.props.x = " adddd" + this.props.y);
-    }
 
 
     render() {
         const position = [this.props.x, this.props.y];
 
-        return <img src={image_block} height={50} posetion={"absolute"} onChange={this.handle}
+
+        return <img src={image_block} height={50} posetion={"absolute"}
                     style={{
                         position: 'absolute',
                         left: position[0],

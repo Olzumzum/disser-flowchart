@@ -7,19 +7,16 @@ class Edit_panel extends Component {
 
 
     onClick = (e) => {
-        this.state.x = 400;
-        this.state.y = 250;
+        this.state.x = e.screenX;
+        this.state.y = e.screenY;
     };
 
     constructor(props) {
         super(props);
-        this.state = {x: 0, y: 0};
-
-        this.parentRef = React.createRef();
-        this.elementRef = React.createRef();
+        this.state = {x: undefined, y: undefined};
 
         this.handlePositionChanged = this.handlePositionChanged.bind(this);
-
+        { console.log("states " + this.state.x + ", " +  this.state.y)}
 
     }
 
@@ -35,6 +32,8 @@ class Edit_panel extends Component {
                 }}
                      onClick={this.onClick}
                 >
+
+
                     <Block x={this.state.x}
                            y={this.state.y}
                            onPositionChanged={this.handlePositionChanged}
