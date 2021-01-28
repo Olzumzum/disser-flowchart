@@ -6,8 +6,10 @@ import React from 'react';
 class Edit_panel extends Component {
 
     onClick = (e) => {
-        this.state.x = e.screenX;
-        this.state.y = e.screenY;
+
+        this.state.x = e.nativeEvent.offsetX;
+        this.state.y = e.nativeEvent.offsetY;
+
     };
 
     constructor(props) {

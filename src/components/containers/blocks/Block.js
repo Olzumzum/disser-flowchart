@@ -19,7 +19,7 @@ class Block extends Component {
         return <img src={image_block} height={50} posetion={"absolute"}
                     style={{
                         position: 'absolute',
-                        left: position[0],
+                        left: position[0] ,
                         top: position[1]
                     }}
         />;
