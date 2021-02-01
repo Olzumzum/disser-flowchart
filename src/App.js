@@ -6,7 +6,7 @@ import Editor from "./components/containers/editor/Editor";
 
 function App({blockPosition}) {
   return (
-        <Header/>
+        // <Header/>
       <Editor blockPosition={blockPosition}/>
   );
 }
