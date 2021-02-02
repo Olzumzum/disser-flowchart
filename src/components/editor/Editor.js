@@ -1,6 +1,6 @@
 import React from "react";
 import {Container, Row} from "react-bootstrap";
-import Edit_panel from "./Edit_panel";
+import EditPanel from "./EditPanel";
 import ComponentPanel from "./ComponentPanel";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -22,7 +22,7 @@ function Editor() {
                     height: 300
                 }}>
                     <ComponentPanel/>
-                    <Edit_panel/>
+                    <EditPanel/>
                 </Row>
 
             </Container>
