@@ -8,7 +8,7 @@ import {observe} from "./components/MoveToBlock";
 observe((blockPosition) =>
     ReactDOM.render(
         <React.StrictMode>
-            <App blockPosition={[7, 4]}/>
+            <App/>
         </React.StrictMode>,
         document.getElementById('root')
     )

@@ -4,10 +4,10 @@ import Header from "./components/Header";
 import React from "react";
 import Editor from "./components/editor/Editor";
 
-function App({blockPosition}) {
+function App() {
   return (
         // <Header/>
-      <Editor blockPosition={blockPosition}/>
+      <Editor/>
   );
 }
 
