@@ -8,7 +8,7 @@ class Block extends Component {
 
     constructor(props) {
         super(props);
-
+        console.log("x=" + this.props.x + " y=" +this.props.y );
         this.state = {id: uuid()};
     }
 
@@ -29,7 +29,7 @@ class Block extends Component {
 
 }
 
-
-
-
 export default Block;
+
+
+
