@@ -1,7 +1,13 @@
 import {Col} from "react-bootstrap";
 import {Component} from "react";
-import Block from "../blocks/Block";
+import Block from "./blocks/Block";
 import React from 'react';
+import BlockProvider from "./BlockProvider";
+
+/**
+ * Панель редактирования, составления схемы
+ * Здесь осуществляются функции перетаскивания, добавления, удаления
+ */
 
 class Edit_panel extends Component {
 
@@ -28,8 +34,9 @@ class Edit_panel extends Component {
                 }}
                      onClick={this.onClick}
                 >
-                    <Block x={this.state.x}
-                           y={this.state.y}/>
+
+                    <BlockProvider x={this.state.x}
+                                   y={this.state.y}/>
 
                 </div>
 
