@@ -2,7 +2,6 @@ import BlockProvider from "./BlockProvider";
 import React from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "./typeDndItems";
-import {moveBlock} from "../MoveToBlock";
 import {Col} from "react-bootstrap";
 
 
@@ -11,7 +10,6 @@ import {Col} from "react-bootstrap";
  * Здесь осуществляются функции перетаскивания, добавления, удаления
  */
 
-let draggableObject = false;
 
 let x = 0;
 let y = 0;
@@ -21,6 +19,12 @@ function onClick(e) {
     y = e.nativeEvent.offsetY;
 }
 
+
+function moveBlock(e){
+    x = e.pageX;
+    y = e.pageY;
+}
+
 function EditPanel() {
 
 
@@ -28,7 +32,8 @@ function EditPanel() {
         accept: ItemTypes.BLOCK,
         drop: () => {
             document.onmouseenter = function (e) {
-                moveBlock(e);
+                moveBlock(e)
+
                 document.onmouseenter = null;
             }
         },
@@ -80,6 +85,7 @@ function EditPanel() {
 
     )
 }
+
 
 export default EditPanel;
 

@@ -19,14 +19,3 @@ export function observe(receive) {
     emitChange()
 }
 
-export function moveBlock(event) {
-    console.log("mouse up, get coor")
-
-
-    let toX = event.pageX;
-    let toY = event.pageY;
-    return(
-        <Block x={toX} y={toY}/>
-    )
-
-}
