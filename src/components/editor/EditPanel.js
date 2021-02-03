@@ -3,6 +3,9 @@ import React from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "./typeDndItems";
 import {Col} from "react-bootstrap";
+import '../../assets/stylesheets/Block.css';
+import '../../assets/stylesheets/Editor.css';
+import '../../assets/stylesheets/EditPanel.css';
 
 
 /**
@@ -20,9 +23,9 @@ function onClick(e) {
 }
 
 
-function moveBlock(e){
-    x = e.pageX;
-    y = e.pageY;
+function moveBlock(e) {
+    x = e.offsetX;
+    y = e.offsetY;
 }
 
 function EditPanel() {
@@ -43,46 +46,23 @@ function EditPanel() {
     });
 
 
-
     return (
-
-
-        <Col className={"bg-warning"}>
+        <Col>
             <div ref={drop}
-                 style={{
-                     width: '100%',
-                     height: '100%'
-                 }}
+                 className={"editor"}
             >
                 <div
-                    style={{
-                        width: '100%',
-                        height: '100%'
-                    }}
+                    className={"edit_panel"}
                     onClick={onClick}
-
                 >
-
                     <BlockProvider x={x}
                                    y={y}/>
                     {isOver && (
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                height: '100%',
-                                width: '100%',
-                                zIndex: 1,
-                                opacity: 0.5,
-                                backgroundColor: 'red',
-                            }}
-                        />
+                        <div className="draggable_component"/>
                     )}
                 </div>
             </div>
         </Col>
-
     )
 }
 
