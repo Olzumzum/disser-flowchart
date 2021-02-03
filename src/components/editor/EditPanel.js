@@ -1,4 +1,4 @@
-import BlockProvider from "./BlockProvider";
+import BlockDragable from "./BlockDragable";
 import React from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "./typeDndItems";
@@ -6,6 +6,7 @@ import {Col} from "react-bootstrap";
 import '../../assets/stylesheets/Block.css';
 import '../../assets/stylesheets/Editor.css';
 import '../../assets/stylesheets/EditPanel.css';
+
 
 
 /**
@@ -20,12 +21,16 @@ let y = 0;
 function onClick(e) {
     x = e.nativeEvent.offsetX;
     y = e.nativeEvent.offsetY;
+    console.log("onclick xy " + x + " " + y);
+
+
 }
 
 
 function moveBlock(e) {
-    x = e.offsetX;
-    y = e.offsetY;
+    x = e.pageX ;
+    y = e.pageY ;
+    console.log("dnd xy " + x + " " + y);
 }
 
 function EditPanel() {
@@ -45,8 +50,11 @@ function EditPanel() {
         }),
     });
 
+    const blockDraggable = <BlockDragable x={x}
+                                          y={y}/>;
 
     return (
+
         <Col>
             <div ref={drop}
                  className={"editor"}
@@ -54,9 +62,10 @@ function EditPanel() {
                 <div
                     className={"edit_panel"}
                     onClick={onClick}
+
                 >
-                    <BlockProvider x={x}
-                                   y={y}/>
+                    {blockDraggable}
+
                     {isOver && (
                         <div className="draggable_component"/>
                     )}

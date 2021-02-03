@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Col} from "react-bootstrap";
-import Block from "./blocks/Block";
 import '../../assets/stylesheets/ComponentPanel.css';
 /**
  * Компонент выполняющий отображение списка всех возможных блоков
@@ -10,7 +9,7 @@ class ComponentPanel extends Component{
         return(
             <Col sm={3} className={"component_panel"}>
                 {/* Здесь должен вставляться список блоков */}
-                <Block/>
+                {/*<Block/>*/}
             </Col>
         );
     }
