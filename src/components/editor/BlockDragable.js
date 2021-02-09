@@ -6,7 +6,7 @@ import uuid from "react-uuid";
 import image_block from "../../assets/images/block.png";
 import "../../assets/stylesheets/Block.css";
 
-let block = undefined;
+let position = [0,0];
 
 function BlockDragable({x, y}) {
 
@@ -17,12 +17,12 @@ function BlockDragable({x, y}) {
         }),
     })
 
-    let block = <Block x={x}
-                       y={y}
-                       idBlock={uuid()}
-    />;
+
+position = [x,y];
+
 
     return (
+
         <div
             ref={drag}
             style={{
@@ -30,8 +30,7 @@ function BlockDragable({x, y}) {
                 cursor: 'move'
             }}
         >
-            <img src={image_block}  className={"block"}
-
+            <img src={image_block} className={"block"}
                  style={{
                      position: 'absolute',
                      left: x,
@@ -40,7 +39,33 @@ function BlockDragable({x, y}) {
             />
         </div>
     )
+
+
+
 }
+
+export function getPosition(){
+    return position;
+}
+
+
+//
+// export function setPosition(x, y){
+//
+//     // block.props.x = x;
+//     // block.props.y = y;
+//     return null;
+// }
+//
+// export function getPosition() {
+//     let posetion = undefined;
+//
+//     // if (block !== undefined)
+//         posetion = [block.props.x, block.props.y];
+//     // console.log("value " + posetion[0] + " and " + posetion[1]);
+//
+//     return posetion;
+// }
 
 
 export default BlockDragable;

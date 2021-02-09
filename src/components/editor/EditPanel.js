@@ -8,12 +8,10 @@ import '../../assets/stylesheets/Editor.css';
 import '../../assets/stylesheets/EditPanel.css';
 
 
-
 /**
  * Панель редактирования, составления схемы
  * Здесь осуществляются функции перетаскивания, добавления, удаления
  */
-
 
 let x = 0;
 let y = 0;
@@ -21,16 +19,12 @@ let y = 0;
 function onClick(e) {
     x = e.nativeEvent.offsetX;
     y = e.nativeEvent.offsetY;
-    console.log("onclick xy " + x + " " + y);
-
-
 }
 
 
 function moveBlock(e) {
-    x = e.pageX ;
-    y = e.pageY ;
-    console.log("dnd xy " + x + " " + y);
+    x = e.pageX;
+    y = e.pageY;
 }
 
 function EditPanel() {
@@ -64,6 +58,7 @@ function EditPanel() {
                     onClick={onClick}
 
                 >
+                    {console.log("drag " + x + ' ' + y)}
                     {blockDraggable}
 
                     {isOver && (

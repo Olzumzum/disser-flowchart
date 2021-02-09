@@ -18,4 +18,3 @@ export function observe(receive) {
     observer = receive;
     emitChange()
 }
-

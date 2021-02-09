@@ -2,7 +2,7 @@ import image_block from "../../../assets/images/block.png";
 import React, {Component} from 'react';
 import uuid from 'react-uuid';
 
-
+//не используется!!!
 class Block extends Component {
 
 
@@ -19,11 +19,15 @@ class Block extends Component {
         return 12;
     }
 
+    onChangeHandler(x,y){
+        this.setState({x: x, y: y});
+    }
+
 
 
 
     render() {
-        const position = [this.props.x, this.props.y];
+        const position = [this.state.x, this.state.y];
 
         return <img src={image_block} height={50} posetion={"absolute"}
                     style={{
