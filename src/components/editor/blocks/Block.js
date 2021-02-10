@@ -19,12 +19,6 @@ class Block extends Component {
         return 12;
     }
 
-    onChangeHandler(x,y){
-        this.setState({x: x, y: y});
-    }
-
-
-
 
     render() {
         const position = [this.state.x, this.state.y];
