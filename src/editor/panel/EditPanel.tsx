@@ -1,10 +1,10 @@
 import {CSSProperties, FC, useCallback, useState} from "react";
-import {DraggableBlock} from "./DraggableBlock";
+import {DraggableBlock} from "../blocks/DraggableBlock";
 import {ContainerProps} from "react-bootstrap";
 import {useDrop} from "react-dnd";
-import {ItemTypes} from "./ItemTypes";
-import {DragItem} from "./DragItem";
-import {snapToGrid as doSnapToGrid} from './snapToGrid'
+import {ItemTypes} from "../ItemTypes";
+import {DragItem} from "../DragItem";
+import {snapToGrid as doSnapToGrid} from '../snapToGrid'
 import update from 'immutability-helper';
 
 const styles: CSSProperties = {
