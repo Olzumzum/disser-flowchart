@@ -1,17 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './assets/stylesheets/index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {observe} from "./components/MoveToBlock";
+import {EditorApp} from './EditorApp'
+import reportWebVitals from "./reportWebVitals";
 
-observe((blockPosition) =>
     ReactDOM.render(
         <React.StrictMode>
-            <App/>
+            <EditorApp/>
         </React.StrictMode>,
         document.getElementById('root')
-    )
 );
 
 reportWebVitals();
