@@ -20,7 +20,10 @@ export const EditorApp: FC = () => {
 
     return (
         <DndProvider backend={HTML5Backend}>
-
+            <Container fluid>
+                {/* <Row>*/}
+                {/*     <Toolbar/>*/}
+                {/*</Row>*/}
                 <Row style={{
                     height: 300
                 }}>
@@ -28,7 +31,7 @@ export const EditorApp: FC = () => {
                     <EditPanel snapToGrid={snapToGridAfterDrop}/>
                     <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                 </Row>
-
+            </Container>
         </DndProvider>
     )
 

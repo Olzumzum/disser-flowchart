@@ -1,17 +1,21 @@
 import {CSSProperties, FC, useCallback, useState} from "react";
 import {DraggableBlock} from "../blocks/DraggableBlock";
-import {ContainerProps} from "react-bootstrap";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
 import update from 'immutability-helper';
+import {panelBlock} from "./ComponentPanel";
+
 
 const styles: CSSProperties = {
-    width: 300,
-    height: 300,
+    margin: 0,
+    float: "right",
+    width: "79%",
+    height: 400,
     border: '1px solid black',
-    position: 'relative',
+    backgroundColor: 'aqua'
+    // position: 'relative',
 }
 
 export interface EditPanelProps {
@@ -65,8 +69,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     })
 
     return (
-        <div ref={drop} style={styles}>
-            {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
+        <div>
+            <div ref={drop} style={styles}>
+                {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
+            </div>
         </div>
     )
 }
