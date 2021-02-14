@@ -4,8 +4,8 @@ import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
-import update from 'immutability-helper';
-import {panelBlock} from "./ComponentPanel";
+import {originalBlocks} from "./ComponentPanel";
+import update from "immutability-helper";
 
 
 const styles: CSSProperties = {
@@ -22,29 +22,57 @@ export interface EditPanelProps {
     snapToGrid: boolean
 }
 
-interface BlockMap {
+//интерфейс для списка имеющихся для отображения блоков
+export interface BlockMap {
     [key: string]: { top: number; left: number; title: string }
 }
 
-function renderBlock(item: any, key: any) {
+//отображает перетаскиваемые блоки
+export function renderBlock(item: any, key: any) {
     return <DraggableBlock key={key} id={key} {...item} />
 }
 
+
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const [blocks, setBlocks] = useState<BlockMap>({
-        a: {top: 20, left: 80, title: 'Drag me around'},
-        b: {top: 180, left: 20, title: 'Drag me too'},
+        // a: {top: 20, left: 80, title: 'Drag me around'},
+        // b: {top: 180, left: 20, title: 'Drag me too'},
     })
 
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
-            setBlocks(
-                update(blocks, {
-                    [id]: {
-                        $merge: {left, top},
-                    },
-                }),
+            let flag = false
+
+            Object.keys(originalBlocks).map((key) => {
+                    if (!key.localeCompare(id)) {
+                        flag = true
+                    }
+                }
             )
+
+            let idS: string = "ex" + top
+            let addingBlock: BlockMap = {[idS]: {top: top, left: left, title: 'New block'}}
+
+            console.log("id " + id)
+            if (flag) {
+                setBlocks(
+                    addingBlock
+                    // update(blocks, {
+                    //         $add: addingBlock,
+                    //     }
+                    // )
+                )
+            } else {
+                setBlocks(
+                    update(blocks, {
+                        [id]: {
+                            $merge: {left, top},
+                        },
+                    }),
+                )
+            }
+
+
         },
         [blocks],
     )
@@ -59,6 +87,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             let left = Math.round(item.left + delta.x)
             let top = Math.round(item.top + delta.y)
+
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
             }
@@ -68,7 +97,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         },
     })
 
+    for (var d in blocks) {
+        console.log("value " + d + " ")
+    }
+
     return (
+
         <div>
             <div ref={drop} style={styles}>
                 {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
