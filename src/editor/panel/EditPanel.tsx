@@ -56,6 +56,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (flag) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
+                // left - 200 потому что нужно учитывать смещение координат курсора
+                //из-за того, что берем блок с другого компонента
                 setBlocks(
                     prevState => ({...prevState,
                         [idNew]: {top: top, left: left-200, title: originalBlocks[id].title}})
