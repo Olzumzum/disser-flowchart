@@ -4,7 +4,7 @@ import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
-import {originalBlocks} from "./ComponentPanel";
+import {ComponentPanel, originalBlocks} from "./ComponentPanel";
 import update from "immutability-helper";
 
 
@@ -55,12 +55,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             let idS: string = "ex" + top
             let addingBlock: BlockMap = {[idS]: {top: top, left: left, title: 'New block'}}
 
+
             console.log("id " + id)
             if (flag) {
                 setBlocks(
-                    prevState => ({...prevState, [idS]: {top: top, left: left, title: 'New block'}})
-
+                    prevState => ({...prevState,
+                        [idS]: {top: top, left: left-200, title: 'New block'}})
                 )
+
             } else {
                 setBlocks(
                     update(blocks, {
@@ -86,6 +88,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             let left = Math.round(item.left + delta.x)
             let top = Math.round(item.top + delta.y)
+
+            console.log("left " + left + " top " + top)
+            console.log("dleft " + delta.x + " dtop " + delta.y)
 
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
