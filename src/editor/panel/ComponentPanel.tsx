@@ -25,8 +25,8 @@ export let originalBlocks: any = {
 export const ComponentPanel = () => {
 
     return(
-        <div>
-            <div  style={styles}>
+        <div >
+            <div id={"component_panel"} style={styles}>
                 {Object.keys(originalBlocks).map((key) => renderBlock(originalBlocks[key], key))}
             </div>
         </div>

@@ -4,7 +4,7 @@ import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
-import {ComponentPanel, originalBlocks} from "./ComponentPanel";
+import {originalBlocks} from "./ComponentPanel";
 import update from "immutability-helper";
 
 
@@ -32,9 +32,18 @@ export function renderBlock(item: any, key: any) {
     return <DraggableBlock key={key} id={key} {...item} />
 }
 
+function getWidthComponentPanel(): number | null {
+    const element = document.getElementById("component_panel")
+
+    if (element != null) {
+        return Number(element.offsetWidth)
+    } else
+        return null
+}
+
 //генерация уникального id
 function generateId(): string {
-    const id = `f${(~~(Math.random()*1e8)).toString(16)}`
+    const id = `f${(~~(Math.random() * 1e8)).toString(16)}`
     return id
 }
 
@@ -56,11 +65,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (flag) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
-                // left - 200 потому что нужно учитывать смещение координат курсора
-                //из-за того, что берем блок с другого компонента
                 setBlocks(
-                    prevState => ({...prevState,
-                        [idNew]: {top: top, left: left-200, title: originalBlocks[id].title}})
+                    prevState => ({
+                        ...prevState,
+                        [idNew]: {top: top, left: left - getWidthComponentPanel()!!, title: originalBlocks[id].title}
+                    })
                 )
             } else {
                 setBlocks(
