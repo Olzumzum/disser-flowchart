@@ -43,8 +43,7 @@ function getWidthComponentPanel(): number | null {
 
 //генерация уникального id
 function generateId(): string {
-    const id = `f${(~~(Math.random() * 1e8)).toString(16)}`
-    return id
+    return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
 
