@@ -32,6 +32,8 @@ export function renderBlock(item: any, key: any) {
     return <DraggableBlock key={key} id={key} {...item} />
 }
 
+let bl: Array<BlockMap> = new Array<BlockMap>()
+
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const [blocks, setBlocks] = useState<BlockMap>({
@@ -56,11 +58,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             console.log("id " + id)
             if (flag) {
                 setBlocks(
-                    addingBlock
-                    // update(blocks, {
-                    //         $add: addingBlock,
-                    //     }
-                    // )
+                    prevState => ({...prevState, [idS]: {top: top, left: left, title: 'New block'}})
+
                 )
             } else {
                 setBlocks(
