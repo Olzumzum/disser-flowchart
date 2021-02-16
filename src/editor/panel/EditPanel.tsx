@@ -24,7 +24,7 @@ export interface EditPanelProps {
 
 //интерфейс имеющихся для отображения блоков
 export interface BlockMap {
-    [key: string]: { top: number; left: number; title: string }
+    [key: string]: { top: number; left: number; title: string, typeBlock: string }
 }
 
 //отображает перетаскиваемые блоки
@@ -67,7 +67,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 setBlocks(
                     prevState => ({
                         ...prevState,
-                        [idNew]: {top: top, left: left - getWidthComponentPanel()!!, title: originalBlocks[id].title}
+                        [idNew]: {top: top,
+                            left: left - getWidthComponentPanel()!!,
+                            title: originalBlocks[id].title,
+                            typeBlock: originalBlocks[id].typeBlock
+
+                        }
                     })
                 )
             } else {
