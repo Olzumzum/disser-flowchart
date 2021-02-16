@@ -22,7 +22,7 @@ export interface EditPanelProps {
     snapToGrid: boolean
 }
 
-//интерфейс для списка имеющихся для отображения блоков
+//интерфейс имеющихся для отображения блоков
 export interface BlockMap {
     [key: string]: { top: number; left: number; title: string }
 }
@@ -32,35 +32,43 @@ export function renderBlock(item: any, key: any) {
     return <DraggableBlock key={key} id={key} {...item} />
 }
 
+function getWidthComponentPanel(): number | null {
+    const element = document.getElementById("component_panel")
+
+    if (element != null) {
+        return Number(element.offsetWidth)
+    } else
+        return null
+}
+
+//генерация уникального id
+function generateId(): string {
+    return `f${(~~(Math.random() * 1e8)).toString(16)}`
+}
+
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    const [blocks, setBlocks] = useState<BlockMap>({
-        // a: {top: 20, left: 80, title: 'Drag me around'},
-        // b: {top: 180, left: 20, title: 'Drag me too'},
-    })
+    const [blocks, setBlocks] = useState<BlockMap>({})
 
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
             let flag = false
-
+            //проверка - блок добавляется с панели перечисления
+            // возможных компонентов (Component Panel) или нет
             Object.keys(originalBlocks).map((key) => {
                     if (!key.localeCompare(id)) {
                         flag = true
                     }
                 }
             )
-
-            let idS: string = "ex" + top
-            let addingBlock: BlockMap = {[idS]: {top: top, left: left, title: 'New block'}}
-
-            console.log("id " + id)
             if (flag) {
+                //создаем новый id для добавляемого блока
+                let idNew: string = generateId()
                 setBlocks(
-                    addingBlock
-                    // update(blocks, {
-                    //         $add: addingBlock,
-                    //     }
-                    // )
+                    prevState => ({
+                        ...prevState,
+                        [idNew]: {top: top, left: left - getWidthComponentPanel()!!, title: originalBlocks[id].title}
+                    })
                 )
             } else {
                 setBlocks(
@@ -71,8 +79,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     }),
                 )
             }
-
-
         },
         [blocks],
     )
