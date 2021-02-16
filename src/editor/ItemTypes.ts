@@ -1,3 +1,3 @@
 export const ItemTypes = {
-    BLOCK: 'block'
+    BLOCK: 'block',
 }
