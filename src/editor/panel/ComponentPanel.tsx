@@ -7,6 +7,7 @@ import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from "../snapToGrid";
 import update from "immutability-helper";
+import {BlockTypes} from "../blocks/BlockTypes";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -18,8 +19,8 @@ const styles: CSSProperties = {
 
 
 export let originalBlocks: any = {
-    a13: {top: 0, left: 0, title: 'Orig 1'},
-    a23: {top: 60, left: 0, title: 'Orig 2'},
+    a13: {top: 0, left: 0, title: 'Condition', typeBlock: BlockTypes.CONDITION},
+    a23: {top: 70, left: 0, title: 'Orig 2', typeBlock: BlockTypes.BLOCK},
 }
 
 export const ComponentPanel = () => {
