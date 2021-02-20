@@ -1,5 +1,5 @@
 import {CSSProperties, FC, memo, useEffect, useState} from "react";
-import {Block} from "./Block";
+import {SubroutineBlockEx} from "./SubroutineBlockEx";
 
 const styles: CSSProperties = {
     display: 'inline-block',
@@ -11,9 +11,6 @@ export interface BlockDragPreviewProps {
     title: string
 }
 
-export interface BoxDragPreviewState {
-    tickTock: any
-}
 
 export const BlockDragPreview: FC<BlockDragPreviewProps> = memo(({title}) => {
     const [tickTock, setTickTock] = useState(false)
@@ -28,7 +25,7 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = memo(({title}) => {
 
     return (
         <div style={styles}>
-            <Block title={title} yellow={tickTock} />
+            <SubroutineBlockEx title={title} yellow={tickTock} />
         </div>
     )
 })

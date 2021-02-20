@@ -1,18 +1,17 @@
 import {CSSProperties, FC} from "react";
+import blockImage from "./block.png";
 
-
-// const styles: CSSProperties = {
-//     border: '1px dashed gray',
-//     padding: '0.5rem 1rem',
-//     cursor: 'move',
-// }
+/**
+ * Родитель всех блоков
+ * хранит всю основную информацию
+ */
 
 export interface BlockProps {
     title: string
     yellow?: boolean
 }
 
-export class BlockParent {
+export class ParentBlock {
 
     protected styles: CSSProperties = {
         border: '1px dashed gray',
@@ -20,11 +19,9 @@ export class BlockParent {
         cursor: 'move',
         width: "40px",
         height: "40px",
-        // backgroundImage:`url(${blockImage})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'contain',
-        // align: "center",
         display: "flex",
         justifyContent: "center",
         margin: "10px"
@@ -40,6 +37,8 @@ export class BlockParent {
     get block(): React.FC<BlockProps> {
         return this._block;
     }
-}
 
-export const Block = new BlockParent().block
+    get style(): CSSProperties {
+        return this.styles
+    }
+}

@@ -1,10 +1,8 @@
 import {CSSProperties, FC, useEffect} from "react";
-import {DragSourceMonitor, useDrag, useDrop} from "react-dnd";
+import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {getEmptyImage} from "react-dnd-html5-backend";
-import {Block} from "./Block";
-import {ConditionBlock} from "./ConditionBlock";
-import {BlockTypes} from "./BlockTypes";
+import {BlockFactory, CreatorBlock} from "./CreatorBlock";
 
 function getStyles(
     left: number,
@@ -23,7 +21,7 @@ function getStyles(
     }
 }
 
-export interface DraggableBlockProps{
+export interface DraggableBlockProps {
     id: string
     title: string
     left: number
@@ -31,21 +29,16 @@ export interface DraggableBlockProps{
     typeBlock: string
 }
 
-function selectTypeBlock(typeBlock: string, title: string){
-    console.log("type block " + typeBlock)
-    switch (typeBlock){
-        case BlockTypes.CONDITION: return <ConditionBlock title={title}/>
-        case BlockTypes.BLOCK: return <Block title={title}/>
-
-    }
+function selectTypeBlock(typeBlock: string, title: string) {
+    const blockFactory: BlockFactory = new CreatorBlock()
+    return blockFactory.createBlock(typeBlock, title)
 }
 
 
-
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
-    const { id, title, left, top, typeBlock } = props
-    const [{ isDragging }, drag, preview] = useDrag({
-        item: { type: ItemTypes.BLOCK, id, left, top, title, typeBlock},
+    const {id, title, left, top, typeBlock} = props
+    const [{isDragging}, drag, preview] = useDrag({
+        item: {type: ItemTypes.BLOCK, id, left, top, title, typeBlock},
         collect: (monitor: DragSourceMonitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -56,7 +49,7 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
         preview(getEmptyImage(), {captureDraggingState: true})
     }, [])
 
-    return(
+    return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
             {selectTypeBlock(typeBlock, title)}
         </div>

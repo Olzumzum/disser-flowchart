@@ -1,11 +1,9 @@
-import { ParentBlock, BlockProps} from "./ParentBlock";
-import {CSSProperties, FC, useState} from "react";
+import {BlockProps, ParentBlock} from "./ParentBlock";
+import React, {CSSProperties, FC} from "react";
 import blockImage from "./block.png";
 import {IBlock} from "./IBlock";
 
-
-
-class ConditionBlockParent implements IBlock{
+class SubroutineBlock implements IBlock {
 
     private parentBlock: ParentBlock = new ParentBlock()
 
@@ -21,10 +19,9 @@ class ConditionBlockParent implements IBlock{
     }
 
 
-
     get block(): React.FC<BlockProps> {
         return this._blockCond;
     }
 }
 
-export const ConditionBlock = new ConditionBlockParent().block
+export const SubroutineBlockEx = new SubroutineBlock().block
