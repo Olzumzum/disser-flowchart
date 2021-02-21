@@ -1,5 +1,5 @@
 import {CSSProperties, FC, memo, useEffect, useState} from "react";
-import {SubroutineBlockEx} from "./SubroutineBlockEx";
+import {SubroutineBlockEx} from "./primitives/SubroutineBlockEx";
 
 const styles: CSSProperties = {
     display: 'inline-block',
@@ -25,7 +25,7 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = memo(({title}) => {
 
     return (
         <div style={styles}>
-            <SubroutineBlockEx title={title} yellow={tickTock} />
+            <SubroutineBlockEx title={title} yellow={tickTock} left={0} top={0}/>
         </div>
     )
 })

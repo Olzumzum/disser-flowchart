@@ -112,10 +112,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         console.log("value " + d + " ")
     }
 
+    function click(e: React.MouseEvent<HTMLElement>){
+
+    }
+
     return (
 
         <div>
-            <div ref={drop} style={styles}>
+            <div ref={drop} style={styles} >
                 {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
             </div>
         </div>

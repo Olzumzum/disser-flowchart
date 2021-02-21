@@ -1,14 +1,18 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
 import React, {CSSProperties, FC} from "react";
-import blockImage from "./block.png";
+import blockImage from "../../../assets/images/block.png";
 import {IBlock} from "./IBlock";
 
 class SubroutineBlock implements IBlock {
 
-    private parentBlock: ParentBlock = new ParentBlock()
+    private _parentBlock: ParentBlock = new ParentBlock()
+
+    get parentBlock(): IBlock {
+        return ParentBlock
+    }
 
     get style(): CSSProperties{
-        const style = this.parentBlock.style
+        const style = this._parentBlock.style
         style.backgroundImage = `url(${blockImage})`
         return style
     }

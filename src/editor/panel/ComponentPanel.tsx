@@ -7,7 +7,7 @@ import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from "../snapToGrid";
 import update from "immutability-helper";
-import {BlockTypes} from "../blocks/BlockTypes";
+import {BlockTypes} from "../blocks/primitives/BlockTypes";
 
 const styles: CSSProperties = {
     margin: 0,

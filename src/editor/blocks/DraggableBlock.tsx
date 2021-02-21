@@ -2,7 +2,7 @@ import {CSSProperties, FC, useEffect} from "react";
 import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {getEmptyImage} from "react-dnd-html5-backend";
-import {BlockFactory, CreatorBlock} from "./CreatorBlock";
+import {BlockFactory, CreatorBlock} from "./primitives/CreatorBlock";
 
 function getStyles(
     left: number,
@@ -29,9 +29,9 @@ export interface DraggableBlockProps {
     typeBlock: string
 }
 
-function selectTypeBlock(typeBlock: string, title: string) {
+function selectTypeBlock(typeBlock: string, title: string, left: number, top: number) {
     const blockFactory: BlockFactory = new CreatorBlock()
-    return blockFactory.createBlock(typeBlock, title)
+    return blockFactory.createBlock(typeBlock, title, left, top)
 }
 
 
@@ -51,7 +51,7 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
 
     return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-            {selectTypeBlock(typeBlock, title)}
+            {selectTypeBlock(typeBlock, title, left, top)}
         </div>
     )
 }
