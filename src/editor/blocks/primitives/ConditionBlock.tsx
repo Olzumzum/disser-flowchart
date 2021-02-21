@@ -15,14 +15,10 @@ class ConditionBlockParent implements IBlock{
     //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
         if(this._blockCondInstance === undefined){
-            this.parentBlock.blockBackImg("")
+            this.parentBlock.blockBackImg(blockImage)
             this._blockCondInstance = this.parentBlock.blockInstance
         }
         return this._blockCondInstance!!;
-    }
-
-    click(e: React.MouseEvent<HTMLElement>){
-        console.log("click click " + e)
     }
 
 }

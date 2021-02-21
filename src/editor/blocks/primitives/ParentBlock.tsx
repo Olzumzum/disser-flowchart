@@ -45,12 +45,12 @@ export class ParentBlock implements StyleBlockBuilder {
     private _blockInstance: FC<BlockProps> | undefined
 
     click(e: React.MouseEvent<HTMLElement>) {
-        console.log("click click " + e)
+        console.log("click click " )
     }
 
     //создать экземпляр
     createBlock() {
-        this._blockInstance = ({title, yellow}) => {
+        this._blockInstance = ({title, yellow, left, top}) => {
             const background = yellow ? 'yellow' : blockImage
             return <div style={{...this.style, background}} onClick={this.click}>{title}</div>
         }
@@ -65,7 +65,7 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //задать фоновое изображение блока
     blockBackImg(img: string): void {
-        this.styles.backgroundImage = `url(${blockImage})`
+        this.styles.backgroundImage = `url(${img})`
     }
 
     get style(): CSSProperties {

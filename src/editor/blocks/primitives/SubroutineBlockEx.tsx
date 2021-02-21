@@ -5,27 +5,20 @@ import {IBlock} from "./IBlock";
 
 class SubroutineBlock implements IBlock {
 
-    private _parentBlock: ParentBlock = new ParentBlock()
+    //родитель всех блоков, общие методы
+    private parentBlock: ParentBlock = new ParentBlock()
+    //экземпляр класса
+    private _blockSubroutInstance: FC<BlockProps>|undefined
 
-    get parentBlock(): IBlock {
-        return ParentBlock
-    }
-
-    get style(): CSSProperties{
-        const style = this._parentBlock.style
-        style.backgroundImage = `url(${blockImage})`
-        return style
-    }
-
-    private _blockCond: FC<BlockProps> = ({title, yellow}) => {
-        const background = yellow ? 'yellow' : blockImage
-        return <div style={{...this.style, background}}>{title}</div>
-    }
-
-
+    //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
-        return this._blockCond;
+        if(this._blockSubroutInstance === undefined){
+            this.parentBlock.blockBackImg(blockImage)
+            this._blockSubroutInstance = this.parentBlock.blockInstance
+        }
+        return this._blockSubroutInstance!!;
     }
+
 }
 
 export const SubroutineBlockEx = new SubroutineBlock().block
