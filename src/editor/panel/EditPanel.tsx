@@ -4,8 +4,8 @@ import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
-import {originalBlocks} from "./ComponentPanel";
 import update from "immutability-helper";
+import {originalBlocks} from "../blocks/factory/originBlocks";
 
 
 const styles: CSSProperties = {
@@ -107,14 +107,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             return undefined
         },
     })
-
-    for (var d in blocks) {
-        console.log("value " + d + " ")
-    }
-
-    function click(e: React.MouseEvent<HTMLElement>){
-
-    }
 
     return (
 

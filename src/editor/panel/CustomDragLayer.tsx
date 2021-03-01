@@ -64,7 +64,7 @@ export const CustomDragLayer: FC<CustomDragLayerProps> = (props) => {
     function renderItem() {
         switch (itemType) {
             case ItemTypes.BLOCK:
-                return <BlockDragPreview title={item.title} />
+                return <BlockDragPreview title={item.title} typeBlock={item.typeBlock} />
             default:
                 return null
         }

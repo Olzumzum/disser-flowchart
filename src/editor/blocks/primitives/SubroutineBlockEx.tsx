@@ -15,6 +15,7 @@ class SubroutineBlock implements IBlock {
         if(this._blockSubroutInstance === undefined){
             this.parentBlock.blockBackImg(blockImage)
             this._blockSubroutInstance = this.parentBlock.blockInstance
+            console.log("create")
         }
         return this._blockSubroutInstance!!;
     }

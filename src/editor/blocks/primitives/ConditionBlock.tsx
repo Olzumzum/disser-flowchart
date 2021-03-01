@@ -1,6 +1,6 @@
 import { ParentBlock, BlockProps} from "./ParentBlock";
 import {CSSProperties, FC, useState} from "react";
-import blockImage from "../../../assets/images/block.png";
+import blockImage from "../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 
 
@@ -20,6 +20,8 @@ class ConditionBlockParent implements IBlock{
         }
         return this._blockCondInstance!!;
     }
+
+
 
 }
 

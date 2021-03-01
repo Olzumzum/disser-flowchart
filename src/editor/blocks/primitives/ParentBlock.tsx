@@ -6,13 +6,15 @@ import blockImage from "../../../assets/images/block.png";
  * хранит всю основную информацию
  */
 
+//типизация полей блока
 export interface BlockProps {
     title: string
     yellow?: boolean
-    top: number,
-    left: number
+    top?: number,
+    left?: number
 }
 
+//построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
@@ -44,22 +46,22 @@ export class ParentBlock implements StyleBlockBuilder {
     //экземпляр класса
     private _blockInstance: FC<BlockProps> | undefined
 
-    click(e: React.MouseEvent<HTMLElement>) {
-        console.log("click click " )
-    }
 
     //создать экземпляр
     createBlock() {
         this._blockInstance = ({title, yellow, left, top}) => {
+            this._left = 0
+            this._top = top
             const background = yellow ? 'yellow' : blockImage
             return <div style={{...this.style, background}} onClick={this.click}>{title}</div>
         }
     }
 
     //вернуть экземпляр блока
-    get blockInstance(): FC<BlockProps> {
+     get blockInstance(): FC<BlockProps> {
         if (this._blockInstance === undefined)
             this.createBlock()
+
         return this._blockInstance!!;
     }
 
@@ -70,6 +72,12 @@ export class ParentBlock implements StyleBlockBuilder {
 
     get style(): CSSProperties {
         return this.styles
+    }
+
+
+    click(e: React.MouseEvent<HTMLElement>) {
+
+        console.log("click click " + toString.call(this))
     }
 
     set nextBlock(next: object) {

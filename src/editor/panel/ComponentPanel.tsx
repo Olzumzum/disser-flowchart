@@ -1,13 +1,7 @@
-import {Col} from "react-bootstrap";
-import {DraggableBlock} from "../blocks/DraggableBlock";
-import {CSSProperties, useCallback, useState} from "react";
-import {BlockMap, renderBlock} from "./EditPanel";
-import {useDrop} from "react-dnd";
-import {ItemTypes} from "../ItemTypes";
-import {DragItem} from "../DragItem";
-import {snapToGrid as doSnapToGrid} from "../snapToGrid";
-import update from "immutability-helper";
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
+import {CSSProperties} from "react";
+import {renderBlock} from "./EditPanel";
+
+import {originalBlocks} from "../blocks/factory/originBlocks";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -17,12 +11,6 @@ const styles: CSSProperties = {
     backgroundColor: 'darkgray',
 }
 
-
-export let originalBlocks: any = {
-    a13: {top: 0, left: 0, title: 'Condition', typeBlock: BlockTypes.CONDITION},
-    a23: {top: 70, left: 0, title: 'Orig 2', typeBlock: BlockTypes.BLOCK},
-    a24: {top: 70, left: 0, title: 'Orig 2', typeBlock: BlockTypes.LOOP},
-}
 
 export const ComponentPanel = () => {
 
