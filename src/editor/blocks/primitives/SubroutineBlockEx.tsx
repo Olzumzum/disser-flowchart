@@ -1,6 +1,6 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
-import React, {CSSProperties, FC} from "react";
-import blockImage from "../../../assets/images/block.png";
+import React, {FC} from "react";
+import blockImage from "../../../assets/images/rectangle.png";
 import {IBlock} from "./IBlock";
 
 class SubroutineBlock implements IBlock {
@@ -18,6 +18,10 @@ class SubroutineBlock implements IBlock {
             console.log("create")
         }
         return this._blockSubroutInstance!!;
+    }
+
+    getIdBlock(): string {
+        return "r";
     }
 
 }

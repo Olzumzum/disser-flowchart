@@ -1,11 +1,14 @@
 import {CSSProperties, FC, useCallback, useState} from "react";
-import {DraggableBlock} from "../blocks/DraggableBlock";
+import {DraggableBlock} from "../dnd/DraggableBlock";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../DragItem";
 import {snapToGrid as doSnapToGrid} from '../snapToGrid'
 import update from "immutability-helper";
-import {originalBlocks} from "../blocks/factory/originBlocks";
+
+import {IBlock} from "../blocks/primitives/IBlock";
+import {CreatorBlockEditPanel} from "../blocks/factory/CreatorBlockEditPanel";
+import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 
 
 const styles: CSSProperties = {
@@ -17,6 +20,8 @@ const styles: CSSProperties = {
     backgroundColor: 'aqua'
     // position: 'relative',
 }
+
+
 
 export interface EditPanelProps {
     snapToGrid: boolean
@@ -46,6 +51,11 @@ function generateId(): string {
     return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
+let arBlock: Array<IBlock> = new Array<IBlock>()
+
+const creator: IBlockFactory = new CreatorBlockEditPanel()
+
+const originalBlocks = creator.getOriginBlock()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const [blocks, setBlocks] = useState<BlockMap>({})
@@ -64,10 +74,19 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (flag) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
+                arBlock.push(creator.createBlock(
+                    originalBlocks[id].typeBlock.toString,
+                    originalBlocks[id].title,
+                    left - getWidthComponentPanel()!!,
+                    top,
+                    idNew
+                )!!)
+
                 setBlocks(
                     prevState => ({
                         ...prevState,
-                        [idNew]: {top: top,
+                        [idNew]: {
+                            top: top,
                             left: left - getWidthComponentPanel()!!,
                             title: originalBlocks[id].title,
                             typeBlock: originalBlocks[id].typeBlock
@@ -76,6 +95,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     })
                 )
             } else {
+
                 setBlocks(
                     update(blocks, {
                         [id]: {
@@ -84,6 +104,13 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     }),
                 )
             }
+
+            arBlock.forEach(value => {
+                console.log("id=" + value)
+            })
+
+            console.log("list " + arBlock.length)
+
         },
         [blocks],
     )
@@ -111,7 +138,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     return (
 
         <div>
-            <div ref={drop} style={styles} >
+            <div ref={drop} style={styles}>
                 {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
             </div>
         </div>

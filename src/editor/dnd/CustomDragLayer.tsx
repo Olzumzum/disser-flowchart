@@ -1,7 +1,7 @@
 import {CSSProperties, FC} from "react";
 import {useDragLayer, XYCoord} from "react-dnd";
 import {snapToGrid} from "../snapToGrid";
-import {BlockDragPreview} from "../blocks/BlockDragPreview";
+import {BlockDragPreview} from "./BlockDragPreview";
 import {ItemTypes} from "../ItemTypes";
 
 const layerStyles: CSSProperties = {

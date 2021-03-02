@@ -4,6 +4,9 @@ export interface IBlockFactory {
     createBlock(typeBlock: string,
                 title: string,
                 left: number,
-                top: number
+                top: number,
+                id: string
     ): IBlock | undefined
+
+    getOriginBlock(): any
 }

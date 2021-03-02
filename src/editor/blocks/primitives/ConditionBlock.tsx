@@ -1,8 +1,7 @@
-import { ParentBlock, BlockProps} from "./ParentBlock";
-import {CSSProperties, FC, useState} from "react";
+import {BlockProps, ParentBlock} from "./ParentBlock";
+import {FC} from "react";
 import blockImage from "../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
-
 
 
 class ConditionBlockParent implements IBlock{
@@ -12,6 +11,7 @@ class ConditionBlockParent implements IBlock{
     //экземпляр класса
     private _blockCondInstance: FC<BlockProps>|undefined
 
+
     //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
         if(this._blockCondInstance === undefined){
@@ -19,6 +19,14 @@ class ConditionBlockParent implements IBlock{
             this._blockCondInstance = this.parentBlock.blockInstance
         }
         return this._blockCondInstance!!;
+    }
+
+    getIdBlock(): string {
+        return this.parentBlock.id!!;
+    }
+
+    setIdBlock(i: string){
+        this.parentBlock.id = i
     }
 
 

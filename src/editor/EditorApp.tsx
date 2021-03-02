@@ -1,5 +1,5 @@
 import {FC, useCallback, useState} from "react";
-import {CustomDragLayer} from "./panel/CustomDragLayer";
+import {CustomDragLayer} from "./dnd/CustomDragLayer";
 import {EditPanel} from "./panel/EditPanel"
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";

@@ -1,7 +1,8 @@
 import {CSSProperties} from "react";
 import {renderBlock} from "./EditPanel";
+import {IBlockFactory} from "../blocks/factory/IBlockFactory";
+import {CreatorBlockEditPanel} from "../blocks/factory/CreatorBlockEditPanel";
 
-import {originalBlocks} from "../blocks/factory/originBlocks";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -10,6 +11,9 @@ const styles: CSSProperties = {
     width: "20%",
     backgroundColor: 'darkgray',
 }
+
+const creator: IBlockFactory = new CreatorBlockEditPanel()
+const originalBlocks = creator.getOriginBlock()
 
 
 export const ComponentPanel = () => {

@@ -1,5 +1,4 @@
 import {CSSProperties, FC, memo, useEffect, useState} from "react";
-import {SubroutineBlockEx} from "./primitives/SubroutineBlockEx";
 
 /**
  * Рисует блок при dnd
@@ -30,7 +29,7 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = memo(({title}, {typeB
 
         return (
             <div style={styles}>
-                <SubroutineBlockEx title={typeBlock} yellow={tickTock} left={0} top={0}/>
+                {/*<SubroutineBlockEx title={typeBlock} yellow={tickTock} left={0} top={0}/>*/}
             </div>
         )
     }

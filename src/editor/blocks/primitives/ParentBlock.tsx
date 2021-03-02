@@ -36,6 +36,8 @@ export class ParentBlock implements StyleBlockBuilder {
         margin: "10px"
     }
 
+    private _id: string | undefined
+
     //ссылка на следующий блок
     private _nextBlock: object | undefined = undefined
     //ссылка на предыдущий блок
@@ -57,8 +59,16 @@ export class ParentBlock implements StyleBlockBuilder {
         }
     }
 
+    get id(): string | undefined {
+        return this._id
+    }
+
+    set id(i) {
+        this._id = i
+    }
+
     //вернуть экземпляр блока
-     get blockInstance(): FC<BlockProps> {
+    get blockInstance(): FC<BlockProps> {
         if (this._blockInstance === undefined)
             this.createBlock()
 
