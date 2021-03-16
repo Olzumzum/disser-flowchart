@@ -1,8 +1,9 @@
 import {CSSProperties} from "react";
-import {renderBlock} from "./EditPanel";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {CreatorBlockEditPanel} from "../blocks/factory/CreatorBlockEditPanel";
-
+import {CreatorBlock} from "../blocks/factory/CreatorBlock";
+import {IBlock} from "../blocks/primitives/IBlock";
+import {BlockTypes} from "../blocks/primitives/BlockTypes";
+import {RendrerManager} from "../dnd/RendrerManager";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -12,16 +13,19 @@ const styles: CSSProperties = {
     backgroundColor: 'darkgray',
 }
 
-const creator: IBlockFactory = new CreatorBlockEditPanel()
-const originalBlocks = creator.getOriginBlock()
+const creator: IBlockFactory = new CreatorBlock()
+const originalBlocks: Array<IBlock> = creator.getOriginBlock()
+
+const renderManager = new RendrerManager()
+const h = {top: 0, left: 0,title: "Cond", typeBlock: BlockTypes.CONDITION, id: "123"}
 
 
 export const ComponentPanel = () => {
-
+    console.log("origin " + originalBlocks.length)
     return(
         <div >
             <div id={"component_panel"} style={styles}>
-                {Object.keys(originalBlocks).map((key) => renderBlock(originalBlocks[key], key))}
+                {renderManager.render(h)}
             </div>
         </div>
     )

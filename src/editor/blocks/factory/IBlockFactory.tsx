@@ -1,12 +1,13 @@
 import {IBlock} from "../primitives/IBlock";
 
 export interface IBlockFactory {
-    createBlock(typeBlock: string,
-                title: string,
+    createBlock(
+        typeBlock: string,
+                // title: string,
                 left: number,
                 top: number,
                 id: string
     ): IBlock | undefined
 
-    getOriginBlock(): any
+    getOriginBlock(): Array<IBlock>
 }

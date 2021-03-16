@@ -2,35 +2,78 @@ import {BlockProps, ParentBlock} from "./ParentBlock";
 import {FC} from "react";
 import blockImage from "../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
+import {BlockTypes} from "./BlockTypes";
 
 
-class ConditionBlockParent implements IBlock{
+export class ConditionBlockParent implements IBlock {
 
     //родитель всех блоков, общие методы
     private parentBlock: ParentBlock = new ParentBlock()
     //экземпляр класса
-    private _blockCondInstance: FC<BlockProps>|undefined
+    private _blockCondInstance: FC<BlockProps> | undefined
+    private title = "Condition"
+
+    constructor(
+        id: number,
+        // title: string,
+        left: number,
+        top: number
+    ) {
+        this.parentBlock.id = id.toString()
+        this.parentBlock.left = left
+        this.parentBlock.top = top
+    }
 
 
     //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
-        if(this._blockCondInstance === undefined){
+
             this.parentBlock.blockBackImg(blockImage)
             this._blockCondInstance = this.parentBlock.blockInstance
-        }
+
         return this._blockCondInstance!!;
     }
 
-    getIdBlock(): string {
-        return this.parentBlock.id!!;
+    getId(): number {
+        return Number(this.parentBlock.id!!);
     }
 
-    setIdBlock(i: string){
-        this.parentBlock.id = i
+    getTypeBlock(): string {
+        return BlockTypes.CONDITION;
     }
 
+    setId(id: number): void {
+    }
+
+    setTypeBlock(type: string): void {
+    }
+
+    render(): JSX.Element {
+        return <ConditionBlock title={this.title}
+                               left={this.parentBlock.left} top={this.parentBlock.top}/>;
+    }
+
+    getTitle(): string {
+        return this.title;
+    }
+
+    getLeft(): number {
+        return this.parentBlock.left;
+    }
+
+    getTop(): number {
+        return this.parentBlock.top;
+    }
+
+    setLeft(left: number): void {
+        this.parentBlock.left = left;
+    }
+
+    setTop(top: number): void {
+        this.parentBlock.top = top;
+    }
 
 
 }
 
-export const ConditionBlock = new ConditionBlockParent().block
+const ConditionBlock = new ConditionBlockParent(0,  0, 0).block

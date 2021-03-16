@@ -1,14 +1,14 @@
 import {CSSProperties, FC, useCallback, useState} from "react";
-import {DraggableBlock} from "../dnd/DraggableBlock";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
-import {DragItem} from "../DragItem";
-import {snapToGrid as doSnapToGrid} from '../snapToGrid'
+import {DragItem} from "../dnd/DragItem";
+import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import update from "immutability-helper";
 
 import {IBlock} from "../blocks/primitives/IBlock";
-import {CreatorBlockEditPanel} from "../blocks/factory/CreatorBlockEditPanel";
+import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
+import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 
 
 const styles: CSSProperties = {
@@ -22,20 +22,12 @@ const styles: CSSProperties = {
 }
 
 
-
 export interface EditPanelProps {
     snapToGrid: boolean
 }
 
-//интерфейс имеющихся для отображения блоков
-export interface BlockMap {
-    [key: string]: { top: number; left: number; title: string, typeBlock: string }
-}
+const renderManager = new RendrerManager()
 
-//отображает перетаскиваемые блоки
-export function renderBlock(item: any, key: any) {
-    return <DraggableBlock key={key} id={key} {...item} />
-}
 
 function getWidthComponentPanel(): number | null {
     const element = document.getElementById("component_panel")
@@ -53,16 +45,17 @@ function generateId(): string {
 
 let arBlock: Array<IBlock> = new Array<IBlock>()
 
-const creator: IBlockFactory = new CreatorBlockEditPanel()
+const creator: IBlockFactory = new CreatorBlock()
 
 const originalBlocks = creator.getOriginBlock()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    const [blocks, setBlocks] = useState<BlockMap>({})
+    // const [blocks, setBlocks] = useState<BlockMap>({})
 
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
             let flag = false
+            console.log("elements " + id + " " + left + " " + top)
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или нет
             Object.keys(originalBlocks).map((key) => {
@@ -75,44 +68,47 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
                 arBlock.push(creator.createBlock(
-                    originalBlocks[id].typeBlock.toString,
-                    originalBlocks[id].title,
+                    originalBlocks[Number(id)].getTypeBlock(),
+                    // originalBlocks[Number(id)].getTitle(),
                     left - getWidthComponentPanel()!!,
                     top,
                     idNew
                 )!!)
 
-                setBlocks(
-                    prevState => ({
-                        ...prevState,
-                        [idNew]: {
-                            top: top,
-                            left: left - getWidthComponentPanel()!!,
-                            title: originalBlocks[id].title,
-                            typeBlock: originalBlocks[id].typeBlock
-
-                        }
-                    })
-                )
+                // setBlocks(
+                //     prevState => ({
+                //         ...prevState,
+                //         [idNew]: {
+                //             top: top,
+                //             left: left - getWidthComponentPanel()!!,
+                //             title: originalBlocks[Number(id)].getTitle(),
+                //             typeBlock: originalBlocks[Number(id)].getTypeBlock()
+                //
+                //         }
+                //     })
+                // )
             } else {
+                // console.log("id items " + arBlock.length)
+                // console.log("id items " +
+                //     arBlock[Number(id)].getTypeBlock() + " " + arBlock[Number(id)].getTitle())
 
-                setBlocks(
-                    update(blocks, {
-                        [id]: {
-                            $merge: {left, top},
-                        },
-                    }),
-                )
+                // setBlocks(
+                //     update(blocks, {
+                //         [id]: {
+                //             $merge: {left, top},
+                //         },
+                //     }),
+                // )
             }
 
-            arBlock.forEach(value => {
-                console.log("id=" + value)
-            })
-
-            console.log("list " + arBlock.length)
+            // arBlock.forEach(value => {
+            //     console.log("id=" + value)
+            // })
+            //
+            // console.log("list " + arBlock.length)
 
         },
-        [blocks],
+        [arBlock],
     )
 
     const [, drop] = useDrop({
@@ -129,7 +125,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
             }
-
+            console.log("element in drop " + item.id)
             moveBlock(item.id, left, top)
             return undefined
         },
@@ -139,7 +135,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
         <div>
             <div ref={drop} style={styles}>
-                {Object.keys(blocks).map((key) => renderBlock(blocks[key], key))}
+                {/*{Object.keys(arBlock).map((key) =>*/}
+                {/*    renderManager.render(renderManager.convert(arBlock)))}*/}
             </div>
         </div>
     )

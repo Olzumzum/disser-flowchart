@@ -37,7 +37,6 @@ export class ParentBlock implements StyleBlockBuilder {
     }
 
     private _id: string | undefined
-
     //ссылка на следующий блок
     private _nextBlock: object | undefined = undefined
     //ссылка на предыдущий блок
@@ -51,8 +50,11 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //создать экземпляр
     createBlock() {
-        this._blockInstance = ({title, yellow, left, top}) => {
-            this._left = 0
+        this._blockInstance = ({title,
+                                   yellow,
+                                   left,
+                                   top}) => {
+            this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
             return <div style={{...this.style, background}} onClick={this.click}>{title}</div>
@@ -66,6 +68,23 @@ export class ParentBlock implements StyleBlockBuilder {
     set id(i) {
         this._id = i
     }
+
+    get top(): number {
+        return this._top!
+    }
+
+    set top(t:number) {
+        this._top = t
+    }
+
+    get left(): number {
+        return this._left!!
+    }
+
+    set left(l: number) {
+        this._left = l
+    }
+
 
     //вернуть экземпляр блока
     get blockInstance(): FC<BlockProps> {
@@ -90,20 +109,20 @@ export class ParentBlock implements StyleBlockBuilder {
         console.log("click click " + toString.call(this))
     }
 
-    set nextBlock(next: object) {
-        this._nextBlock = next
-    }
-
-    set prevBlock(prev: object) {
-        this._prevBlock = prev
-    }
-
-    get getNextBlock(): object | undefined {
-        return this._nextBlock
-    }
-
-    get getPrevBlock(): object | undefined {
-        return this._prevBlock
-    }
+    // set nextBlock(next: object) {
+    //     this._nextBlock = next
+    // }
+    //
+    // set prevBlock(prev: object) {
+    //     this._prevBlock = prev
+    // }
+    //
+    // get getNextBlock(): object | undefined {
+    //     return this._nextBlock
+    // }
+    //
+    // get getPrevBlock(): object | undefined {
+    //     return this._prevBlock
+    // }
 
 }
