@@ -3,8 +3,8 @@ import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {getEmptyImage} from "react-dnd-html5-backend";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {ConditionBlockParent} from "../blocks/primitives/ConditionBlock";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
+import {IBlock} from "../blocks/primitives/IBlock";
 
 function getStyles(
     left: number,
@@ -31,9 +31,11 @@ export interface DraggableBlockProps {
     typeBlock: string
 }
 
-function selectTypeBlock(typeBlock: string, title: string, left: number, top: number, id: string) {
+function selectTypeBlock(
+    typeBlock: string, title: string, left: number, top: number, id: string
+): IBlock | undefined {
     const blockFactory: IBlockFactory = new CreatorBlock()
-    return blockFactory.createBlock(typeBlock,left, top, id)
+    return blockFactory.createBlock(typeBlock, left, top, id)
 }
 
 
@@ -41,7 +43,7 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     const {left, top, title, typeBlock, id} = props
 
     const [{isDragging}, drag, preview] = useDrag({
-        item: {type: ItemTypes.BLOCK,left, top, title, typeBlock, id},
+        item: {type: ItemTypes.BLOCK, left, top, title, typeBlock, id},
         collect: (monitor: DragSourceMonitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -53,11 +55,9 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     }, [])
 
 
-
-
     return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-            { selectTypeBlock(typeBlock, title, left, top, id)}
+            {selectTypeBlock(typeBlock, title, left, top, id)?.render()}
         </div>
     )
 }

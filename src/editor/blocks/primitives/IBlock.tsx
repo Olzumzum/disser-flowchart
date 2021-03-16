@@ -15,7 +15,7 @@ export interface IBlock {
     getTypeBlock(): string,
     setTypeBlock(type: string): void,
 
-    render(title: string, left: number, top: number): JSX.Element
+    render(): JSX.Element
 
 
 

@@ -38,8 +38,8 @@ export class SubroutineBlock implements IBlock {
     setTypeBlock(type: string): void {
     }
 
-    render(title: string, left: number, top: number): JSX.Element {
-        return <SubroutineBlockEx title={title} left={left} top={top}/>;
+    render(): JSX.Element {
+        return <SubroutineBlockEx title={""} left={0} top={0}/>;
     }
 
     getTitle(): string {
