@@ -8,7 +8,7 @@ import update from "immutability-helper";
 import {IBlock} from "../blocks/primitives/IBlock";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import { RendrerManager} from "../dnd/RendrerManager";
+import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 
 
 const styles: CSSProperties = {
@@ -48,67 +48,48 @@ let arBlock: Array<IBlock> = new Array<IBlock>()
 const creator: IBlockFactory = new CreatorBlock()
 
 const originalBlocks = creator.getOriginBlock()
+let fd: Array<BlockMap1> = new Array<BlockMap1>()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    // const [blocks, setBlocks] = useState<BlockMap>({})
-
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
             let flag = false
-            console.log("elements " + id + " " + left + " " + top)
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или нет
-            Object.keys(originalBlocks).map((key) => {
-                    if (!key.localeCompare(id)) {
+            Object.keys(originalBlocks).map((id) => {
+                    if (!id.localeCompare(id)) {
                         flag = true
                     }
                 }
             )
             if (flag) {
+                // console.log("in flag" + id + " " + left + " " + top)
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
                 arBlock.push(creator.createBlock(
                     originalBlocks[Number(id)].getTypeBlock(),
-                    // originalBlocks[Number(id)].getTitle(),
                     left - getWidthComponentPanel()!!,
                     top,
                     idNew
                 )!!)
 
-                // setBlocks(
-                //     prevState => ({
-                //         ...prevState,
-                //         [idNew]: {
-                //             top: top,
-                //             left: left - getWidthComponentPanel()!!,
-                //             title: originalBlocks[Number(id)].getTitle(),
-                //             typeBlock: originalBlocks[Number(id)].getTypeBlock()
-                //
-                //         }
-                //     })
-                // )
             } else {
-                // console.log("id items " + arBlock.length)
-                // console.log("id items " +
-                //     arBlock[Number(id)].getTypeBlock() + " " + arBlock[Number(id)].getTitle())
-
-                // setBlocks(
-                //     update(blocks, {
-                //         [id]: {
-                //             $merge: {left, top},
-                //         },
-                //     }),
-                // )
+                arBlock[Number(id)].setLeft(left)
+                arBlock[Number(id)].setTop(top)
             }
 
-            // arBlock.forEach(value => {
-            //     console.log("id=" + value)
-            // })
-            //
-            // console.log("list " + arBlock.length)
+            fd = renderManager.convert(arBlock)
+            console.log("fd " + fd.length)
+
+            fd.forEach(item => {
+                console.log("id=" + item.left)
+            })
+
+            console.log("list " + arBlock.length)
 
         },
         [arBlock],
+
     )
 
     const [, drop] = useDrop({
@@ -125,16 +106,19 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
             }
-            console.log("element in drop " + item.id)
+            // console.log("element in drop " + item.id)
             moveBlock(item.id, left, top)
             return undefined
         },
     })
 
+
+
     return (
 
         <div>
             <div ref={drop} style={styles}>
+                { arBlock.length}
                 {/*{Object.keys(arBlock).map((key) =>*/}
                 {/*    renderManager.render(renderManager.convert(arBlock)))}*/}
             </div>

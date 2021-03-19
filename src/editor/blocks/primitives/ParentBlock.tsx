@@ -109,20 +109,4 @@ export class ParentBlock implements StyleBlockBuilder {
         console.log("click click " + toString.call(this))
     }
 
-    // set nextBlock(next: object) {
-    //     this._nextBlock = next
-    // }
-    //
-    // set prevBlock(prev: object) {
-    //     this._prevBlock = prev
-    // }
-    //
-    // get getNextBlock(): object | undefined {
-    //     return this._nextBlock
-    // }
-    //
-    // get getPrevBlock(): object | undefined {
-    //     return this._prevBlock
-    // }
-
 }

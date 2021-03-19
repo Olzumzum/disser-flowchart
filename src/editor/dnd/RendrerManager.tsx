@@ -22,6 +22,7 @@ export class RendrerManager {
 
     convert(blocks: Array<IBlock>): Array<BlockMap1> {
         let convertBlocks = new Array<BlockMap1>()
+        console.log("blocks " + blocks.length)
         // const [mass, setMass] = useState<BlockMap>({})
         blocks.forEach(item => {
             convertBlocks.push(
@@ -35,12 +36,10 @@ export class RendrerManager {
 
                 })
         })
-        console.log("blocks convert " + convertBlocks.length)
+        // console.log("blocks convert " + convertBlocks.length)
 
         return convertBlocks
     }
-
-    h = {top: 0, left: 0, title: "Cond", typeBlock: BlockTypes.CONDITION, id: "123"}
 
     public renderBlock(blocks: Array<IBlock>) {
         const b = this.convert(blocks)
@@ -57,7 +56,7 @@ export class RendrerManager {
 
     renders(item: any, key: any) {
         console.log("renders " + item)
-        return <DraggableBlock key={key} id={key} {...item} />
+        return <DraggableBlock key={key} id={item.id} {...item} />
     }
 
 }

@@ -14,12 +14,11 @@ export class ConditionBlockParent implements IBlock {
     private title = "Condition"
 
     constructor(
-        id: number,
-        // title: string,
+        id: string,
         left: number,
         top: number
     ) {
-        this.parentBlock.id = id.toString()
+        this.parentBlock.id = id
         this.parentBlock.left = left
         this.parentBlock.top = top
     }
@@ -34,8 +33,8 @@ export class ConditionBlockParent implements IBlock {
         return this._blockCondInstance!!;
     }
 
-    getId(): number {
-        return Number(this.parentBlock.id!!);
+    getId(): string {
+        return this.parentBlock.id!!;
     }
 
     getTypeBlock(): string {
@@ -48,8 +47,11 @@ export class ConditionBlockParent implements IBlock {
     setTypeBlock(type: string): void {
     }
 
+
+
     render(): JSX.Element {
-        return <ConditionBlock title={this.title}
+
+        return <this.block title={this.title}
                                left={this.parentBlock.left} top={this.parentBlock.top}/>;
     }
 
@@ -76,4 +78,3 @@ export class ConditionBlockParent implements IBlock {
 
 }
 
-const ConditionBlock = new ConditionBlockParent(0,  0, 0).block

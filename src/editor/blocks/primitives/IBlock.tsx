@@ -1,7 +1,7 @@
 import {BlockProps} from "./ParentBlock";
 
 export interface IBlock {
-    getId(): number | undefined,
+    getId(): string | undefined,
     setId(id: number): void,
 
     getTitle(): string,
