@@ -34,10 +34,10 @@ export interface DraggableBlockProps {
 function selectTypeBlock(
     typeBlock: string, title: string, left: number, top: number, id: string
 ): IBlock | undefined {
+    console.log("type block " + typeBlock)
     const blockFactory: IBlockFactory = new CreatorBlock()
     return blockFactory.createBlock(typeBlock, left, top, id)
 }
-
 
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     const {left, top, title, typeBlock, id} = props
@@ -49,6 +49,7 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
         }),
     })
 
+    console.log("Render")
 
     useEffect(() => {
         preview(getEmptyImage(), {captureDraggingState: true})

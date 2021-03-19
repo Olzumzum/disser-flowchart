@@ -1,43 +1,63 @@
 import {IBlock} from "../blocks/primitives/IBlock";
 import {DraggableBlock} from "./DraggableBlock";
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
-
-//интерфейс имеющихся для отображения блоков
-export interface BlockMap {
-    [key: string]: { top: number; left: number; title: string, typeBlock: string }
-}
+import {BlockMap} from "../panel/ComponentPanel";
+import {useState} from "react";
 
 /**
  * класс обращающий блоки в перетаскиваемые объекты
  * для отображения
  */
+
+export interface BlockMap1
+    {top: number; left: number; title: string, typeBlock: string, id: string }
+
+
 export class RendrerManager {
     /**
      * Преобразовать имеющийся массив блоков в
      * мапу для отображения
      * @param blocks
      */
-    private convert(blocks: Array<IBlock>): Array<BlockMap> {
-        let convertBlocks = new Array<BlockMap>()
+
+    convert(blocks: Array<IBlock>): Array<BlockMap1> {
+        let convertBlocks = new Array<BlockMap1>()
+        // const [mass, setMass] = useState<BlockMap>({})
         blocks.forEach(item => {
-                let key: string = item.getId()!.toString()
-                convertBlocks.push({key:
-                        {top: item.getTop(), left: item.getLeft(),
-                            title: item.getTitle(), typeBlock: item.getTypeBlock()}})
+            convertBlocks.push(
+                {
+
+                        id: item.getId()!.toString(),
+                        title: item.getTitle(),
+                        left: item.getLeft(),
+                        top: item.getTop(),
+                        typeBlock: item.getTypeBlock(),
+
+                })
         })
+        console.log("blocks convert " + convertBlocks.length)
+
         return convertBlocks
     }
 
+    h = {top: 0, left: 0, title: "Cond", typeBlock: BlockTypes.CONDITION, id: "123"}
 
-    //
-    // public renderBlock(blocks: Array<IBlock>){
-    //
-    // }
+    public renderBlock(blocks: Array<IBlock>) {
+        const b = this.convert(blocks)
+        return b.forEach(item => {
+            this.render(item)
+        })
+        // return this.render(this.h)
+    }
 
 //отображает перетаскиваемые блоки
-     render(item: any) {
+    render(item: any) {
         return <DraggableBlock key={item.id} {...item} />
     }
 
+    renders(item: any, key: any) {
+        console.log("renders " + item)
+        return <DraggableBlock key={key} id={key} {...item} />
+    }
 
 }

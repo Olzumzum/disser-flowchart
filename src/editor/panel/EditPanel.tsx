@@ -8,7 +8,7 @@ import update from "immutability-helper";
 import {IBlock} from "../blocks/primitives/IBlock";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
+import { RendrerManager} from "../dnd/RendrerManager";
 
 
 const styles: CSSProperties = {
@@ -39,7 +39,7 @@ function getWidthComponentPanel(): number | null {
 }
 
 //генерация уникального id
-function generateId(): string {
+export function generateId(): string {
     return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
