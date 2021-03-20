@@ -9,6 +9,7 @@ import {IBlock} from "../blocks/primitives/IBlock";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
+import {render} from "react-dom";
 
 
 const styles: CSSProperties = {
@@ -87,6 +88,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             console.log("list " + arBlock.length)
 
+
         },
         [arBlock],
 
@@ -118,9 +120,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
         <div>
             <div ref={drop} style={styles}>
-                { arBlock.length}
-                {/*{Object.keys(arBlock).map((key) =>*/}
-                {/*    renderManager.render(renderManager.convert(arBlock)))}*/}
+                {/*{ arBlock.length}*/}
+                {Object.keys(arBlock).map((key) =>
+                  renderManager.render(renderManager.convert(arBlock)))}
             </div>
         </div>
     )
