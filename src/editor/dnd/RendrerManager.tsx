@@ -1,8 +1,6 @@
 import {IBlock} from "../blocks/primitives/IBlock";
 import {DraggableBlock} from "./DraggableBlock";
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
-import {BlockMap} from "../panel/ComponentPanel";
-import {useState} from "react";
+
 
 /**
  * класс обращающий блоки в перетаскиваемые объекты

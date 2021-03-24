@@ -1,0 +1,1 @@
+export const DATA_LOADING_ERROR = "Произошла ошибка при загрузке данных";
