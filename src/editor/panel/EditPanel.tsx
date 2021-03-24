@@ -1,4 +1,4 @@
-import {CSSProperties, FC, useCallback, useState} from "react";
+import {CSSProperties, FC, useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../dnd/DragItem";
@@ -10,6 +10,8 @@ import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {render} from "react-dom";
+import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
+import {useActions} from "../../hooks/blockActions";
 
 
 const styles: CSSProperties = {
@@ -44,20 +46,29 @@ export function generateId(): string {
     return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
-let arBlock: Array<IBlock> = new Array<IBlock>()
+// let arBlock: Array<IBlock> = new Array<IBlock>()
 
 const creator: IBlockFactory = new CreatorBlock()
 
-const originalBlocks = creator.getOriginBlock()
+// const originalBlocks = creator.getOriginBlock()
 let fd: Array<BlockMap1> = new Array<BlockMap1>()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
+    const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
+    let fd: Array<BlockMap1> = renderManager.convert(blocks)
+    const {fetchOriginalBlocks, fetchBlocks, addBlocks} = useActions()
+
+    useEffect(() => {
+        fetchOriginalBlocks()
+        fetchBlocks()
+    })
+
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
             let flag = false
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или нет
-            Object.keys(originalBlocks).map((id) => {
+            Object.keys(originBlocks).map((id) => {
                     if (!id.localeCompare(id)) {
                         flag = true
                     }
@@ -67,30 +78,30 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 // console.log("in flag" + id + " " + left + " " + top)
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
-                arBlock.push(creator.createBlock(
-                    originalBlocks[Number(id)].getTypeBlock(),
+                addBlocks(creator.createBlock(
+                    originBlocks[Number(id)].getTypeBlock(),
                     left - getWidthComponentPanel()!!,
                     top,
                     idNew
                 )!!)
 
             } else {
-                arBlock[Number(id)].setLeft(left)
-                arBlock[Number(id)].setTop(top)
+                blocks[Number(id)].setLeft(left)
+                blocks[Number(id)].setTop(top)
             }
 
-            fd = renderManager.convert(arBlock)
+            fd = renderManager.convert(blocks)
             console.log("fd " + fd.length)
 
             fd.forEach(item => {
                 console.log("id=" + item.left)
             })
 
-            console.log("list " + arBlock.length)
+            // console.log("list " + arBlock.length)
 
 
         },
-        [arBlock],
+        [blocks],
 
     )
 
@@ -121,8 +132,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         <div>
             <div ref={drop} style={styles}>
                 {/*{ arBlock.length}*/}
-                {Object.keys(arBlock).map((key) =>
-                  renderManager.render(renderManager.convert(arBlock)))}
+                {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], "id"))}
             </div>
         </div>
     )

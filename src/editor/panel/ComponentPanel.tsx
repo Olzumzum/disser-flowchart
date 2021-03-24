@@ -18,9 +18,9 @@ const styles: CSSProperties = {
 const renderManager = new RendrerManager()
 
 export const ComponentPanel = () => {
-    const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
+    const {originBlocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let fd: Array<BlockMap1> = renderManager.convert(originBlocks)
-    const {fetchOriginalBlocks, fetchBlocks, addBlocks} = useActions()
+    const {fetchOriginalBlocks, fetchBlocks} = useActions()
 
     useEffect(() => {
         fetchOriginalBlocks()
