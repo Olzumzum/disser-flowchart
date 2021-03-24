@@ -5,6 +5,7 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blockReducer} from "../../store/reducers/blockReducer";
 import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
 import {useActions} from "../../hooks/blockActions";
+import {fetchBlocks, fetchOriginalBlocks} from "../../store/action-creators/blocks";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -16,19 +17,13 @@ const styles: CSSProperties = {
 
 const renderManager = new RendrerManager()
 
-let y: Boolean = false
-
-// export interface BlockMap {
-//     [key: string]: { top: number; left: number; title: string, typeBlock: string, id: string }
-// }
-
-
 export const ComponentPanel = () => {
-    const {blocks, loading, error} = blocksTypedSelector(state => state.blocks)
-    let fd: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks} = useActions()
+    const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
+    let fd: Array<BlockMap1> = renderManager.convert(originBlocks)
+    const {fetchOriginalBlocks, fetchBlocks, addBlocks} = useActions()
 
     useEffect(() => {
+        fetchOriginalBlocks()
         fetchBlocks()
     })
 

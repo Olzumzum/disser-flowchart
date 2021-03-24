@@ -29,9 +29,10 @@ export class CreatorBlock implements IBlockFactory {
     }
 
     getOriginBlock(): Array<IBlock> {
-        let one = new ConditionBlockParent("0", 0, 0)
+
         return [
-            one,
+            new ConditionBlockParent("0", 0, 0),
+            new ConditionBlockParent("1", 0, 65)
         ]
     }
 }
