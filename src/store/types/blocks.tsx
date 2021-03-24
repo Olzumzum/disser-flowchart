@@ -32,9 +32,14 @@ interface AddBlock {
     payload: IBlock;
 }
 
+interface PuttData {
+    type: BlocksActionTypes.PUT_DATA;
+}
+
 export type BlocksAction =
     FetchBlocksAction
     | FetchBlocksSuccess
     | FetchBlocksError
     | AddBlock
     | FetchOriginalBlockAction
+    | PuttData

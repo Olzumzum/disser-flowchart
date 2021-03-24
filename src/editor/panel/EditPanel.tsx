@@ -12,6 +12,7 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {render} from "react-dom";
 import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
 import {useActions} from "../../hooks/blockActions";
+import {changeBlocks} from "../../store/action-creators/blocks";
 
 
 const styles: CSSProperties = {
@@ -68,15 +69,17 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         (id: string, left: number, top: number) => {
 
             let flag = false
-
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или нет
-            Object.keys(originBlocks).map((id) => {
-                    if (!id.localeCompare(id)) {
-                        flag = true
-                    }
+           if (blocks.length === 0 ) flag = true
+            else blocks.forEach(item => {
+                if(item.getId()?.localeCompare(id)){
+                    console.log("flag " + id + " " + item.getId())
+                    flag = true
                 }
-            )
+           })
+
+
             if (flag) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
@@ -88,8 +91,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 )!!)
                 console.log("element " + idNew)
             } else {
-                blocks[Number(id)].setLeft(left)
-                blocks[Number(id)].setTop(top)
+
+                changeBlocks(id, top, left)
             }
 
             // fd = renderManager.convert(blocks)
