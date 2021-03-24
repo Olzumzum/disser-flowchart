@@ -20,12 +20,11 @@ const renderManager = new RendrerManager()
 export const ComponentPanel = () => {
     const {originBlocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let fd: Array<BlockMap1> = renderManager.convert(originBlocks)
-    const {fetchOriginalBlocks, fetchBlocks} = useActions()
+    const {fetchOriginalBlocks} = useActions()
 
     useEffect(() => {
         fetchOriginalBlocks()
-        fetchBlocks()
-    })
+    }, [])
 
     if(loading){
         return <h1>Идет загрузка...</h1>
@@ -37,7 +36,7 @@ export const ComponentPanel = () => {
 
     return (
         <div id={"component_panel"} style={styles}>
-            {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], "id"))}
+            {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], id))}
         </div>
 
     )

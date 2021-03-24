@@ -43,7 +43,7 @@ export const fetchBlocks = () => {
 }
 
 export const addBlocks = (block: IBlock) => {
-    return async (dispatch: Dispatch<BlocksAction>) => {
+    return (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
             const response = blocks

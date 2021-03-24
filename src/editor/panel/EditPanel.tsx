@@ -59,13 +59,16 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {fetchOriginalBlocks, fetchBlocks, addBlocks} = useActions()
 
     useEffect(() => {
-        fetchOriginalBlocks()
         fetchBlocks()
-    })
+    }, [])
+
+
 
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
+
             let flag = false
+
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или нет
             Object.keys(originBlocks).map((id) => {
@@ -75,7 +78,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 }
             )
             if (flag) {
-                // console.log("in flag" + id + " " + left + " " + top)
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
                 addBlocks(creator.createBlock(
@@ -84,22 +86,13 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     top,
                     idNew
                 )!!)
-
+                console.log("element " + idNew)
             } else {
                 blocks[Number(id)].setLeft(left)
                 blocks[Number(id)].setTop(top)
             }
 
-            fd = renderManager.convert(blocks)
-            console.log("fd " + fd.length)
-
-            fd.forEach(item => {
-                console.log("id=" + item.left)
-            })
-
-            // console.log("list " + arBlock.length)
-
-
+            // fd = renderManager.convert(blocks)
         },
         [blocks],
 
@@ -119,20 +112,24 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
             }
-            // console.log("element in drop " + item.id)
             moveBlock(item.id, left, top)
             return undefined
         },
     })
 
+    if(loading){
+        return <h1>Идет загрузка...</h1>
+    }
 
+    if(error){
+        return <h1>{error}</h1>
+    }
 
     return (
 
         <div>
             <div ref={drop} style={styles}>
-                {/*{ arBlock.length}*/}
-                {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], "id"))}
+                {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], id))}
             </div>
         </div>
     )

@@ -20,8 +20,6 @@ export class RendrerManager {
 
     convert(blocks: Array<IBlock>): Array<BlockMap1> {
         let convertBlocks = new Array<BlockMap1>()
-        console.log("blocks " + blocks.length)
-        // const [mass, setMass] = useState<BlockMap>({})
         blocks.forEach(item => {
             convertBlocks.push(
                 {
@@ -34,8 +32,6 @@ export class RendrerManager {
 
                 })
         })
-        // console.log("blocks convert " + convertBlocks.length)
-
         return convertBlocks
     }
 
@@ -53,7 +49,6 @@ export class RendrerManager {
     }
 
     renders(item: any, key: any) {
-        console.log("renders " + item)
         return <DraggableBlock key={key} id={item.id} {...item} />
     }
 
