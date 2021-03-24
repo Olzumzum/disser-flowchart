@@ -45,10 +45,9 @@ export const fetchBlocks = () => {
 export const addBlocks = (block: IBlock) => {
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
-            dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
             const response = blocks
-             response.push(block)
-
+            response.push(block)
+            dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
         } catch (e){
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
