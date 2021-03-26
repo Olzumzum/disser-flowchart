@@ -60,6 +60,20 @@ export class SubroutineBlock implements IBlock {
     setTop(top: number): void {
     }
 
+    getPreviousNeighbor(): string {
+        return "";
+    }
+
+    getSubsequentNeighbor(): string {
+        return "";
+    }
+
+    setPreviousNeighbor(id: string): void {
+    }
+
+    setSubsequentNeighbor(id: string): void {
+    }
+
 
 
 }

@@ -1,6 +1,5 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../assets/images/block.png";
-import {IBlock} from "./IBlock";
 
 /**
  * Родитель всех блоков
@@ -51,15 +50,34 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //создать экземпляр
     createBlock() {
-        this._blockInstance = ({title,
+        this._blockInstance = ({
+                                   title,
                                    yellow,
                                    left,
-                                   top}) => {
+                                   top
+                               }) => {
             this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
-            return <div id={this._id} style={{...this.style, background}} onClick={this.click}>{title}</div>
+            return <div
+                id={this._id}
+                style={{...this.style, background}}
+                onClick={this.click}
+                onDoubleClick={this.dbclick}
+            >
+                {title}
+            </div>
         }
+    }
+
+    //одинарное нажатие
+    click(e: React.MouseEvent<HTMLElement>) {
+        console.log("one click" + e.currentTarget.id)
+    }
+
+    //двойное нажатие
+    dbclick(e: React.MouseEvent<HTMLElement>){
+        console.log("dbclick " + e.currentTarget.id)
     }
 
     get id(): string | undefined {
@@ -74,7 +92,7 @@ export class ParentBlock implements StyleBlockBuilder {
         return this._top!
     }
 
-    set top(t:number) {
+    set top(t: number) {
         this._top = t
     }
 
@@ -105,12 +123,8 @@ export class ParentBlock implements StyleBlockBuilder {
     }
 
 
-    click(e: React.MouseEvent<HTMLElement>) {
-        let g = e.currentTarget
-        console.log("click click " + g.id)
-    }
 
-    set prevBlock(id: string){
+    set prevBlock(id: string) {
         this._prevBlock = id
     }
 
@@ -118,7 +132,7 @@ export class ParentBlock implements StyleBlockBuilder {
         return this._prevBlock!!
     }
 
-    set nextBlock(id: string){
+    set nextBlock(id: string) {
         this._nextBlock = id
     }
 
