@@ -1,5 +1,6 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../assets/images/block.png";
+import {IBlock} from "./IBlock";
 
 /**
  * Родитель всех блоков
@@ -38,9 +39,9 @@ export class ParentBlock implements StyleBlockBuilder {
 
     private _id: string | undefined
     //ссылка на следующий блок
-    private _nextBlock: object | undefined = undefined
+    private _nextBlock: string | undefined = undefined
     //ссылка на предыдущий блок
-    private _prevBlock: object | undefined = undefined
+    private _prevBlock: string | undefined = undefined
     //координаты блока
     private _top: number | undefined
     private _left: number | undefined
@@ -57,7 +58,7 @@ export class ParentBlock implements StyleBlockBuilder {
             this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
-            return <div style={{...this.style, background}} onClick={this.click}>{title}</div>
+            return <div id={this._id} style={{...this.style, background}} onClick={this.click}>{title}</div>
         }
     }
 
@@ -105,8 +106,24 @@ export class ParentBlock implements StyleBlockBuilder {
 
 
     click(e: React.MouseEvent<HTMLElement>) {
+        let g = e.currentTarget
+        console.log("click click " + g.id)
+    }
 
-        console.log("click click " + toString.call(this))
+    set prevBlock(id: string){
+        this._prevBlock = id
+    }
+
+    get prevBlock(): string {
+        return this._prevBlock!!
+    }
+
+    set nextBlock(id: string){
+        this._nextBlock = id
+    }
+
+    get nextBlock(): string {
+        return this._nextBlock!!
     }
 
 }

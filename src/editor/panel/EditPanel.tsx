@@ -73,7 +73,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
            if (blocks.length === 0 ) flag = true
             else blocks.forEach(item => {
                 if(item.getId()?.localeCompare(id)){
-                    console.log("flag " + id + " " + item.getId())
                     flag = true
                 }
            })
@@ -81,7 +80,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             if (flag) {
                 //создаем новый id для добавляемого блока
-                console.log("реакция")
                 let idNew: string = generateId()
                 addBlocks(creator.createBlock(
                     originBlocks[Number(id)].getTypeBlock(),
@@ -132,7 +130,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     return (
         <div>
             <div ref={drop} style={styles}>
-                {Object.keys(renderBlocks).map((id) => renderManager.renders(renderBlocks[Number(id)], id))}
+                {Object.keys(renderBlocks).map((id) =>
+                    renderManager.renders(renderBlocks[Number(id)], id))}
             </div>
         </div>
     )

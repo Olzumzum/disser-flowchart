@@ -35,21 +35,13 @@ export class RendrerManager {
         return convertBlocks
     }
 
-    public renderBlock(blocks: Array<IBlock>) {
-        const b = this.convert(blocks)
-        return b.forEach(item => {
-            this.render(item)
-        })
-        // return this.render(this.h)
-    }
-
 //отображает перетаскиваемые блоки
     render(item: any) {
         return <DraggableBlock key={item.id} {...item} />
     }
 
     renders(item: any, key: any) {
-        return <DraggableBlock key={key} id={item.id} {...item} />
+        return <DraggableBlock key={key} id={item.id} {...item}/>
     }
 
 }
