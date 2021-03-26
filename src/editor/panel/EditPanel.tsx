@@ -30,12 +30,12 @@ export interface EditPanelProps {
     snapToGrid: boolean
 }
 
-const renderManager = new RendrerManager()
-
-
+/**
+ * изменить координаты left в зависимости от ширины
+ * панели компонентов (панель с original Blocks)
+ */
 function getWidthComponentPanel(): number | null {
     const element = document.getElementById("component_panel")
-
     if (element != null) {
         return Number(element.offsetWidth)
     } else
@@ -47,16 +47,16 @@ export function generateId(): string {
     return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
-// let arBlock: Array<IBlock> = new Array<IBlock>()
-
+//приводит получаемые объекты к виду, пригодному для отображения
+const renderManager = new RendrerManager()
+//создает новые блоки
 const creator: IBlockFactory = new CreatorBlock()
 
-// const originalBlocks = creator.getOriginBlock()
 let fd: Array<BlockMap1> = new Array<BlockMap1>()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
-    let fd: Array<BlockMap1> = new Array<BlockMap1>()
+    let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
     const {fetchBlocks, addBlocks, changeBlocks} = useActions()
 
     useEffect(() => {
@@ -64,7 +64,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     }, [])
 
 
-
+    /**
+     * переместить блок или создать блок
+     */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
 
@@ -100,6 +102,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     )
 
+    /**
+     * реакция на dnd
+     */
     const [, drop] = useDrop({
         accept: ItemTypes.BLOCK,
         drop(item: DragItem, monitor) {
@@ -127,13 +132,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>{error}</h1>
     }
 
-    fd = renderManager.convert(blocks)
 
     return (
-
         <div>
             <div ref={drop} style={styles}>
-                {Object.keys(fd).map((id) => renderManager.renders(fd[Number(id)], id))}
+                {Object.keys(renderBlocks).map((id) => renderManager.renders(renderBlocks[Number(id)], id))}
             </div>
         </div>
     )
