@@ -15,6 +15,10 @@ const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
 const blocks = new Array<IBlock>()
 
+/**
+ * загрузить список всех оригинальных блоков, расположенных
+ * на панели компонентов
+ */
 export const fetchOriginalBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
@@ -31,6 +35,10 @@ export const fetchOriginalBlocks = () => {
     }
 }
 
+/**
+ * загрузить список всех добавленных на панель редактирования блоков
+ *
+ */
 export const fetchBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
@@ -47,6 +55,10 @@ export const fetchBlocks = () => {
     }
 }
 
+/**
+ * добавление нового блока из панели компонентов
+ * @param block
+ */
 export const addBlocks = (block: IBlock) => {
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
@@ -61,6 +73,12 @@ export const addBlocks = (block: IBlock) => {
     }
 }
 
+/**
+ * изменение координат блока с указанным id
+ * @param id изменяемого блока
+ * @param left значение, на которое изменится координата left
+ * @param top значение, на которое изменится координата top
+ */
 export const changeBlocks = (id: string, left: number, top: number) => {
     let flag = false
     blocks.forEach(item => {
@@ -71,29 +89,24 @@ export const changeBlocks = (id: string, left: number, top: number) => {
         }
     })
 
+
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
-                console.log("тут")
-                dispatch({type: BlocksActionTypes.PUT_DATA})
-                blocks.forEach(item => {
-                    console.log("data " + item.getLeft() + " " + item.getTop())
-                })
-                dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+                dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
+                // dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
 
             } else {
-                console.log("ошибка")
-                dispatch({
-                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
-                    payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
-                })
+                // dispatch({
+                //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                //     payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
+                // })
             }
         } catch (e) {
-            console.log("ошибка")
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
-                payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
-            })
+            // dispatch({
+            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+            //     payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
+            // })
         }
     }
 }

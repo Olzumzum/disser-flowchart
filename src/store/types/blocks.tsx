@@ -34,6 +34,7 @@ interface AddBlock {
 
 interface PuttData {
     type: BlocksActionTypes.PUT_DATA;
+    payload: IBlock[];
 }
 
 export type BlocksAction =

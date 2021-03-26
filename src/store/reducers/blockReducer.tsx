@@ -22,7 +22,7 @@ export const blockReducer = (state: BlockState = initialState, action: BlocksAct
         case BlocksActionTypes.FETCH_ORIGIN_BLOCKS_SUCCESS:
             return {...state, loading: false, originBlocks: action.payload}
         case BlocksActionTypes.PUT_DATA:
-            return {...state}
+            return {...state, blocks: action.payload }
         default:
             return state
     }

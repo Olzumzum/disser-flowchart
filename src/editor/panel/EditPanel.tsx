@@ -56,8 +56,8 @@ let fd: Array<BlockMap1> = new Array<BlockMap1>()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
-    let fd: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchOriginalBlocks, fetchBlocks, addBlocks} = useActions()
+    let fd: Array<BlockMap1> = new Array<BlockMap1>()
+    const {fetchBlocks, addBlocks, changeBlocks} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -82,6 +82,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             if (flag) {
                 //создаем новый id для добавляемого блока
+                console.log("реакция")
                 let idNew: string = generateId()
                 addBlocks(creator.createBlock(
                     originBlocks[Number(id)].getTypeBlock(),
@@ -89,13 +90,13 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     top,
                     idNew
                 )!!)
-                console.log("element " + idNew)
+                console.log("length " + blocks.length)
             } else {
-
                 changeBlocks(id, top, left)
+
             }
 
-            // fd = renderManager.convert(blocks)
+
         },
         [blocks],
 
@@ -127,6 +128,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     if(error){
         return <h1>{error}</h1>
     }
+
+    fd = renderManager.convert(blocks)
 
     return (
 
