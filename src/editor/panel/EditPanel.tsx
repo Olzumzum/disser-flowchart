@@ -3,13 +3,9 @@ import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
-import update from "immutability-helper";
-
-import {IBlock} from "../blocks/primitives/IBlock";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
-import {render} from "react-dom";
 import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
 import {useActions} from "../../hooks/blockActions";
 import {changeBlocks} from "../../store/action-creators/blocks";
