@@ -70,7 +70,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             let flag = false
             //проверка - блок добавляется с панели перечисления
-            // возможных компонентов (Component Panel) или нет
+            // возможных компонентов (Component Panel) или
+            //пепетаскивается существующий на панели редактирования блок
            if (blocks.length === 0 ) flag = true
             else blocks.forEach(item => {
                 if(item.getId()?.localeCompare(id)){
@@ -90,13 +91,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     top,
                     idNew
                 )!!)
-                console.log("length " + blocks.length)
             } else {
-                changeBlocks(id, top, left)
-
+                //перетаскиваем блок
+                changeBlocks(id, left, top)
             }
-
-
         },
         [blocks],
 

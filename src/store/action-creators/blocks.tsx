@@ -94,19 +94,18 @@ export const changeBlocks = (id: string, left: number, top: number) => {
         try {
             if (flag) {
                 dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
-                // dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
 
             } else {
-                // dispatch({
-                //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
-                //     payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
-                // })
+                dispatch({
+                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                    payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
+                })
             }
         } catch (e) {
-            // dispatch({
-            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
-            //     payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
-            // })
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
+            })
         }
     }
 }
