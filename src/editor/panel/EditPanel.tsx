@@ -65,20 +65,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
      */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
-
-            let flag = false
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или
             //пепетаскивается существующий на панели редактирования блок
-           if (blocks.length === 0 ) flag = true
-            else blocks.forEach(item => {
-                if(item.getId()?.localeCompare(id)){
-                    flag = true
-                }
-           })
-
-
-            if (flag) {
+            if (originBlocks[Number(id)] !== undefined) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
                 addBlocks(creator.createBlock(

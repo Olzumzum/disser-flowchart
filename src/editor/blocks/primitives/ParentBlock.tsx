@@ -63,9 +63,9 @@ export class ParentBlock implements StyleBlockBuilder {
             return <div
                 id={this._id}
                 style={{...this.style, background}}
-                onClick={this.click}
-                onDoubleClick={this.dbclick}
-                // onM
+                // onMouseDown={this.click}
+                // onDoubleClick={this.dbclick}
+                // onMouseUp={this.click}
             >
                 {title}
             </div>
