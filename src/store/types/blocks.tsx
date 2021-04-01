@@ -44,6 +44,12 @@ interface PuttData {
     payload: IBlock[];
 }
 
+//создание связи между блоками
+interface CreateConnection {
+    type: BlocksActionTypes.CREATE_CONNECTION;
+    payload: IBlock[];
+}
+
 export type BlocksAction =
     FetchBlocksAction
     | FetchBlocksSuccess
@@ -51,3 +57,4 @@ export type BlocksAction =
     | AddBlock
     | FetchOriginalBlockAction
     | PuttData
+    | CreateConnection

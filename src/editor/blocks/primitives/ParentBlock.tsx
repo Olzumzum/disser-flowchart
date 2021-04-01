@@ -1,5 +1,6 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../assets/images/block.png";
+import {oneClickBlock} from "../../../store/action-creators/clickOnBlocks";
 
 /**
  * Родитель всех блоков
@@ -64,6 +65,7 @@ export class ParentBlock implements StyleBlockBuilder {
                 style={{...this.style, background}}
                 onClick={this.click}
                 onDoubleClick={this.dbclick}
+                // onM
             >
                 {title}
             </div>
@@ -72,11 +74,11 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //одинарное нажатие
     click(e: React.MouseEvent<HTMLElement>) {
-        console.log("one click" + e.currentTarget.id)
+        oneClickBlock(e.currentTarget.id)
     }
 
     //двойное нажатие
-    dbclick(e: React.MouseEvent<HTMLElement>){
+    dbclick(e: React.MouseEvent<HTMLElement>) {
         console.log("dbclick " + e.currentTarget.id)
     }
 
@@ -121,7 +123,6 @@ export class ParentBlock implements StyleBlockBuilder {
     get style(): CSSProperties {
         return this.styles
     }
-
 
 
     set prevBlock(id: string) {

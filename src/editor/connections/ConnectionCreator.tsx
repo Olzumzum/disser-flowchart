@@ -7,13 +7,13 @@ export const ConnectionCreator = (idOne: string, idTwo: string) => {
 }
 
 const setNeighbors = (idOne: string, idTwo: string) => {
-    const {blocks} = blocksTypedSelector(state => state.blocks)
+    // const {blocks} = blocksTypedSelector(state => state.blocks)
 
-
-    blocks.forEach(item => {
-        if(item.getId()?.localeCompare(idOne))
-            item.setSubsequentNeighbor(idTwo)
-        if(item.getId()?.localeCompare(idTwo))
-            item.setPreviousNeighbor(idOne)
-    })
+    console.log("Конекшен криэтор")
+    // blocks.forEach(item => {
+    //     if(item.getId()?.localeCompare(idOne))
+    //         item.setSubsequentNeighbor(idTwo)
+    //     if(item.getId()?.localeCompare(idTwo))
+    //         item.setPreviousNeighbor(idOne)
+    // })
 }

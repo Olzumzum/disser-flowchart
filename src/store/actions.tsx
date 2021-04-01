@@ -5,4 +5,5 @@ export enum BlocksActionTypes {
     FETCH_BLOCKS_ERROR = 'FETCH_BLOCKS_ERROR',
     ADD_BLOCK = 'ADD_BLOCK',
     PUT_DATA = 'PUT_DATA',
+    CREATE_CONNECTION = 'CREATE_CONNECTION',
 }
