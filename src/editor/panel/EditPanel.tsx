@@ -11,7 +11,6 @@ import {useActions} from "../../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../store/action-creators/blocks";
 
 
-
 const styles: CSSProperties = {
     margin: 0,
     float: "right",
@@ -78,9 +77,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 )!!)
             } else {
 
-                checkCoordinatesBlock(id, left, top)
-                //перетаскиваем блок
-                changeBlocks(id, left, top)
+                if (!checkCoordinatesBlock(id, left, top))
+                    //перетаскиваем блок
+                    changeBlocks(id, left, top)
 
             }
         },

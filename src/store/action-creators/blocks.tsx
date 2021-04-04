@@ -110,7 +110,14 @@ export const changeBlocks = (id: string, left: number, top: number) => {
     }
 }
 
-
+/**
+ * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
+ * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
+ * и не перемещать блок
+ * @param id перемещаемого блока
+ * @param left - координата перемещаемого блока
+ * @param top - координата перемещаемого блока
+ */
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
 
     blocks.forEach(item => {
@@ -124,8 +131,25 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top  <= item.getTop() + blockTop)
             ){
                 console.log("Создать связь")
+                setNeighborsBlocks(id, item.getId()!!)
+                return true
             }
-
+            return false
         }
+
+        return false
     })
+
+    return false
+}
+
+const setNeighborsBlocks = (idOne: string, idTwo: string) => {
+    let itemOne: IBlock | undefined
+    let itemTwo: IBlock | undefined
+    blocks.forEach(item => {
+        if(item.getId()?.localeCompare(idOne)) itemOne = item
+        if(item.getId()?.localeCompare(idTwo)) itemTwo = item
+    })
+    if(itemOne !== undefined && itemTwo !== undefined)
+        console.log("Я бью женщин и детей, потому что я красавчик")
 }
