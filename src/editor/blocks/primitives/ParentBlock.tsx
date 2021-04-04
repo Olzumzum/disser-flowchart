@@ -65,11 +65,28 @@ export class ParentBlock implements StyleBlockBuilder {
                 style={{...this.style, background}}
                 // onMouseDown={this.click}
                 // onDoubleClick={this.dbclick}
-                // onMouseUp={this.click}
+                // onMouseDown={this.mouseDown}
+                // onMouseUp={this.mouseUp}
+                // onMouseOver={this.mouseOver}
             >
                 {title}
             </div>
         }
+    }
+
+
+
+    mouseOver(e: React.MouseEvent<HTMLElement>){
+        console.log("over")
+        // this.over = e.currentTarget.id.toString()
+    }
+
+    mouseUp(e: React.MouseEvent<HTMLElement>){
+        console.log("up " + e.currentTarget.id)
+    }
+    mouseDown(e: React.MouseEvent<HTMLElement>){
+        console.log("Тач старт " + e.currentTarget.id)
+        // this.perem = e.currentTarget.id.toString()
     }
 
     //одинарное нажатие

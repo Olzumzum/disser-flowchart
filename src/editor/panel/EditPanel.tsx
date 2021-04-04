@@ -1,4 +1,4 @@
-import {CSSProperties, FC, useCallback, useEffect, useState} from "react";
+import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../ItemTypes";
 import {DragItem} from "../dnd/DragItem";
@@ -8,7 +8,8 @@ import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
 import {useActions} from "../../hooks/blockActions";
-import {changeBlocks} from "../../store/action-creators/blocks";
+import {changeBlocks, checkCoordinatesBlock} from "../../store/action-creators/blocks";
+
 
 
 const styles: CSSProperties = {
@@ -48,8 +49,6 @@ const renderManager = new RendrerManager()
 //создает новые блоки
 const creator: IBlockFactory = new CreatorBlock()
 
-let fd: Array<BlockMap1> = new Array<BlockMap1>()
-
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
@@ -78,13 +77,16 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     idNew
                 )!!)
             } else {
+
+                checkCoordinatesBlock(id, left, top)
                 //перетаскиваем блок
                 changeBlocks(id, left, top)
+
             }
         },
         [blocks],
-
     )
+
 
     /**
      * реакция на dnd
@@ -97,25 +99,27 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 y: number
             }
 
+
             let left = Math.round(item.left + delta.x)
             let top = Math.round(item.top + delta.y)
 
             if (snapToGrid) {
                 ;[left, top] = doSnapToGrid(left, top)
             }
+
             moveBlock(item.id, left, top)
             return undefined
         },
     })
 
-    if(loading){
+
+    if (loading) {
         return <h1>Идет загрузка...</h1>
     }
 
-    if(error){
+    if (error) {
         return <h1>{error}</h1>
     }
-
 
     return (
         <div>

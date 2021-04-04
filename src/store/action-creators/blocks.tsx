@@ -109,3 +109,23 @@ export const changeBlocks = (id: string, left: number, top: number) => {
         }
     }
 }
+
+
+export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
+
+    blocks.forEach(item => {
+        if (item.getId()?.localeCompare(id)) {
+            const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
+            const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
+
+            if ((left >= item.getLeft() || (left + blockWidth) >= item.getLeft()) &&
+                (left  <= item.getLeft() + blockWidth) &&
+                (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
+                (top  <= item.getTop() + blockTop)
+            ){
+                console.log("Создать связь")
+            }
+
+        }
+    })
+}
