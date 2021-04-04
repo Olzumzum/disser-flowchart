@@ -134,7 +134,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 setNeighborsBlocks(id, item.getId()!!)
                 return true
             }
-            return false
+
         }
 
         return false
@@ -150,6 +150,20 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         if(item.getId()?.localeCompare(idOne)) itemOne = item
         if(item.getId()?.localeCompare(idTwo)) itemTwo = item
     })
-    if(itemOne !== undefined && itemTwo !== undefined)
-        console.log("Я бью женщин и детей, потому что я красавчик")
+    if(itemOne !== undefined && itemTwo !== undefined){
+        //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
+        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
+        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
+        // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
+
+        setNeighbors(itemOne, itemTwo)
+        console.log("Соседи предыдущий " + itemOne.getPreviousNeighbor() + " последующий "
+        + itemOne.getSubsequentNeighbor())
+    }
+
+}
+
+const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
+    itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
+    itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
