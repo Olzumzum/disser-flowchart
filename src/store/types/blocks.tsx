@@ -29,7 +29,7 @@ interface FetchBlocksSuccess {
 //ошибка загрузки блоков
 interface FetchBlocksError {
     type: BlocksActionTypes.FETCH_BLOCKS_ERROR;
-    payload: string;
+    payload: string | null;
 }
 
 //добавление нового элемента в список блоков

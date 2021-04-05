@@ -25,6 +25,9 @@ export const fetchOriginalBlocks = () => {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             const response = originalBlocks
             dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
                 type: BlocksActionTypes.FETCH_ORIGIN_BLOCKS_SUCCESS, payload: response
             })
         } catch (e) {
@@ -45,6 +48,9 @@ export const fetchBlocks = () => {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             // const response = originalBlocks
             dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
         } catch (e) {
@@ -64,6 +70,9 @@ export const addBlocks = (block: IBlock) => {
         try {
             const response = blocks
             response.push(block)
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
         } catch (e) {
             dispatch({
@@ -88,13 +97,13 @@ export const changeBlocks = (id: string, left: number, top: number) => {
             flag = true
         }
     })
-
-
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
+                dispatch({
+                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+                })
                 dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
-
             } else {
                 dispatch({
                     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,

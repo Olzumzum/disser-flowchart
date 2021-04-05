@@ -9,6 +9,7 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
 import {useActions} from "../../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../store/action-creators/blocks";
+import {ErrorMessage} from "../error/ErrorMessage";
 
 
 const styles: CSSProperties = {
@@ -116,9 +117,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
-    if (error) {
-        return <h1>{error}</h1>
-    }
+    // if(error){
+    //     return <ErrorMessage message={error}/>
+    // }
 
     return (
         <div>

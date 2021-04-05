@@ -7,7 +7,7 @@ import {ComponentPanel} from "./panel/ComponentPanel";
 import {Container, Row} from "react-bootstrap";
 import {Provider} from "react-redux";
 import {store} from "../store";
-
+import {ErrorMessage} from "./error/ErrorMessage";
 
 export const EditorApp: FC = () => {
 
@@ -22,6 +22,7 @@ export const EditorApp: FC = () => {
         setSnapToGridWhileDragging(!snapToGridWhileDragging)
     }, [snapToGridWhileDragging])
 
+
     return (
         <Provider store={store}>
             <DndProvider backend={HTML5Backend}>
@@ -32,9 +33,12 @@ export const EditorApp: FC = () => {
                     <Row style={{
                         height: 300
                     }}>
+                        {}
                         <ComponentPanel/>
                         <EditPanel snapToGrid={snapToGridAfterDrop}/>
                         <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
+                        <ErrorMessage/>
+
                     </Row>
                 </Container>
             </DndProvider>
