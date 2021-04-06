@@ -1,5 +1,6 @@
 import {CSSProperties, FC} from "react";
-import blockImage from "../../../assets/images/block.png";
+import blockImage from "../../../../assets/images/block.png";
+import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 
 /**
  * Родитель всех блоков
@@ -38,9 +39,9 @@ export class ParentBlock implements StyleBlockBuilder {
 
     private _id: string | undefined
     //ссылка на следующий блок
-    private _nextBlock: object | undefined = undefined
+    private _nextBlock: string | undefined = undefined
     //ссылка на предыдущий блок
-    private _prevBlock: object | undefined = undefined
+    private _prevBlock: string | undefined = undefined
     //координаты блока
     private _top: number | undefined
     private _left: number | undefined
@@ -50,15 +51,52 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //создать экземпляр
     createBlock() {
-        this._blockInstance = ({title,
+        this._blockInstance = ({
+                                   title,
                                    yellow,
                                    left,
-                                   top}) => {
+                                   top
+                               }) => {
             this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
-            return <div style={{...this.style, background}} onClick={this.click}>{title}</div>
+            return <div
+                id={this._id}
+                style={{...this.style, background}}
+                // onMouseDown={this.click}
+                // onDoubleClick={this.dbclick}
+                // onMouseDown={this.mouseDown}
+                // onMouseUp={this.mouseUp}
+                // onMouseOver={this.mouseOver}
+            >
+                {title}
+            </div>
         }
+    }
+
+
+
+    mouseOver(e: React.MouseEvent<HTMLElement>){
+        console.log("over")
+        // this.over = e.currentTarget.id.toString()
+    }
+
+    mouseUp(e: React.MouseEvent<HTMLElement>){
+        console.log("up " + e.currentTarget.id)
+    }
+    mouseDown(e: React.MouseEvent<HTMLElement>){
+        console.log("Тач старт " + e.currentTarget.id)
+        // this.perem = e.currentTarget.id.toString()
+    }
+
+    //одинарное нажатие
+    click(e: React.MouseEvent<HTMLElement>) {
+        oneClickBlock(e.currentTarget.id)
+    }
+
+    //двойное нажатие
+    dbclick(e: React.MouseEvent<HTMLElement>) {
+        console.log("dbclick " + e.currentTarget.id)
     }
 
     get id(): string | undefined {
@@ -73,7 +111,7 @@ export class ParentBlock implements StyleBlockBuilder {
         return this._top!
     }
 
-    set top(t:number) {
+    set top(t: number) {
         this._top = t
     }
 
@@ -104,9 +142,20 @@ export class ParentBlock implements StyleBlockBuilder {
     }
 
 
-    click(e: React.MouseEvent<HTMLElement>) {
+    set prevBlock(id: string) {
+        this._prevBlock = id
+    }
 
-        console.log("click click " + toString.call(this))
+    get prevBlock(): string {
+        return this._prevBlock!!
+    }
+
+    set nextBlock(id: string) {
+        this._nextBlock = id
+    }
+
+    get nextBlock(): string {
+        return this._nextBlock!!
     }
 
 }

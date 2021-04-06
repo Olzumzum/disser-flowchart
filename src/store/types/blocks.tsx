@@ -1,4 +1,4 @@
-import {IBlock} from "../../editor/blocks/primitives/IBlock";
+import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {BlocksActionTypes} from "../actions";
 
 //все, что может прийти о загрузке блоков
@@ -29,7 +29,7 @@ interface FetchBlocksSuccess {
 //ошибка загрузки блоков
 interface FetchBlocksError {
     type: BlocksActionTypes.FETCH_BLOCKS_ERROR;
-    payload: string;
+    payload: string | null;
 }
 
 //добавление нового элемента в список блоков
@@ -44,6 +44,12 @@ interface PuttData {
     payload: IBlock[];
 }
 
+//создание связи между блоками
+interface CreateConnection {
+    type: BlocksActionTypes.CREATE_CONNECTION;
+    payload: IBlock[];
+}
+
 export type BlocksAction =
     FetchBlocksAction
     | FetchBlocksSuccess
@@ -51,3 +57,4 @@ export type BlocksAction =
     | AddBlock
     | FetchOriginalBlockAction
     | PuttData
+    | CreateConnection

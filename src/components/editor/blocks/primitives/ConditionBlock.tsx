@@ -1,6 +1,6 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
 import {FC} from "react";
-import blockImage from "../../../assets/images/romb.png";
+import blockImage from "../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 
@@ -47,8 +47,6 @@ export class ConditionBlockParent implements IBlock {
     setTypeBlock(type: string): void {
     }
 
-
-
     render(): JSX.Element {
 
         return <this.block title={this.title}
@@ -73,6 +71,22 @@ export class ConditionBlockParent implements IBlock {
 
     setTop(top: number): void {
         this.parentBlock.top = top;
+    }
+
+    setPreviousNeighbor(id: string): void {
+        this.parentBlock.prevBlock = id
+    }
+
+    setSubsequentNeighbor(id: string): void {
+        this.parentBlock.nextBlock = id
+    }
+
+    getPreviousNeighbor(): string {
+        return this.parentBlock.prevBlock;
+    }
+
+    getSubsequentNeighbor(): string {
+        return this.parentBlock.nextBlock;
     }
 
 

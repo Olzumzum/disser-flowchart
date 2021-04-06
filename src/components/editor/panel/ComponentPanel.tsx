@@ -2,10 +2,11 @@ import {CSSProperties, useEffect} from "react";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
-import {blockReducer} from "../../store/reducers/blockReducer";
-import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
-import {useActions} from "../../hooks/blockActions";
-import {fetchBlocks, fetchOriginalBlocks} from "../../store/action-creators/blocks";
+import {blockReducer} from "../../../store/reducers/blockReducer";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
+import {fetchBlocks, fetchOriginalBlocks} from "../../../store/action-creators/blocks";
+import {ErrorMessage} from "../error/ErrorMessage";
 
 const styles: CSSProperties = {
     margin: 0,
@@ -13,6 +14,7 @@ const styles: CSSProperties = {
     height: 400,
     width: "20%",
     backgroundColor: 'darkgray',
+    display: "flex"
 }
 
 const renderManager = new RendrerManager()
@@ -30,9 +32,9 @@ export const ComponentPanel = () => {
         return <h1>Идет загрузка...</h1>
     }
 
-    if(error){
-        return <h1>{error}</h1>
-    }
+    // if(error){
+    //     return <ErrorMessage message={error}/>
+    // }
 
     return (
         <div id={"component_panel"} style={styles}>

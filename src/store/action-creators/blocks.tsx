@@ -1,15 +1,16 @@
 import {BlocksAction} from "../types/blocks";
 import {Dispatch} from "redux";
 import {BlocksActionTypes} from "../actions";
-import {IBlockFactory} from "../../editor/blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../../editor/blocks/factory/CreatorBlock";
+import {IBlockFactory} from "../../components/editor/blocks/factory/IBlockFactory";
+import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
 import {
     COORDINATE_CHANGE_ERROR,
     DATA_INSERTION_ERROR,
     DATA_LOADING_ERROR,
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
-import {IBlock} from "../../editor/blocks/primitives/IBlock";
+import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
+import {ConnectionManager} from "../../components/editor/connections/ConnectionManager";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -24,6 +25,9 @@ export const fetchOriginalBlocks = () => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             const response = originalBlocks
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
             dispatch({
                 type: BlocksActionTypes.FETCH_ORIGIN_BLOCKS_SUCCESS, payload: response
             })
@@ -45,6 +49,9 @@ export const fetchBlocks = () => {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             // const response = originalBlocks
             dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
         } catch (e) {
@@ -64,6 +71,9 @@ export const addBlocks = (block: IBlock) => {
         try {
             const response = blocks
             response.push(block)
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
         } catch (e) {
             dispatch({
@@ -88,13 +98,13 @@ export const changeBlocks = (id: string, left: number, top: number) => {
             flag = true
         }
     })
-
-
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
+                dispatch({
+                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+                })
                 dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
-
             } else {
                 dispatch({
                     type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
@@ -108,4 +118,67 @@ export const changeBlocks = (id: string, left: number, top: number) => {
             })
         }
     }
+}
+
+/**
+ * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
+ * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
+ * и не перемещать блок
+ * @param id перемещаемого блока
+ * @param left - координата перемещаемого блока
+ * @param top - координата перемещаемого блока
+ */
+export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
+
+    blocks.forEach(item => {
+        if (item.getId()?.localeCompare(id)) {
+            const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
+            const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
+
+            if ((left >= item.getLeft() || (left + blockWidth) >= item.getLeft()) &&
+                (left  <= item.getLeft() + blockWidth) &&
+                (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
+                (top  <= item.getTop() + blockTop)
+            ){
+                console.log("Создать связь")
+                setNeighborsBlocks(id, item.getId()!!)
+                return true
+            }
+
+        }
+
+        return false
+    })
+
+    return false
+}
+
+const setNeighborsBlocks = (idOne: string, idTwo: string) => {
+    let itemOne: IBlock | undefined
+    let itemTwo: IBlock | undefined
+    blocks.forEach(item => {
+        if(item.getId()?.localeCompare(idOne)) itemOne = item
+        if(item.getId()?.localeCompare(idTwo)) itemTwo = item
+    })
+    if(itemOne !== undefined && itemTwo !== undefined){
+        //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
+        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
+        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
+        // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
+
+        setNeighbors(itemOne, itemTwo)
+        console.log("Соседи предыдущий " + itemOne.getPreviousNeighbor() + " последующий "
+        + itemOne.getSubsequentNeighbor())
+        paintConnection()
+    }
+
+}
+
+const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
+    itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
+    itemTwo.setPreviousNeighbor(itemOne.getId()!!)
+}
+
+const paintConnection = () => {
+    return <ConnectionManager/>
 }

@@ -1,6 +1,6 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
 import React, {FC} from "react";
-import blockImage from "../../../assets/images/rectangle.png";
+import blockImage from "../../../../assets/images/rectangle.png";
 import {IBlock} from "./IBlock";
 
 export class SubroutineBlock implements IBlock {
@@ -58,6 +58,20 @@ export class SubroutineBlock implements IBlock {
     }
 
     setTop(top: number): void {
+    }
+
+    getPreviousNeighbor(): string {
+        return "";
+    }
+
+    getSubsequentNeighbor(): string {
+        return "";
+    }
+
+    setPreviousNeighbor(id: string): void {
+    }
+
+    setSubsequentNeighbor(id: string): void {
     }
 
 

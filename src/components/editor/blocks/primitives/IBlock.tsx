@@ -1,4 +1,3 @@
-import {BlockProps} from "./ParentBlock";
 
 export interface IBlock {
     getId(): string | undefined,
@@ -17,7 +16,11 @@ export interface IBlock {
 
     render(): JSX.Element
 
+    setPreviousNeighbor(id: string): void
+    getPreviousNeighbor(): string
 
+    setSubsequentNeighbor(id: string): void
+    getSubsequentNeighbor(): string
 
 }
 
