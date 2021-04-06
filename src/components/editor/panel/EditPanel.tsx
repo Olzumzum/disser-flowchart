@@ -123,10 +123,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}, props) => {
         return <h1>Идет загрузка...</h1>
     }
 
-    // if(error){
-    //     return <ErrorMessage message={error}/>
-    // }
-
     return (
         <div>
             <div ref={drop} style={styles}>

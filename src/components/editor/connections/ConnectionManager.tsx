@@ -1,4 +1,6 @@
 import React, {FC, useEffect, useRef} from "react";
+import {ConnectionBlocks} from "./ConnectionBlocks";
+
 
 interface ConnectionManagerProperties {
     // width: number,
@@ -11,28 +13,22 @@ interface ConnectionManagerProperties {
     // data: number[]
 }
 
-export const ConnectionManager: FC<ConnectionManagerProperties> =
-    props => {
+export const ConnectionManager: FC<ConnectionManagerProperties> = props => {
 
-        const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-        const draw = (ctx: CanvasRenderingContext2D) => {
-            ctx.fillStyle = '#000000'
-            ctx.beginPath()
-            ctx.fillRect(50,50, 3, 50)
-            ctx.fill()
-        }
-
-        useEffect(() => {
-            const canvas = canvasRef.current!!
-            const contextC = canvas.getContext('2d')!!
-            draw(contextC)
-        }, [])
+    useEffect(() => {
+        const context = canvasRef.current!!.getContext('2d')!!
+        ConnectionBlocks(context, 50, 50)
+    }, [])
 
 
-        return (
-            <canvas ref={canvasRef}{...props}>
+    return (
+        <canvas ref={canvasRef}{...props}/>
+    )
+}
 
-            </canvas>
-        )
-    }
+// function createConnection(){
+//
+// }
+

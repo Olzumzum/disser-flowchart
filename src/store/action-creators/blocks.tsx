@@ -12,9 +12,14 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {ConnectionManager} from "../../components/editor/connections/ConnectionManager";
 
+//создает блоки разных типов
 const creatorBlocks: IBlockFactory = new CreatorBlock()
+//список возможных блоков для построения схемы
 const originalBlocks = creatorBlocks.getOriginBlock()
+//добавленные пользователем блоки
 const blocks = new Array<IBlock>()
+//связи между блоками
+const connectBlocks = new Array()
 
 /**
  * загрузить список всех оригинальных блоков, расположенных
