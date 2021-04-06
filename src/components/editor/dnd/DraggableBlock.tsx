@@ -1,6 +1,6 @@
 import {CSSProperties, FC, useEffect} from "react";
 import {DragSourceMonitor, useDrag} from "react-dnd";
-import {ItemTypes} from "../ItemTypes";
+import {ItemTypes} from "./ItemTypes";
 import {getEmptyImage} from "react-dnd-html5-backend";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";

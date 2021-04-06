@@ -1,4 +1,4 @@
-import {IBlock} from "../../editor/blocks/primitives/IBlock";
+import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {BlocksActionTypes} from "../actions";
 
 //все, что может прийти о загрузке блоков

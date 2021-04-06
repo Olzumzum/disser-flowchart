@@ -1,15 +1,16 @@
 import {BlocksAction} from "../types/blocks";
 import {Dispatch} from "redux";
 import {BlocksActionTypes} from "../actions";
-import {IBlockFactory} from "../../editor/blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../../editor/blocks/factory/CreatorBlock";
+import {IBlockFactory} from "../../components/editor/blocks/factory/IBlockFactory";
+import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
 import {
     COORDINATE_CHANGE_ERROR,
     DATA_INSERTION_ERROR,
     DATA_LOADING_ERROR,
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
-import {IBlock} from "../../editor/blocks/primitives/IBlock";
+import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
+import {ConnectionManager} from "../../components/editor/connections/ConnectionManager";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -168,6 +169,7 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         setNeighbors(itemOne, itemTwo)
         console.log("Соседи предыдущий " + itemOne.getPreviousNeighbor() + " последующий "
         + itemOne.getSubsequentNeighbor())
+        paintConnection()
     }
 
 }
@@ -175,4 +177,8 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
 const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
+}
+
+const paintConnection = () => {
+    return <ConnectionManager/>
 }

@@ -1,14 +1,14 @@
 import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {useDrop} from "react-dnd";
-import {ItemTypes} from "../ItemTypes";
+import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
-import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
-import {useActions} from "../../hooks/blockActions";
-import {changeBlocks, checkCoordinatesBlock} from "../../store/action-creators/blocks";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
+import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {ErrorMessage} from "../error/ErrorMessage";
 
 

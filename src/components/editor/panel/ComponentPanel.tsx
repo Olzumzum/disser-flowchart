@@ -2,10 +2,10 @@ import {CSSProperties, useEffect} from "react";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
-import {blockReducer} from "../../store/reducers/blockReducer";
-import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
-import {useActions} from "../../hooks/blockActions";
-import {fetchBlocks, fetchOriginalBlocks} from "../../store/action-creators/blocks";
+import {blockReducer} from "../../../store/reducers/blockReducer";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
+import {fetchBlocks, fetchOriginalBlocks} from "../../../store/action-creators/blocks";
 import {ErrorMessage} from "../error/ErrorMessage";
 
 const styles: CSSProperties = {

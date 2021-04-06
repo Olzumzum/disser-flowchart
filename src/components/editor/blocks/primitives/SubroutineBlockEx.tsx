@@ -1,6 +1,6 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
 import React, {FC} from "react";
-import blockImage from "../../../assets/images/rectangle.png";
+import blockImage from "../../../../assets/images/rectangle.png";
 import {IBlock} from "./IBlock";
 
 export class SubroutineBlock implements IBlock {

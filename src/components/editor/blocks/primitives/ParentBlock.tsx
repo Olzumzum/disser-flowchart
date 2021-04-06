@@ -1,6 +1,6 @@
 import {CSSProperties, FC} from "react";
-import blockImage from "../../../assets/images/block.png";
-import {oneClickBlock} from "../../../store/action-creators/clickOnBlocks";
+import blockImage from "../../../../assets/images/block.png";
+import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 
 /**
  * Родитель всех блоков

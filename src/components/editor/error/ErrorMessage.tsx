@@ -1,5 +1,5 @@
 import {CSSProperties, FC} from "react";
-import {blocksTypedSelector} from "../../hooks/blocksTypedSelector";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 
 
 

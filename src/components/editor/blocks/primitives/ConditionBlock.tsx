@@ -1,6 +1,6 @@
 import {BlockProps, ParentBlock} from "./ParentBlock";
 import {FC} from "react";
-import blockImage from "../../../assets/images/romb.png";
+import blockImage from "../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 
