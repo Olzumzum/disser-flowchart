@@ -1,4 +1,4 @@
-import {CSSProperties, FC, useCallback, useEffect} from "react";
+import React, {CSSProperties, FC, useCallback, useEffect, useRef} from "react";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
@@ -10,6 +10,7 @@ import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {ErrorMessage} from "../error/ErrorMessage";
+import {ConnectionManager} from "../connections/ConnectionManager";
 
 
 const styles: CSSProperties = {
@@ -20,6 +21,10 @@ const styles: CSSProperties = {
     border: '1px solid black',
     backgroundColor: 'aqua'
     // position: 'relative',
+}
+
+const canvasStyle: CSSProperties = {
+    position: 'relative',
 }
 
 
@@ -49,7 +54,7 @@ const renderManager = new RendrerManager()
 //создает новые блоки
 const creator: IBlockFactory = new CreatorBlock()
 
-export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
+export const EditPanel: FC<EditPanelProps> = ({snapToGrid}, props) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
     const {fetchBlocks, addBlocks, changeBlocks} = useActions()
@@ -57,6 +62,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     useEffect(() => {
         fetchBlocks()
     }, [])
+
 
 
     /**
@@ -126,6 +132,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             <div ref={drop} style={styles}>
                 {Object.keys(renderBlocks).map((id) =>
                     renderManager.renders(renderBlocks[Number(id)], id))}
+                <ConnectionManager/>
             </div>
         </div>
     )

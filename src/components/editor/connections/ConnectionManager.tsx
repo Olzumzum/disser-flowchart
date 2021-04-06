@@ -19,15 +19,14 @@ export const ConnectionManager: FC<ConnectionManagerProperties> =
         const draw = (ctx: CanvasRenderingContext2D) => {
             ctx.fillStyle = '#000000'
             ctx.beginPath()
-            ctx.arc(50, 100, 20, 0, 2 * Math.PI)
+            ctx.fillRect(50,50, 3, 50)
             ctx.fill()
         }
 
         useEffect(() => {
             const canvas = canvasRef.current!!
             const contextC = canvas.getContext('2d')!!
-            contextC.fillStyle = '#000000'
-            contextC.fillRect(0, 0, contextC.canvas.width, contextC.canvas.height)
+            draw(contextC)
         }, [])
 
 

@@ -34,7 +34,7 @@ export const EditorApp: FC = () => {
                     <Row style={{
                         height: 300
                     }}>
-                        <ConnectionManager/>
+                        {/*<ConnectionManager/>*/}
                         <ComponentPanel/>
                         <EditPanel snapToGrid={snapToGridAfterDrop}/>
                         <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
