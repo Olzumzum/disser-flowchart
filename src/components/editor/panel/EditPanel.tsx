@@ -10,6 +10,7 @@ import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {CanvasPainter} from "../connections/CanvasPainter";
+import {getWidthComponentPanel} from "../calculationCoordinats/calculetionCoordinats";
 
 
 const styles: CSSProperties = {
@@ -29,17 +30,6 @@ export interface EditPanelProps {
     snapToGrid: boolean
 }
 
-/**
- * изменить координаты left в зависимости от ширины
- * панели компонентов (панель с original Blocks)
- */
-function getWidthComponentPanel(): number | null {
-    const element = document.getElementById("component_panel")
-    if (element != null) {
-        return Number(element.offsetWidth)
-    } else
-        return null
-}
 
 //генерация уникального id
 export function generateId(): string {
@@ -79,7 +69,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     idNew
                 )!!)
             } else {
-                if (!checkCoordinatesBlock(id, left, top))
+                const f = checkCoordinatesBlock(id, left, top)
+                console.log("возврат " + f)
+                if (!f)
                     //перетаскиваем блок
                     changeBlocks(id, left, top)
             }

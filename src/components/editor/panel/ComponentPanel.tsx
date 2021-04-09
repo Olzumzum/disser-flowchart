@@ -6,7 +6,6 @@ import {blockReducer} from "../../../store/reducers/blockReducer";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {fetchBlocks, fetchOriginalBlocks} from "../../../store/action-creators/blocks";
-import {ErrorMessage} from "../error/ErrorMessage";
 
 const styles: CSSProperties = {
 

@@ -12,6 +12,8 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
 import {drawConnectionBlocks} from "../../components/editor/connections/drawConnection";
+import {getWidthComponentPanel} from "../../components/editor/calculationCoordinats/calculetionCoordinats";
+
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -130,9 +132,9 @@ export const changeBlocks = (id: string, left: number, top: number) => {
  * @param top - координата перемещаемого блока
  */
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
-
+    let flag = false
     blocks.forEach(item => {
-        if (item.getId()?.localeCompare(id)) {
+        if (!flag && item.getId()?.localeCompare(id)) {
             const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
             const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
 
@@ -143,15 +145,13 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
             ) {
                 console.log("Создать связь")
                 setNeighborsBlocks(id, item.getId()!!)
-                return true
+                flag = true
+
             }
-
         }
-
-        return false
     })
 
-    return false
+    return flag
 }
 
 const setNeighborsBlocks = (idOne: string, idTwo: string) => {
@@ -169,8 +169,8 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
 
         setNeighbors(itemOne, itemTwo)
         console.log("Соседи предыдущий " + itemOne.getTop() + " последующий "
-            + itemOne.getLeft())
-        paintConnection(itemOne.getTop(), 259, 0)
+            + (itemOne.getLeft() - getWidthComponentPanel()!! + 20))
+        paintConnection(itemOne.getTop(), itemOne.getLeft() - getWidthComponentPanel()!!, 0)
     }
 
 }
