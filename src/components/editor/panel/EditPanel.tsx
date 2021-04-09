@@ -13,13 +13,15 @@ import {CanvasPainter} from "../connections/CanvasPainter";
 
 
 const styles: CSSProperties = {
-    margin: 0,
+
     float: "right",
-    width: "79%",
+    width: "100%",
     height: 400,
-    border: '1px solid black',
-    backgroundColor: 'aqua'
-    // position: 'relative',
+    // border: '1px solid black',
+    backgroundColor: 'aqua',
+    margin: 3,
+    marginRight: 6,
+    padding: 5,
 }
 
 
@@ -117,7 +119,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
     return (
-        <div style={{width: "80%"}}>
+        <div>
                 <div ref={drop} style={styles}>
                     {Object.keys(renderBlocks).map((id) =>
                         renderManager.renders(renderBlocks[Number(id)], id))}
