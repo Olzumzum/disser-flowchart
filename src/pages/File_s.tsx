@@ -1,6 +1,11 @@
 import React, {Component} from "react";
 import {Button, Col, Container, Nav, Row, Tab} from "react-bootstrap";
 
+/**
+ * Пока здесь ничего полезного,
+ * Когда делала эту страницу, думала, что через нее
+ * будет производиться импорт-экспорт
+ */
 export default class File_s extends Component {
     render() {
         return (

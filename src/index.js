@@ -6,6 +6,10 @@ import './assets/stylesheets/index.css';
 import App from "./App";
 import Home from "./pages/Home";
 
+/**
+ * Страртовая страница приложения,
+ * здесь реакт подключает приложение
+ */
 ReactDOM.render(
     <React.StrictMode>
         <App/>

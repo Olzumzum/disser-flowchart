@@ -8,6 +8,7 @@ import {Container, Row} from "react-bootstrap";
 import {Provider} from "react-redux";
 import {store} from "../../store";
 import {ErrorMessage} from "./error/ErrorMessage";
+import Toolbar from "../Toolbar";
 
 export const EditorApp: FC = () => {
 
@@ -27,9 +28,9 @@ export const EditorApp: FC = () => {
         <Provider store={store}>
             <DndProvider backend={HTML5Backend}>
                 <Container fluid>
-                    {/* <Row>*/}
-                    {/*     <Toolbar/>*/}
-                    {/*</Row>*/}
+                     <Row>
+                         <Toolbar/>
+                    </Row>
                     <Row style={{
                         height: 300
                     }}>

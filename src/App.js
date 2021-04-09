@@ -5,7 +5,13 @@ import React from "react";
 import Header from "./components/Header";
 
 
-
+/**
+ * Приложение основное, подключается только шапка
+ * Содержимое ссылок шапки указывается в файлах, описывающих эти страницы.
+ * По умолчанию стартовая Home
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function App() {
   return (
     <Header/>

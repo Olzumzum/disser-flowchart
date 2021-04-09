@@ -5,6 +5,10 @@ import Home from "../pages/Home";
 import Help from "../pages/Help";
 import File_s from "../pages/File_s";
 
+/**
+ * Шапка сервиса,
+ * здесь перечислены все возможные ссылочки сайта, оформлена шапочка
+ */
 export default class Header extends Component {
     render() {
         return (
