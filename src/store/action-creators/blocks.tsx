@@ -10,8 +10,8 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {contextC} from "../../components/editor/connections/CanvasPainter";
-import {drawConnectionBlocks} from "../../components/editor/connections/ConnectionBlocks";
+import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
+import {drawConnectionBlocks} from "../../components/editor/connections/drawConnection";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -168,9 +168,9 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
 
         setNeighbors(itemOne, itemTwo)
-        console.log("Соседи предыдущий " + itemOne.getPreviousNeighbor() + " последующий "
-            + itemOne.getSubsequentNeighbor())
-        paintConnection()
+        console.log("Соседи предыдущий " + itemOne.getTop() + " последующий "
+            + itemOne.getLeft())
+        paintConnection(itemOne.getTop(), 259, 0)
     }
 
 }
@@ -183,8 +183,8 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
 /**
  * Рисует связи между соединяемыми блоками
  */
-const paintConnection = () => {
-    const context = contextC
+const paintConnection = (x: number, y: number, height: number) => {
+    const context = contextCanvas
     if (context !== null)
-        drawConnectionBlocks(context, 50, 50, 1, 15)
+        drawConnectionBlocks(context, x, y, 50, 150)
 }

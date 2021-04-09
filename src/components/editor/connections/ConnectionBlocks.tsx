@@ -1,10 +1,36 @@
-export const drawConnectionBlocks = (ctx: CanvasRenderingContext2D,
-                                     x: number,
-                                     y: number,
-                                     width: number,
-                                     height: number) => {
-    ctx.fillStyle = '#000000'
-    ctx.beginPath()
-    ctx.fillRect(x, y, width, height)
-    ctx.fill()
+/**
+ * Связь между блоками
+ */
+export class ConnectionBlocks {
+    private _x: number = 0;
+    private _y: number = 0;
+    private _width: number = 0;
+    private _height: number = 0;
+
+    constructor(x: number,
+                y: number,
+                width: number,
+                height:number) {
+        this._x = x;
+        this._y = y;
+        this._width = width;
+        this._height = height;
+    }
+
+    get x(): number {
+        return this._x
+    }
+
+    get y(): number {
+        return this._y
+    }
+
+    get width(): number {
+        return this._width
+    }
+
+    get height(): number {
+        return this._height
+    }
+
 }

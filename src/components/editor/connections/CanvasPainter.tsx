@@ -3,7 +3,7 @@ import React, {FC, useEffect, useRef} from "react";
 /**
  * Возврщает конекст канвас, где будут рисоваться связи
  */
-export let contextC: CanvasRenderingContext2D
+export let contextCanvas: CanvasRenderingContext2D
 
 /**
  * Рисует канву, на которой отображаются линии-связи между блоками
@@ -15,11 +15,9 @@ export const CanvasPainter: FC =
         const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
         useEffect(() => {
-            const canvas = canvasRef.current!!
-            contextC = canvas.getContext('2d')!!
-            contextC.fillStyle = '#000000'
-        }, [])
+            contextCanvas = canvasRef.current!!.getContext('2d')!!
 
+        }, [])
 
         return (
             <canvas ref={canvasRef}{...props}/>
