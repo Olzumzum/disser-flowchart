@@ -69,9 +69,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     idNew
                 )!!)
             } else {
-                const f = checkCoordinatesBlock(id, left, top)
-                console.log("возврат " + f)
-                if (!f)
+                if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
                     changeBlocks(id, left, top)
             }
