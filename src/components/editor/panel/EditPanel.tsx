@@ -117,8 +117,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
     return (
-        <div>
-
+        <div style={{width: "80%"}}>
                 <div ref={drop} style={styles}>
                     {Object.keys(renderBlocks).map((id) =>
                         renderManager.renders(renderBlocks[Number(id)], id))}
