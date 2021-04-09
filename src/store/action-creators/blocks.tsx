@@ -10,7 +10,8 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {ConnectionManager, drawLine} from "../../components/editor/connections/ConnectionManager";
+import {contextC} from "../../components/editor/connections/CanvasPainter";
+import {drawConnectionBlocks} from "../../components/editor/connections/ConnectionBlocks";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -136,10 +137,10 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
             const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
 
             if ((left >= item.getLeft() || (left + blockWidth) >= item.getLeft()) &&
-                (left  <= item.getLeft() + blockWidth) &&
+                (left <= item.getLeft() + blockWidth) &&
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
-                (top  <= item.getTop() + blockTop)
-            ){
+                (top <= item.getTop() + blockTop)
+            ) {
                 console.log("Создать связь")
                 setNeighborsBlocks(id, item.getId()!!)
                 return true
@@ -157,10 +158,10 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
     blocks.forEach(item => {
-        if(item.getId()?.localeCompare(idOne)) itemOne = item
-        if(item.getId()?.localeCompare(idTwo)) itemTwo = item
+        if (item.getId()?.localeCompare(idOne)) itemOne = item
+        if (item.getId()?.localeCompare(idTwo)) itemTwo = item
     })
-    if(itemOne !== undefined && itemTwo !== undefined){
+    if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
@@ -168,7 +169,7 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
 
         setNeighbors(itemOne, itemTwo)
         console.log("Соседи предыдущий " + itemOne.getPreviousNeighbor() + " последующий "
-        + itemOne.getSubsequentNeighbor())
+            + itemOne.getSubsequentNeighbor())
         paintConnection()
     }
 
@@ -179,6 +180,11 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
 
+/**
+ * Рисует связи между соединяемыми блоками
+ */
 const paintConnection = () => {
-    drawLine()
+    const context = contextC
+    if (context !== null)
+        drawConnectionBlocks(context, 50, 50, 1, 15)
 }

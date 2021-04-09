@@ -9,7 +9,7 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
-import {ConnectionManager} from "../connections/ConnectionManager";
+import {CanvasPainter} from "../connections/CanvasPainter";
 
 
 const styles: CSSProperties = {
@@ -122,7 +122,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 <div ref={drop} style={styles}>
                     {Object.keys(renderBlocks).map((id) =>
                         renderManager.renders(renderBlocks[Number(id)], id))}
-                        <ConnectionManager/>
+                        <CanvasPainter/>
                 </div>
 
         </div>
