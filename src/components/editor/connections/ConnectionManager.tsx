@@ -11,23 +11,19 @@ interface ConnectionManagerProperties {
     // data: number[]
 }
 
+let contextC: CanvasRenderingContext2D
+
 export const ConnectionManager: FC<ConnectionManagerProperties> =
     props => {
 
         const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-        const draw = (ctx: CanvasRenderingContext2D) => {
-            ctx.fillStyle = '#000000'
-            ctx.beginPath()
-            ctx.arc(50, 100, 20, 0, 2 * Math.PI)
-            ctx.fill()
-        }
-
         useEffect(() => {
             const canvas = canvasRef.current!!
-            const contextC = canvas.getContext('2d')!!
+            contextC = canvas.getContext('2d')!!
             contextC.fillStyle = '#000000'
-            contextC.fillRect(0, 0, contextC.canvas.width, contextC.canvas.height)
+            // contextC.fillRect(0, 0, contextC.canvas.width, contextC.canvas.height)
+            // draw(contextC)
         }, [])
 
 
@@ -37,3 +33,16 @@ export const ConnectionManager: FC<ConnectionManagerProperties> =
             </canvas>
         )
     }
+
+const draw = (ctx: CanvasRenderingContext2D) => {
+    ctx.fillStyle = '#000000'
+    ctx.beginPath()
+    ctx.arc(50, 100, 20, 0, 2 * Math.PI)
+    ctx.fill()
+}
+
+export function drawLine() {
+    const context = contextC
+    console.log("context " + context)
+    draw(context)
+}

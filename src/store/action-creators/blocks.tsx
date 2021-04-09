@@ -10,7 +10,7 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {ConnectionManager} from "../../components/editor/connections/ConnectionManager";
+import {ConnectionManager, drawLine} from "../../components/editor/connections/ConnectionManager";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -180,5 +180,5 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
 }
 
 const paintConnection = () => {
-    return <ConnectionManager/>
+    drawLine()
 }

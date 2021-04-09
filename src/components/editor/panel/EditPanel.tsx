@@ -9,6 +9,7 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
+import {ConnectionManager} from "../connections/ConnectionManager";
 
 
 const styles: CSSProperties = {
@@ -95,7 +96,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 x: number
                 y: number
             }
-            
+
             let left = Math.round(item.left + delta.x)
             let top = Math.round(item.top + delta.y)
 
@@ -117,10 +118,13 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     return (
         <div>
-            <div ref={drop} style={styles}>
-                {Object.keys(renderBlocks).map((id) =>
-                    renderManager.renders(renderBlocks[Number(id)], id))}
-            </div>
+
+                <div ref={drop} style={styles}>
+                    {Object.keys(renderBlocks).map((id) =>
+                        renderManager.renders(renderBlocks[Number(id)], id))}
+                        <ConnectionManager/>
+                </div>
+
         </div>
     )
 }
