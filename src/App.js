@@ -2,12 +2,13 @@ import './assets/stylesheets/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import React from "react";
+import Header from "./components/Header";
 
 
 
 function App() {
   return (
-    <h>f</h>
+    <Header/>
   );
 }
 
