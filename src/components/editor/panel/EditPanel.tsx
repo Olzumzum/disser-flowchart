@@ -9,7 +9,6 @@ import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
-import {ErrorMessage} from "../error/ErrorMessage";
 
 
 const styles: CSSProperties = {
@@ -77,14 +76,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     idNew
                 )!!)
             } else {
-
                 if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
                     changeBlocks(id, left, top)
-
             }
         },
-        [blocks],
+        [addBlocks, changeBlocks, originBlocks],
     )
 
 
@@ -98,8 +95,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 x: number
                 y: number
             }
-
-
+            
             let left = Math.round(item.left + delta.x)
             let top = Math.round(item.top + delta.y)
 
@@ -108,6 +104,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             }
 
             moveBlock(item.id, left, top)
+
             return undefined
         },
     })
@@ -117,9 +114,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
-    // if(error){
-    //     return <ErrorMessage message={error}/>
-    // }
 
     return (
         <div>
