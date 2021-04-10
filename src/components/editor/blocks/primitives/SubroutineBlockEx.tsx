@@ -24,8 +24,8 @@ export class SubroutineBlock implements IBlock {
     }
 
 
-    getId(): string | undefined {
-        return undefined;
+    getId(): string {
+        return "";
     }
 
     getTypeBlock(): string {

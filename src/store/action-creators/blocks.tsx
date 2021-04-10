@@ -10,14 +10,12 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
-import {drawConnectionBlocks} from "../../components/editor/connections/drawConnection";
-import {scaleCoorConnection} from "../../components/editor/calculationCoordinats/connectionCalc";
-
+import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
 const blocks = new Array<IBlock>()
+
 
 /**
  * загрузить список всех оригинальных блоков, расположенных
@@ -185,15 +183,3 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
 
-/**
- * Нарисовать связь между блокамии
- * @param itemOne
- * @param itemTwo
- */
-const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
-    const coor: any[] | null= scaleCoorConnection(itemOne, itemTwo)
-    const context = contextCanvas
-    if (context !== null && coor !== null) {
-        drawConnectionBlocks(context, coor[0], coor[1], 50, 150)
-    }
-}

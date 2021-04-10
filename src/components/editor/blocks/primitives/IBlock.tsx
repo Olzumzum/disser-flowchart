@@ -1,6 +1,6 @@
 
 export interface IBlock {
-    getId(): string | undefined,
+    getId(): string,
     setId(id: number): void,
 
     getTitle(): string,
