@@ -16,25 +16,42 @@ const CONNECTION_COLOR = '#000000';
  */
 export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
     const context = contextCanvas
-    const coor: any[] | null= scaleCoorConnection(itemOne, itemTwo)
+    const coor: any[] | null = scaleCoorConnection(itemOne, itemTwo)
     if (context !== null && coor !== null) {
-        checkCoorBlocksByFollow(itemTwo, itemOne)
+        const result = checkCoorBlocksByFollow(itemTwo, itemOne)
+
+        if (typeof result === "boolean") console.log("boolean")
+        else if (typeof result === "object") console.log("IBlock")
+
         drawLine(context, coor[0], coor[1], 50, 150)
     }
 }
 
 
-function checkCoorBlocksByFollow(itemTwo: IBlock, itemOne: IBlock) {
-    if(itemOne !== null && itemTwo !== null){
-        const height: number = Math.abs(itemOne.getTop() - itemTwo.getTop())
-        const thresholdDistancBlocks = itemTwo.getTop() + getHeightElement(itemTwo.getId())!! + 10
-        if(height > thresholdDistancBlocks) console.log("Норм")
+function checkCoorBlocksByFollow(itemTwo: IBlock, itemOne: IBlock): IBlock | boolean {
+    if (itemOne !== null && itemTwo !== null) {
+        const heightTwoBlock = getHeightElement(itemTwo.getId())!!
+        const heightOneBlock = getHeightElement(itemOne.getId())!!
+
+        const height: number = Math.abs(itemOne.getTop() - (itemTwo.getTop()+ heightTwoBlock))
+
+        const thresholdDistancBlocks = itemTwo.getTop() - heightTwoBlock
+        console.log("he " + heightTwoBlock)
+        console.log("threshold " + thresholdDistancBlocks + " height " + height)
+        if (height > thresholdDistancBlocks) return true
         else {
             console.log("Переместить блоки")
+            const newHeightValue: number = thresholdDistancBlocks
+            itemOne.setTop(newHeightValue)
+            return itemOne
         }
     }
+    return false
 }
 
+function getNewHeight() {
+
+}
 
 
 /**
@@ -46,10 +63,10 @@ function checkCoorBlocksByFollow(itemTwo: IBlock, itemOne: IBlock) {
  * @param height - длинна линии
  */
 const drawLine = (ctx: CanvasRenderingContext2D,
-                         x: number,
-                         y: number,
-                         width: number,
-                         height: number) => {
+                  x: number,
+                  y: number,
+                  width: number,
+                  height: number) => {
     const connect = new ConnectionBlocks(x, y, CONNECTION_WIDTH, height)
 
     ctx.fillStyle = CONNECTION_COLOR
