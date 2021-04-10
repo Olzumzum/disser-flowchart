@@ -33,13 +33,18 @@ function getWidthPanel(id: string): number | null {
 function getHeightPanel(id: string): number | null {
     const element = document.getElementById(id)
     if (element != null) {
-        return Number(element.offsetHeight)
+        return Number(element.clientHeight)
     } else
         return null
 
 }
 
 export function leftCoorCanvas(y: number): number{
-    const left = y - 120
+    const documentWidth = document.documentElement.clientWidth
+    const compPanelWidth = getWidthComponentPanel()
+
+
+    const left = y + compPanelWidth!
+    console.log("scale coor " + left)
     return left
 }

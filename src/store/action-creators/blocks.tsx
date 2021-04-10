@@ -177,9 +177,9 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
 
         setNeighbors(itemOne, itemTwo)
         console.log("Соседи предыдущий " + itemOne.getTop() + " последующий "
-            + (itemOne.getLeft() - getWidthComponentPanel()!! + 20))
+            + itemOne.getLeft())
         const left = leftCoorCanvas(itemOne.getLeft())
-        paintConnection(itemOne.getTop(), 50, 150)
+        paintConnection(itemTwo.getLeft() + 10, itemTwo.getTop() + 10, 150)
     }
 
 }

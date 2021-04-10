@@ -37,7 +37,7 @@ export class RendrerManager {
 
 //отображает перетаскиваемые блоки
     render(item: any) {
-        return <DraggableBlock key={item.id} {...item} />
+        return <DraggableBlock key={item.id} {...item} style={{backdrop: "blue"}} />
     }
 
     renders(item: any, key: any) {

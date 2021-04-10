@@ -16,12 +16,16 @@ export const CanvasPainter: FC =
 
         const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+
         useEffect(() => {
             contextCanvas = canvasRef.current!!.getContext('2d')!!
+
+            contextCanvas.canvas.width = getWidthEditPanel()!!
+            contextCanvas.canvas.height = getHeightEditPanel()!!
         }, [])
 
         return (
-            <canvas ref={canvasRef}{...props}/>
+            <canvas ref={canvasRef}{...props} style={{backgroundColor: "yellow"}}/>
         )
     }
 
