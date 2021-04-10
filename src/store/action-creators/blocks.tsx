@@ -12,10 +12,7 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
 import {drawConnectionBlocks} from "../../components/editor/connections/drawConnection";
-import {
-    getWidthComponentPanel,
-    leftCoorCanvas
-} from "../../components/editor/calculationCoordinats/calculetionCoordinats";
+import {scaleCoorConnection} from "../../components/editor/calculationCoordinats/connectionCalc";
 
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
@@ -175,11 +172,10 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
         // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
 
+        //установить соседство блоков
         setNeighbors(itemOne, itemTwo)
-        console.log("Соседи предыдущий " + itemOne.getTop() + " последующий "
-            + itemOne.getLeft())
-        const left = leftCoorCanvas(itemOne.getLeft())
-        paintConnection(itemTwo.getLeft() + 10, itemTwo.getTop() + 10, 150)
+        //нарисовать связь
+        paintConnection(itemOne, itemTwo)
     }
 
 }
@@ -190,10 +186,14 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
 }
 
 /**
- * Рисует связи между соединяемыми блоками
+ * Нарисовать связь между блокамии
+ * @param itemOne
+ * @param itemTwo
  */
-const paintConnection = (x: number, y: number, height: number) => {
+const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
+    const coor: any[] | null= scaleCoorConnection(itemOne, itemTwo)
     const context = contextCanvas
-    if (context !== null)
-        drawConnectionBlocks(context, x, y, 50, 150)
+    if (context !== null && coor !== null) {
+        drawConnectionBlocks(context, coor[0], coor[1], 50, 150)
+    }
 }

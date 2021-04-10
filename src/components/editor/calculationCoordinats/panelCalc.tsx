@@ -2,6 +2,8 @@
  * изменить координаты left в зависимости от ширины
  * панели компонентов (панель с original Blocks)
  */
+import {IBlock} from "../blocks/primitives/IBlock";
+
 export function getWidthComponentPanel(): number | null {
     return getWidthPanel("component_panel")
 }
@@ -37,14 +39,4 @@ function getHeightPanel(id: string): number | null {
     } else
         return null
 
-}
-
-export function leftCoorCanvas(y: number): number{
-    const documentWidth = document.documentElement.clientWidth
-    const compPanelWidth = getWidthComponentPanel()
-
-
-    const left = y + compPanelWidth!
-    console.log("scale coor " + left)
-    return left
 }

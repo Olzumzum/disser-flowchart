@@ -10,7 +10,7 @@ import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {CanvasPainter} from "../connections/CanvasPainter";
-import {getWidthComponentPanel} from "../calculationCoordinats/calculetionCoordinats";
+import {getWidthComponentPanel} from "../calculationCoordinats/panelCalc";
 
 
 const styles: CSSProperties = {

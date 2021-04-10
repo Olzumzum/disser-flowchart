@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useRef} from "react";
-import {getHeightEditPanel, getWidthEditPanel} from "../calculationCoordinats/calculetionCoordinats";
+import {getHeightEditPanel, getWidthEditPanel} from "../calculationCoordinats/panelCalc";
 
 /**
  * Возврщает конекст канвас, где будут рисоваться связи
