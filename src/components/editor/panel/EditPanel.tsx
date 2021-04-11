@@ -8,13 +8,9 @@ import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
-import {
-    changingBlockCoor,
-    checkCoordinatesBlock,getItemTwoId, setNeighborsBlocks
-} from "../../../store/action-creators/blocks";
+import {changingBlockCoor, checkCoordinatesBlock, connectBlocksLink} from "../../../store/action-creators/blocks";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {getWidthComponentPanel} from "../calculationCoordinats/panelCalc";
-
 
 
 const styles: CSSProperties = {
@@ -48,7 +44,7 @@ const creator: IBlockFactory = new CreatorBlock()
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks, addBlocks, changingBlockCoor, setNeighborsBlocks} = useActions()
+    const {fetchBlocks, addBlocks, connectBlocksLink} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -77,12 +73,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
                     changingBlockCoor(id, left, top)
-                else {
-                    setNeighborsBlocks(id, getItemTwoId()!!)
-                }
+                else
+                    //соединяем блоки
+                    connectBlocksLink(id)
             }
         },
-        [addBlocks, changingBlockCoor],
+        [addBlocks],
     )
 
 
@@ -118,11 +114,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     return (
         <div>
-                <div id={"edit_panel"} ref={drop} style={styles}>
-                    {Object.keys(renderBlocks).map((id) =>
-                        renderManager.renders(renderBlocks[Number(id)], id))}
-                        <CanvasPainter/>
-                </div>
+            <div id={"edit_panel"} ref={drop} style={styles}>
+                {Object.keys(renderBlocks).map((id) =>
+                    renderManager.renders(renderBlocks[Number(id)], id))}
+                <CanvasPainter/>
+            </div>
 
         </div>
     )

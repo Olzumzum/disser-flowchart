@@ -124,11 +124,8 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
     }
 }
 
-let itemTwo: string | undefined
-
-export function getItemTwoId(): string | undefined {
-    return itemTwo
-}
+//id блока с которым будет создаваться связь
+let idItemTwo: string | undefined = undefined
 
 /**
  * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
@@ -152,7 +149,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
                 (top <= item.getTop() + blockTop)
             ) {
-                itemTwo = item.getId()
+                idItemTwo = item.getId()
                 flag = true
 
             }
@@ -169,12 +166,14 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
  * @param idOne - блок, идущий первым
  * @param idTwo - следующий блок
  */
-export const setNeighborsBlocks = (idOne: string, idTwo: string) => {
+export const connectBlocksLink = (idOne: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
 
+
     itemOne = getBlockById(idOne)
-    itemTwo = getBlockById(idTwo)
+    if (idItemTwo !== undefined) itemTwo = getBlockById(idItemTwo)
+    else console.log("Обработать ошибку")
 
     if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
