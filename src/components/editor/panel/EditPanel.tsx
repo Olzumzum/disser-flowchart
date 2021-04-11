@@ -44,7 +44,7 @@ const creator: IBlockFactory = new CreatorBlock()
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks, addBlocks, connectBlocksLink} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink} = useActions()
 
     useEffect(() => {
         fetchBlocks()

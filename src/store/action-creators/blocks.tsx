@@ -11,8 +11,6 @@ import {
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
-import {getHeightElement} from "../../components/editor/calculationCoordinats/elementSizeCalc";
-import {getHeightEditPanel} from "../../components/editor/calculationCoordinats/panelCalc";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -94,14 +92,14 @@ export const addBlocks = (block: IBlock) => {
  */
 export const changingBlockCoor = (id: string, left: number, top: number) => {
     let flag = false
-    blocks.forEach(item => {
-        if (!item.getId()?.localeCompare(id)) {
-            if (left !== -1) item.setLeft(left)
-            if (top !== -1) item.setTop(top)
 
-            flag = true
-        }
-    })
+    const item = getBlockById(id)
+    if (item !== undefined) {
+        if (left !== -1) item.setLeft(left)
+        if (top !== -1) item.setTop(top)
+        flag = true
+    }
+
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
@@ -138,7 +136,7 @@ let idItemTwo: string | undefined = undefined
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
     let flag = false
 
-    blocks.forEach((item,i) => {
+    blocks.forEach((item, i) => {
 
         if (!flag && item.getId()?.localeCompare(id)) {
             const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
@@ -158,7 +156,6 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
 
     return flag
 }
-
 
 
 /**
@@ -193,12 +190,20 @@ export const connectBlocksLink = (idOne: string) => {
 
 }
 
+/**
+ * Задать ссылки для двух элементов
+ * @param itemOne
+ * @param itemTwo
+ */
 const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
 
-
+/**
+ * Поиска блока по идентификатору
+ * @param id
+ */
 export function getBlockById(id: string): IBlock | undefined {
     let block: IBlock | undefined = undefined
     blocks.forEach(item => {

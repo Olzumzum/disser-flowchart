@@ -11,9 +11,9 @@ import {IBlock} from "../blocks/primitives/IBlock";
  */
 export function scaleCoorConnection(itemOne: IBlock, itemTwo: IBlock): number[] | null {
     //точка входа itemOne
-    let coorItemOne: number[] | null = getCoorFromMiddleBlock(itemOne, false)
+    let coorItemOne: number[] | null = getCoorFromMiddleBlock(itemOne, true)
     //точка входа ItemTwo
-    let coorItemTwo: number[] | null = getCoorFromMiddleBlock(itemTwo, true)
+    let coorItemTwo: number[] | null = getCoorFromMiddleBlock(itemTwo, false)
 
     //расстояние между блоками
     const height: number = Math.abs(itemTwo.getTop() - itemOne.getTop())
