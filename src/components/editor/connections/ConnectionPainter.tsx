@@ -1,10 +1,11 @@
 import {IBlock} from "../blocks/primitives/IBlock";
 import {scaleCoorConnection} from "../calculationCoordinats/connectionCalc";
 import {contextCanvas} from "./CanvasPainter";
-import {ConnectionBlocks} from "./ConnectionBlocks";
+import {LinePartConnect} from "./LinePartConnect";
 import {getHeightElement} from "../calculationCoordinats/elementSizeCalc";
 import {getHeightEditPanel} from "../calculationCoordinats/panelCalc";
 import {changingBlockCoor} from "../../../store/action-creators/blocks";
+import {ConnectionBlocks} from "./ConnectionBlocks";
 
 /** ТОЛЩИНА РИСУЕМОЙ СВЯЗИ ПО УМОЛЧАНИЮ **/
 const CONNECTION_WIDTH = 1;
@@ -24,18 +25,40 @@ export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
             " coord " + coor!![2] + " " + coor!![3])
         const height = checkCoorBlocksByFollow(itemOne, itemTwo)
 
-        if(height !== null) {
-            if (coor[0] === coor[2]) drawLine(context, coor[0], coor[1], CONNECTION_WIDTH, height)
-            else {
+        if (height !== null) {
+            if (coor[0] === coor[2]) {
+                const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, height)
+                const connection = new ConnectionBlocks([line])
+                paintMassLines(context, connection)
+
+            } else {
                 const partConnect = (height / 2) - CONNECTION_WIDTH
-                drawLine(context, coor[0], coor[1], CONNECTION_WIDTH, partConnect)
-                drawLine(context, coor[2], (coor[3] - partConnect),
-                    CONNECTION_WIDTH, partConnect)
-                drawLine(context, (coor[0]), (coor[3] - partConnect),
-                    (coor[2] - coor[0]), CONNECTION_WIDTH)
+
+                const line0: LinePartConnect =
+                    new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, partConnect)
+                const line1: LinePartConnect =
+                    new LinePartConnect(coor[2], (coor[3] - partConnect), CONNECTION_WIDTH, partConnect)
+                const line2: LinePartConnect =
+                    new LinePartConnect(coor[0], (coor[3] - partConnect), (coor[2] - coor[0]), CONNECTION_WIDTH)
+
+                const connection = new ConnectionBlocks([line0, line1, line2])
+
+                paintMassLines(context, connection)
             }
         }
     }
+}
+
+/**
+ * Рисует связь, состаящую из массива прямых
+ * @param context - контекст конвы, где рисуется связь
+ * @param connection - рисуемая связь
+ */
+function paintMassLines(context: CanvasRenderingContext2D, connection: ConnectionBlocks) {
+    const lines = connection.connection
+    lines.forEach(line => {
+        drawLine(context, line.x, line.y, line.width, line.height)
+    })
 }
 
 /**
@@ -43,7 +66,7 @@ export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
  * @param itemOne - связываемый блок
  * @param itemTwo - - связываемый блок
  */
-export const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock): number | null =>{
+export const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock): number | null => {
     if (itemTwo !== null && itemOne !== null) {
         //высота блока, от которого строится начало связи
         const heightTwoBlock = getHeightElement(itemOne.getId())!!
@@ -84,7 +107,6 @@ export const blockMovement = (block: IBlock, newCoorValue: number) => {
 }
 
 
-
 /**
  * Нарисовать прямую
  * @param ctx - конекст канвы, где происходит рисование
@@ -97,11 +119,13 @@ const drawLine = (ctx: CanvasRenderingContext2D,
                   x: number,
                   y: number,
                   width: number,
-                  height: number) => {
-    const connect = new ConnectionBlocks(x, y, width, height)
+                  height: number): LinePartConnect => {
+    const line = new LinePartConnect(x, y, width, height)
 
     ctx.fillStyle = CONNECTION_COLOR
     ctx.beginPath()
-    ctx.fillRect(connect.x, connect.y, connect.width, connect.height)
+    ctx.fillRect(line.x, line.y, line.width, line.height)
     ctx.fill()
+
+    return line
 }
