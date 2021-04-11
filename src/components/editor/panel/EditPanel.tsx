@@ -8,9 +8,10 @@ import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
-import {changingBlockCoor, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
+import {changingBlockCoor, checkCoordinatesBlock, setNeighborsBlocks} from "../../../store/action-creators/blocks";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {getWidthComponentPanel} from "../calculationCoordinats/panelCalc";
+
 
 
 const styles: CSSProperties = {
@@ -44,7 +45,7 @@ const creator: IBlockFactory = new CreatorBlock()
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, blockMovement, setNeighborsBlocks} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -69,12 +70,16 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     idNew
                 )!!)
             } else {
+                // blockMovement(blocks[1], 150)
                 if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
                     changingBlockCoor(id, left, top)
+                else {
+                    setNeighborsBlocks(id, blocks[1].getId())
+                }
             }
         },
-        [addBlocks, changingBlockCoor, originBlocks],
+        [addBlocks, changingBlockCoor],
     )
 
 

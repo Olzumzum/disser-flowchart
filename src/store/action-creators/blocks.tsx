@@ -10,7 +10,9 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {getHeightElement} from "../../components/editor/calculationCoordinats/elementSizeCalc";
+import {getHeightEditPanel} from "../../components/editor/calculationCoordinats/panelCalc";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -68,7 +70,7 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
-    return (dispatch: Dispatch<BlocksAction>) => {
+    return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             const response = blocks
             response.push(block)
@@ -104,8 +106,15 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
 }
 
 
+export const blockMovement = (block: IBlock, newCoorValue: number) => {
+    const heightOneBlock = getHeightElement(block.getId())!!
+    if (newCoorValue >= getHeightEditPanel()!!
+        || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
+    return changingBlockCoor(block.getId()!!, -1, newCoorValue)
+}
+
 export function asyncChangeCoorBlock(flag: boolean) {
-    return (dispatch: Dispatch<BlocksAction>) => {
+    return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
                 dispatch({
@@ -137,7 +146,7 @@ export function asyncChangeCoorBlock(flag: boolean) {
  */
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
     let flag = false
-    console.log("id " + id)
+
     blocks.forEach((item,i) => {
         console.log("item is " + i + " " + item.getId() + " flag " + flag)
 
@@ -150,7 +159,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
                 (top <= item.getTop() + blockTop)
             ) {
-                setNeighborsBlocks(id, item.getId())
+                // setNeighborsBlocks(id, item.getId())
                 flag = true
 
             }
@@ -165,7 +174,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
  * @param idOne - блок, идущий первым
  * @param idTwo - следующий блок
  */
-const setNeighborsBlocks = (idOne: string, idTwo: string) => {
+export const setNeighborsBlocks = (idOne: string, idTwo: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
 
@@ -174,7 +183,6 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         if (!item.getId().localeCompare(idTwo)) itemTwo = item
     })
 
-    console.log("Связываем " + itemOne?.getId() + " анд " + itemTwo?.getId())
     if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
@@ -183,9 +191,12 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
 
         //установить соседство блоков
         setNeighbors(itemOne, itemTwo)
+        checkCoorBlocksByFollow(itemOne, itemTwo)
         //нарисовать связь
-
         paintConnection(itemOne, itemTwo)
+        return async (dispatch: Dispatch<BlocksAction>) => {
+            dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
+        }
     }
 
 }

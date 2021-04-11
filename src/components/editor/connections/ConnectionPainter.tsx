@@ -3,8 +3,7 @@ import {scaleCoorConnection} from "../calculationCoordinats/connectionCalc";
 import {contextCanvas} from "./CanvasPainter";
 import {ConnectionBlocks} from "./ConnectionBlocks";
 import {getHeightElement} from "../calculationCoordinats/elementSizeCalc";
-import {getHeightEditPanel} from "../calculationCoordinats/panelCalc";
-import {changingBlockCoor} from "../../../store/action-creators/blocks";
+import {blockMovement} from "../../../store/action-creators/blocks";
 
 /** ШИРИНА РИСУЕМОЙ СВЯЗИ **/
 const CONNECTION_WIDTH = 1;
@@ -27,7 +26,7 @@ export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
 }
 
 
-const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock) =>{
+export const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock) =>{
     if (itemTwo !== null && itemOne !== null) {
         //высота блока, от которого строится начало связи
         const heightTwoBlock = getHeightElement(itemOne.getId())!!
@@ -56,12 +55,6 @@ const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock) =>{
 
 }
 
-const blockMovement = (block: IBlock, newCoorValue: number) => {
-    const heightOneBlock = getHeightElement(block.getId())!!
-    if (newCoorValue >= getHeightEditPanel()!!
-        || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
-        changingBlockCoor(block.getId()!!, -1, newCoorValue)
-}
 
 
 
