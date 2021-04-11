@@ -4,6 +4,7 @@ import {contextCanvas} from "./CanvasPainter";
 import {ConnectionBlocks} from "./ConnectionBlocks";
 import {getHeightElement} from "../calculationCoordinats/elementSizeCalc";
 import {getHeightEditPanel} from "../calculationCoordinats/panelCalc";
+import {changingBlockCoor} from "../../../store/action-creators/blocks";
 
 /** ШИРИНА РИСУЕМОЙ СВЯЗИ **/
 const CONNECTION_WIDTH = 1;
@@ -19,35 +20,35 @@ export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
     const context = contextCanvas
     const coor: any[] | null = scaleCoorConnection(itemOne, itemTwo)
     if (context !== null && coor !== null) {
-        checkCoorBlocksByFollow(itemTwo, itemOne)
+        checkCoorBlocksByFollow(itemOne, itemTwo)
 
         drawLine(context, coor[0], coor[1], 50, 150)
     }
 }
 
 
-function checkCoorBlocksByFollow(itemTwo: IBlock, itemOne: IBlock): boolean {
-    if (itemOne !== null && itemTwo !== null) {
+const checkCoorBlocksByFollow = (itemOne: IBlock, itemTwo: IBlock) =>{
+    if (itemTwo !== null && itemOne !== null) {
         //высота блока, от которого строится начало связи
-        const heightTwoBlock = getHeightElement(itemTwo.getId())!!
+        const heightTwoBlock = getHeightElement(itemOne.getId())!!
 
         //нижняя координата
-        const bottomCoorTwoBlock = itemTwo.getTop() + heightTwoBlock
+        const bottomCoorTwoBlock = itemOne.getTop() + heightTwoBlock
         //минимально допустимое расстояние между блоками
         const thresholdDistancBlocks = 10
         //новая координата блока, если он находится в неверном месте
         const newCoorValue = bottomCoorTwoBlock + thresholdDistancBlocks
 
-        if (itemOne.getTop() <= itemTwo.getTop() || itemOne.getTop() <= bottomCoorTwoBlock) {
-            blockMovement(itemOne, newCoorValue)
+        if (itemTwo.getTop() <= itemOne.getTop() || itemTwo.getTop() <= bottomCoorTwoBlock) {
+            blockMovement(itemTwo, newCoorValue)
             return true
         } else {
             //расстояние между блоками
-            const height: number = Math.abs(itemOne.getTop() - bottomCoorTwoBlock)
+            const height: number = Math.abs(itemTwo.getTop() - bottomCoorTwoBlock)
 
             if (height >= thresholdDistancBlocks) return true
             else {
-                blockMovement(itemOne, newCoorValue)
+                blockMovement(itemTwo, newCoorValue)
                 return true
             }
         }
@@ -55,17 +56,13 @@ function checkCoorBlocksByFollow(itemTwo: IBlock, itemOne: IBlock): boolean {
 
 }
 
-function blockMovement(block: IBlock, newCoorValue: number){
+const blockMovement = (block: IBlock, newCoorValue: number) => {
     const heightOneBlock = getHeightElement(block.getId())!!
-    if(newCoorValue >= getHeightEditPanel()!!
+    if (newCoorValue >= getHeightEditPanel()!!
         || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
-    changingBlockCoor(block, newCoorValue, true)
+        changingBlockCoor(block.getId()!!, -1, newCoorValue)
 }
 
-function changingBlockCoor(block: IBlock, newCoorValue: number, isTop: boolean): IBlock {
-    isTop ? block.setTop(newCoorValue) : block.setLeft(newCoorValue)
-    return block
-}
 
 
 /**

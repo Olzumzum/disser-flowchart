@@ -10,18 +10,19 @@ import {IBlock} from "../blocks/primitives/IBlock";
  * width - расстояние между блоками по оси x
  */
 export function scaleCoorConnection(itemOne: IBlock, itemTwo: IBlock): number[] | null {
+    //точка входа itemOne
+    let coorItemOne: number[] | null = getCoorFromMiddleBlock(itemOne, false)
     //точка входа ItemTwo
     let coorItemTwo: number[] | null = getCoorFromMiddleBlock(itemTwo, true)
-    //точка входа itemOne
-    let coorItemOne: number[] | null = getCoorFromMiddleBlock(itemTwo, false)
+
     //расстояние между блоками
-    const height: number = Math.abs(itemOne.getTop() - itemTwo.getTop())
-    const width: number = Math.abs(itemOne.getLeft() - itemTwo.getLeft())
+    const height: number = Math.abs(itemTwo.getTop() - itemOne.getTop())
+    const width: number = Math.abs(itemTwo.getLeft() - itemOne.getLeft())
 
     if (coorItemTwo !== null && coorItemOne !== null)
         return [
-            coorItemTwo[0], coorItemTwo[1],
-            coorItemOne[0],coorItemOne[1],
+            coorItemOne[0], coorItemOne[1],
+            coorItemTwo[0],coorItemTwo[1],
             height, width
         ]
     else return null

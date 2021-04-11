@@ -33,7 +33,7 @@ export const ErrorMessage: FC<ErrorMessageProps> = (props) => {
     let active: boolean
 
     active = error !== null;
-    console.log("active " + error)
+
     styleErrorMessage.transform = active ? 'scale(1)' : 'scale(0)';
 
     if(error){
@@ -47,15 +47,4 @@ export const ErrorMessage: FC<ErrorMessageProps> = (props) => {
         </div>
     } else return null
 
-
-    // return (
-    //     <div className={"errorMessage"} style={styleErrorMessage} onClick={() => {
-    //         active = false
-    //     }}>
-    //         <div className={"errorMessage_content"} style={styleErrorMessageContent}
-    //              onClick={e => e.stopPropagation()}>
-    //             <h3>{error}</h3>
-    //         </div>
-    //     </div>
-    // )
 }

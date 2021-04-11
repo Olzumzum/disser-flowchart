@@ -8,7 +8,7 @@ import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
-import {changeBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
+import {changingBlockCoor, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {getWidthComponentPanel} from "../calculationCoordinats/panelCalc";
 
@@ -44,7 +44,7 @@ const creator: IBlockFactory = new CreatorBlock()
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {originBlocks, blocks, loading, error} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks, addBlocks, changeBlocks} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -71,10 +71,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             } else {
                 if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
-                    changeBlocks(id, left, top)
+                    changingBlockCoor(id, left, top)
             }
         },
-        [addBlocks, changeBlocks, originBlocks],
+        [addBlocks, changingBlockCoor, originBlocks],
     )
 
 

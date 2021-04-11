@@ -90,15 +90,21 @@ export const addBlocks = (block: IBlock) => {
  * @param left значение, на которое изменится координата left
  * @param top значение, на которое изменится координата top
  */
-export const changeBlocks = (id: string, left: number, top: number) => {
+export const changingBlockCoor = (id: string, left: number, top: number) => {
     let flag = false
     blocks.forEach(item => {
         if (!item.getId()?.localeCompare(id)) {
-            item.setTop(top)
-            item.setLeft(left)
+            if (left !== -1) item.setLeft(left)
+            if (top !== -1) item.setTop(top)
+
             flag = true
         }
     })
+    return asyncChangeCoorBlock(flag)
+}
+
+
+export function asyncChangeCoorBlock(flag: boolean) {
     return (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
@@ -131,7 +137,10 @@ export const changeBlocks = (id: string, left: number, top: number) => {
  */
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
     let flag = false
-    blocks.forEach(item => {
+    console.log("id " + id)
+    blocks.forEach((item,i) => {
+        console.log("item is " + i + " " + item.getId() + " flag " + flag)
+
         if (!flag && item.getId()?.localeCompare(id)) {
             const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
             const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
@@ -141,8 +150,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
                 (top <= item.getTop() + blockTop)
             ) {
-                console.log("Создать связь")
-                setNeighborsBlocks(id, item.getId()!!)
+                setNeighborsBlocks(id, item.getId())
                 flag = true
 
             }
@@ -160,10 +168,13 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
 const setNeighborsBlocks = (idOne: string, idTwo: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
+
     blocks.forEach(item => {
-        if (item.getId()?.localeCompare(idOne)) itemOne = item
-        if (item.getId()?.localeCompare(idTwo)) itemTwo = item
+        if (!item.getId().localeCompare(idOne)) itemOne = item
+        if (!item.getId().localeCompare(idTwo)) itemTwo = item
     })
+
+    console.log("Связываем " + itemOne?.getId() + " анд " + itemTwo?.getId())
     if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
@@ -173,6 +184,7 @@ const setNeighborsBlocks = (idOne: string, idTwo: string) => {
         //установить соседство блоков
         setNeighbors(itemOne, itemTwo)
         //нарисовать связь
+
         paintConnection(itemOne, itemTwo)
     }
 
