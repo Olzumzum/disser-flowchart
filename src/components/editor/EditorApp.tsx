@@ -44,6 +44,7 @@ export const EditorApp: FC = () => {
                             <ComponentPanel/>
                         </Col>
                         <Col xs={10}>
+
                             <EditPanel snapToGrid={snapToGridAfterDrop}/>
                             <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                         </Col>
