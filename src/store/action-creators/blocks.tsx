@@ -102,18 +102,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
             flag = true
         }
     })
-    return asyncChangeCoorBlock(flag)
-}
-
-
-export const blockMovement = (block: IBlock, newCoorValue: number) => {
-    const heightOneBlock = getHeightElement(block.getId())!!
-    if (newCoorValue >= getHeightEditPanel()!!
-        || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
-    return changingBlockCoor(block.getId()!!, -1, newCoorValue)
-}
-
-export function asyncChangeCoorBlock(flag: boolean) {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
@@ -136,6 +124,12 @@ export function asyncChangeCoorBlock(flag: boolean) {
     }
 }
 
+let itemTwo: string | undefined
+
+export function getItemTwoId(): string | undefined {
+    return itemTwo
+}
+
 /**
  * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
  * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
@@ -148,7 +142,6 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
     let flag = false
 
     blocks.forEach((item,i) => {
-        console.log("item is " + i + " " + item.getId() + " flag " + flag)
 
         if (!flag && item.getId()?.localeCompare(id)) {
             const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
@@ -159,7 +152,7 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
                 (top <= item.getTop() + blockTop)
             ) {
-                // setNeighborsBlocks(id, item.getId())
+                itemTwo = item.getId()
                 flag = true
 
             }
@@ -168,6 +161,8 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
 
     return flag
 }
+
+
 
 /**
  * Задать соседство блоков
@@ -178,10 +173,8 @@ export const setNeighborsBlocks = (idOne: string, idTwo: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
 
-    blocks.forEach(item => {
-        if (!item.getId().localeCompare(idOne)) itemOne = item
-        if (!item.getId().localeCompare(idTwo)) itemTwo = item
-    })
+    itemOne = getBlockById(idOne)
+    itemTwo = getBlockById(idTwo)
 
     if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
@@ -206,3 +199,13 @@ const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
 
+
+export function getBlockById(id: string): IBlock | undefined {
+    let block: IBlock | undefined = undefined
+    blocks.forEach(item => {
+        if (!item.getId().localeCompare(id))
+            block = item
+
+    })
+    return block
+}
