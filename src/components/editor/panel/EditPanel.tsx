@@ -19,7 +19,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     return (
         <Tabs id="controlled-tab-example">
             {/*{tabs}*/}
-            {tab}
         </Tabs>
 
     )
