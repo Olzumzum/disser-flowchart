@@ -6,15 +6,17 @@ import {blockReducer} from "../../../store/reducers/blockReducer";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 import {fetchBlocks, fetchOriginalBlocks} from "../../../store/action-creators/blocks";
-import {ErrorMessage} from "../error/ErrorMessage";
 
 const styles: CSSProperties = {
-    margin: 0,
+
     float: "left",
     height: 400,
-    width: "20%",
+    width: "100%",
     backgroundColor: 'darkgray',
-    display: "flex"
+    padding: 15,
+    margin: 3,
+    marginLeft: 6,
+
 }
 
 const renderManager = new RendrerManager()
@@ -31,10 +33,6 @@ export const ComponentPanel = () => {
     if(loading){
         return <h1>Идет загрузка...</h1>
     }
-
-    // if(error){
-    //     return <ErrorMessage message={error}/>
-    // }
 
     return (
         <div id={"component_panel"} style={styles}>

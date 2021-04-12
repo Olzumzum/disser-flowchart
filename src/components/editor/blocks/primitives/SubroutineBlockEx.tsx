@@ -24,8 +24,8 @@ export class SubroutineBlock implements IBlock {
     }
 
 
-    getId(): string | undefined {
-        return undefined;
+    getId(): string {
+        return "";
     }
 
     getTypeBlock(): string {
@@ -78,4 +78,4 @@ export class SubroutineBlock implements IBlock {
 
 }
 
- const SubroutineBlockEx = new SubroutineBlock().block
+const SubroutineBlockEx = new SubroutineBlock().block

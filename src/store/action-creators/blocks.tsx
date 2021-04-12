@@ -1,6 +1,6 @@
 import {BlocksAction} from "../types/blocks";
 import {Dispatch} from "redux";
-import {BlocksActionTypes} from "../actions";
+import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 import {IBlockFactory} from "../../components/editor/blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
 import {
@@ -10,12 +10,12 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
-import {drawConnectionBlocks} from "../../components/editor/connections/drawConnection";
+import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
 const blocks = new Array<IBlock>()
+
 
 /**
  * загрузить список всех оригинальных блоков, расположенных
@@ -68,7 +68,7 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
-    return (dispatch: Dispatch<BlocksAction>) => {
+    return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             const response = blocks
             response.push(block)
@@ -90,16 +90,17 @@ export const addBlocks = (block: IBlock) => {
  * @param left значение, на которое изменится координата left
  * @param top значение, на которое изменится координата top
  */
-export const changeBlocks = (id: string, left: number, top: number) => {
+export const changingBlockCoor = (id: string, left: number, top: number) => {
     let flag = false
-    blocks.forEach(item => {
-        if (!item.getId()?.localeCompare(id)) {
-            item.setTop(top)
-            item.setLeft(left)
-            flag = true
-        }
-    })
-    return (dispatch: Dispatch<BlocksAction>) => {
+
+    const item = getBlockById(id)
+    if (item !== undefined) {
+        if (left !== -1) item.setLeft(left)
+        if (top !== -1) item.setTop(top)
+        flag = true
+    }
+
+    return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
                 dispatch({
@@ -121,6 +122,9 @@ export const changeBlocks = (id: string, left: number, top: number) => {
     }
 }
 
+//id блока с которым будет создаваться связь
+let idItemTwo: string | undefined = undefined
+
 /**
  * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
  * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
@@ -130,9 +134,11 @@ export const changeBlocks = (id: string, left: number, top: number) => {
  * @param top - координата перемещаемого блока
  */
 export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
+    let flag = false
 
-    blocks.forEach(item => {
-        if (item.getId()?.localeCompare(id)) {
+    blocks.forEach((item, i) => {
+
+        if (!flag && item.getId()?.localeCompare(id)) {
             const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
             const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
 
@@ -141,50 +147,69 @@ export const checkCoordinatesBlock = (id: string, left: number, top: number) => 
                 (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
                 (top <= item.getTop() + blockTop)
             ) {
-                console.log("Создать связь")
-                setNeighborsBlocks(id, item.getId()!!)
-                return true
+                idItemTwo = item.getId()
+                flag = true
+
             }
-
         }
-
-        return false
     })
 
-    return false
+    return flag
 }
 
-const setNeighborsBlocks = (idOne: string, idTwo: string) => {
+
+/**
+ * Задать соседство блоков
+ * @param idOne - блок, идущий первым
+ * @param idTwo - следующий блок
+ */
+export const connectBlocksLink = (idOne: string) => {
     let itemOne: IBlock | undefined
     let itemTwo: IBlock | undefined
-    blocks.forEach(item => {
-        if (item.getId()?.localeCompare(idOne)) itemOne = item
-        if (item.getId()?.localeCompare(idTwo)) itemTwo = item
-    })
+
+
+    itemOne = getBlockById(idOne)
+    if (idItemTwo !== undefined) itemTwo = getBlockById(idItemTwo)
+    else console.log("Обработать ошибку")
+
     if (itemOne !== undefined && itemTwo !== undefined) {
         //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
         // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
         // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
 
+        //установить соседство блоков
         setNeighbors(itemOne, itemTwo)
-        console.log("Соседи предыдущий " + itemOne.getTop() + " последующий "
-            + itemOne.getLeft())
-        paintConnection(itemOne.getTop(), 259, 0)
+        checkCoorBlocksByFollow(itemOne, itemTwo)
+        //нарисовать связь
+        paintConnection(itemOne, itemTwo)
+        return async (dispatch: Dispatch<BlocksAction>) => {
+            dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
+        }
     }
 
 }
 
+/**
+ * Задать ссылки для двух элементов
+ * @param itemOne
+ * @param itemTwo
+ */
 const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
     itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
     itemTwo.setPreviousNeighbor(itemOne.getId()!!)
 }
 
 /**
- * Рисует связи между соединяемыми блоками
+ * Поиска блока по идентификатору
+ * @param id
  */
-const paintConnection = (x: number, y: number, height: number) => {
-    const context = contextCanvas
-    if (context !== null)
-        drawConnectionBlocks(context, x, y, 50, 150)
+export function getBlockById(id: string): IBlock | undefined {
+    let block: IBlock | undefined = undefined
+    blocks.forEach(item => {
+        if (!item.getId().localeCompare(id))
+            block = item
+
+    })
+    return block
 }

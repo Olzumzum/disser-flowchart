@@ -1,5 +1,5 @@
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {BlocksActionTypes} from "../actions";
+import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 
 //все, что может прийти о загрузке блоков
 export interface BlockState {
