@@ -1,13 +1,13 @@
 import {EditTabsActionTypes} from "../actions/EditTabActionTypes";
 
 export interface EditTabsState {
-    tabs: string | null,
+    tabs: any[],
     error: string | null
 }
 
 interface FetchEditTabs {
     type: EditTabsActionTypes.FETCH_EDIT_TABS,
-    payload: string | null,
+    payload: any[],
 }
 
 interface FetchEditTabsError {
@@ -15,6 +15,12 @@ interface FetchEditTabsError {
     payload: string | null
 }
 
+interface AddEditTab {
+    type: EditTabsActionTypes.ADD_EDIT_TAB,
+    payload: any,
+}
+
 export type EditTabsAction =
     FetchEditTabs
     | FetchEditTabsError
+    | AddEditTab

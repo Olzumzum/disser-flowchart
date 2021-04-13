@@ -1,6 +1,9 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/block.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
+import {addEditTab} from "../../../../store/action-creators/editTabs";
+import {EditPanel} from "../../panel/EditPanel";
+
 
 /**
  * Родитель всех блоков
@@ -77,7 +80,9 @@ export class ParentBlock implements StyleBlockBuilder {
 
     //двойное нажатие
     dbclick(e: React.MouseEvent<HTMLElement>) {
-        console.log("dbclick " + e.currentTarget.id)
+        // console.log("dbclick " + e.currentTarget.id)
+        // addEditTab()
+
     }
 
     get id(): string | undefined {

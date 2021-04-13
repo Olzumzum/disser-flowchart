@@ -4,7 +4,7 @@ import {editTabsReducer} from "./editTabsReducer";
 
 export const rootReducer = combineReducers({
     blocks: blockReducer,
-    // tabs: editTabsReducer
+    tabs: editTabsReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>
