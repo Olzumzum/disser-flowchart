@@ -28,6 +28,8 @@ export class CreatorBlock implements IBlockFactory {
 
     }
 
+
+
     getOriginBlock(): Array<IBlock> {
 
         return [
@@ -35,4 +37,20 @@ export class CreatorBlock implements IBlockFactory {
             new ConditionBlockParent("1", 0, 65)
         ]
     }
+}
+
+export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | undefined {
+
+    // let s: string = ""
+    // if (typeof typeBlock === 'symbol') {
+    //     s = typeBlock.toString()
+    // } else {
+    //     if (typeof typeBlock === 'string')
+    //         s = typeBlock
+    // }
+    // switch (typeBlock){
+    //     case BlockTypes.CONDITION:
+            return new ConditionBlockParent("preview", 0, 0)
+
+    // }
 }
