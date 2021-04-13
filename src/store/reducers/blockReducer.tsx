@@ -1,4 +1,4 @@
-import {BlocksActionTypes} from "../actions";
+import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 import {BlocksAction, BlockState} from "../types/blocks";
 
 

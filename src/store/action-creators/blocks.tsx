@@ -1,6 +1,6 @@
 import {BlocksAction} from "../types/blocks";
 import {Dispatch} from "redux";
-import {BlocksActionTypes} from "../actions";
+import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 import {IBlockFactory} from "../../components/editor/blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
 import {

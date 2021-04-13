@@ -8,7 +8,7 @@ import {DraggableBlock} from "./DraggableBlock";
  */
 
 export interface BlockMap1
-    {top: number; left: number; title: string, typeBlock: string, id: string }
+{top: number; left: number; title: string, typeBlock: string, id: string }
 
 
 export class RendrerManager {
@@ -24,11 +24,11 @@ export class RendrerManager {
             convertBlocks.push(
                 {
 
-                        id: item.getId()!.toString(),
-                        title: item.getTitle(),
-                        left: item.getLeft(),
-                        top: item.getTop(),
-                        typeBlock: item.getTypeBlock(),
+                    id: item.getId()!.toString(),
+                    title: item.getTitle(),
+                    left: item.getLeft(),
+                    top: item.getTop(),
+                    typeBlock: item.getTypeBlock(),
 
                 })
         })

@@ -27,8 +27,8 @@ export class ConditionBlockParent implements IBlock {
     //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
 
-            this.parentBlock.blockBackImg(blockImage)
-            this._blockCondInstance = this.parentBlock.blockInstance
+        this.parentBlock.blockBackImg(blockImage)
+        this._blockCondInstance = this.parentBlock.blockInstance
 
         return this._blockCondInstance!!;
     }
@@ -50,7 +50,7 @@ export class ConditionBlockParent implements IBlock {
     render(): JSX.Element {
 
         return <this.block title={this.title}
-                               left={this.parentBlock.left} top={this.parentBlock.top}/>;
+                           left={this.parentBlock.left} top={this.parentBlock.top}/>;
     }
 
     getTitle(): string {

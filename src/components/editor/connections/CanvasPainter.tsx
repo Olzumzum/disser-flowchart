@@ -4,7 +4,7 @@ import {getHeightEditPanel, getWidthEditPanel} from "../calculationCoordinats/pa
 /**
  * Возврщает конекст канвас, где будут рисоваться связи
  */
-export let contextCanvas: CanvasRenderingContext2D
+export let contextCanvas: CanvasRenderingContext2D | null
 
 /**
  * Рисует канву, на которой отображаются линии-связи между блоками
@@ -28,6 +28,7 @@ export const CanvasPainter: FC =
             <canvas ref={canvasRef}{...props} style={{backgroundColor: "yellow"}}/>
         )
     }
+
 
 /**
  * Очистить канву
