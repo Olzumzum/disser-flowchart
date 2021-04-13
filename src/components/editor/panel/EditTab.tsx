@@ -12,7 +12,6 @@ import {generateId} from "./EditPanel";
 import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
-import {IBlock} from "../blocks/primitives/IBlock";
 import {Tab} from "react-bootstrap";
 
 
@@ -33,15 +32,15 @@ interface EditTabProps {
 }
 
 
-//приводит получаемые объекты к виду, пригодному для отображения
-const renderManager = new RendrerManager()
-//создает новые блоки
-const creator: IBlockFactory = new CreatorBlock()
-
 export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
+    //приводит получаемые объекты к виду, пригодному для отображения
+    const renderManager = new RendrerManager()
+//создает новые блоки
+    const creator: IBlockFactory = new CreatorBlock()
+
     const {originBlocks, blocks, loading} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
-    const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink, addEditTab} = useActions()
 
 
     useEffect(() => {
@@ -80,6 +79,7 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
     )
 
 
+
     /**
      * реакция на dnd
      */
@@ -110,7 +110,7 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
 
     return (
 
-        <div id={"edit_panel"} ref={drop} style={styles}>
+        <div id={"edit_panel"} ref={drop} style={styles} onDoubleClick={addEditTab}>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
@@ -119,10 +119,10 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
     )
 }
 
-export function createEditTab(idBlock: string): JSX.Element {
+export function createEditTab(idTab: string): JSX.Element {
     const editTab = <EditTab snapToGrid/>
     return (
-        <Tab eventKey={idBlock} title={idBlock}>
+        <Tab eventKey={idTab} title={idTab}>
             {editTab}
         </Tab>
     )

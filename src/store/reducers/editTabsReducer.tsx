@@ -2,7 +2,7 @@ import {EditTabsAction, EditTabsState} from "../types/editTabs";
 import {EditTabsActionTypes} from "../actions/EditTabActionTypes";
 
 const initialState: EditTabsState = {
-    tabs: null,
+    tabs: [],
     error: null
 }
 
@@ -14,5 +14,9 @@ export const editTabsReducer = (state: EditTabsState = initialState,
             return {...state, tabs: action.payload};
         case EditTabsActionTypes.FETCH_EDOT_TABS_ERROR:
             return {...state, error: action.payload}
+        case EditTabsActionTypes.ADD_EDIT_TAB:
+            return{...state}
+        default:
+        return {...state}
     }
 }

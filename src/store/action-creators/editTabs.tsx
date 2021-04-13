@@ -4,7 +4,7 @@ import {EditTabsActionTypes} from "../actions/EditTabActionTypes";
 import {DATA_LOADING_ERROR} from "../../assets/errorMessadges";
 import {createEditTab} from "../../components/editor/panel/EditTab";
 
-const tab =  createEditTab("id block")
+const tabs = Array<any>(createEditTab("Main tab"))
 
 
 export const fetchEditTabs =() => {
@@ -12,7 +12,7 @@ export const fetchEditTabs =() => {
         try {
             dispatch({
                 type: EditTabsActionTypes.FETCH_EDIT_TABS,
-                payload: null
+                payload: tabs
             })
             dispatch({
                 type: EditTabsActionTypes.FETCH_EDOT_TABS_ERROR,
@@ -23,6 +23,23 @@ export const fetchEditTabs =() => {
                 type: EditTabsActionTypes.FETCH_EDOT_TABS_ERROR,
                 payload: DATA_LOADING_ERROR,
             })
+        }
+    }
+}
+
+export const addEditTab = () => {
+    return async (dispatch: Dispatch<EditTabsAction>) => {
+        try {
+            const tab =  createEditTab("Tab " + tabs.length)
+            tabs.push(tab)
+
+            dispatch({
+                type: EditTabsActionTypes.ADD_EDIT_TAB,
+                payload: tab
+            })
+
+        }catch (e){
+
         }
     }
 }

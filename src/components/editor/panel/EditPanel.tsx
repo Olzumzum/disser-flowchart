@@ -1,6 +1,9 @@
-import {FC} from "react";
+import {FC, useEffect} from "react";
 import {Tabs} from "react-bootstrap";
-import {createEditTab} from "./EditTab";
+
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
+import {EditTabsState} from "../../../store/types/editTabs";
 
 export interface EditPanelProps {
     snapToGrid: boolean
@@ -11,15 +14,25 @@ export function generateId(): string {
     return `f${(~~(Math.random() * 1e8)).toString(16)}`
 }
 
-const tab = createEditTab("index")
+export let superFlag: boolean = false
+export function suFlag(){
+    superFlag = true
+
+}
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    // const {tabs, error} = blocksTypedSelector(state => state.tabs)
-    // const {} = useActions()
+    const {tabs} = blocksTypedSelector(state => state.tabs)
+    const {fetchEditTabs, addEditTab} = useActions()
+
+    useEffect(() => {
+        fetchEditTabs()
+    }, [])
+
+
+
     return (
-        <Tabs id="controlled-tab-example">
-            {/*{tabs}*/}
-            {tab}
+        <Tabs id="controlled-tab-example" defaultActiveKey={"Main tab"}>
+            {tabs}
         </Tabs>
 
     )

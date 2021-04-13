@@ -100,6 +100,8 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
         flag = true
     }
 
+
+
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
