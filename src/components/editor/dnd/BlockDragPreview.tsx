@@ -1,4 +1,5 @@
-import {CSSProperties, FC, memo, useEffect, useState} from "react";
+import {CSSProperties, FC, useEffect, useState} from "react";
+import {getPreviewBlock} from "../blocks/factory/CreatorBlock";
 
 /**
  * Рисует блок при dnd
@@ -11,28 +12,29 @@ const styles: CSSProperties = {
 
 export interface BlockDragPreviewProps {
     title: string
-    typeBlock: string
+    typeBlock: string | symbol | null
 }
 
-export const BlockDragPreview: FC<BlockDragPreviewProps> = memo(({title}, {typeBlock}) => {
-        const [tickTock, setTickTock] = useState(false)
+export const BlockDragPreview: FC<BlockDragPreviewProps> = (props) => {
+    const [tickTock, setTickTock] = useState(false)
+    const {typeBlock} = props
 
-        useEffect(
-            function subscribeToIntervalTick() {
-                const interval = setInterval(() => setTickTock(!tickTock), 500)
-                return () => clearInterval(interval)
-            },
-            [tickTock]
-        )
+    useEffect(
+        function subscribeToIntervalTick() {
+            const interval = setInterval(() => setTickTock(!tickTock), 500)
+            return () => clearInterval(interval)
+        },
+        [tickTock]
+    )
 
 
+    return (
+        <div style={styles}>
+            {getPreviewBlock(typeBlock)?.render()}
 
-        return (
-            <div style={styles}>
-                {/*<SubroutineBlockEx title={typeBlock} yellow={tickTock} left={0} top={0}/>*/}
-            </div>
-        )
-    }
-)
+        </div>
+    )
+}
+
 
 
