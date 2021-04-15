@@ -5,7 +5,7 @@ export function load_file(){
 
 //Чтение файла пользователя
 export function read_file(){
-    debugger
+    //debugger
     let text = "";
     let file = document.getElementById("uploaded_file").files[0];
     let file_name = file.name;
@@ -22,5 +22,8 @@ export function read_file(){
 
 // Обработка выбранного файла - преобразование во внутренний формат
 function compile_in(text){
-    alert(text);
+    var lines = text.split('\n');
+    for (var line=0; line < lines.length; line++){
+        alert(lines[line]);
+    }
 }
