@@ -5,7 +5,7 @@ import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {CONVERT_PROMPT} from "../../../../assets/strings/editor_strings";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import {renderTooltip} from "../../prompt/block_prompt";
+import {renderConvertPrompt} from "../../prompt/block_prompt";
 
 
 
@@ -79,23 +79,17 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                 <OverlayTrigger
                 placement={"right"}
                 delay={{ show: 250, hide: 400 }}
-                overlay={renderTooltip}>
+                overlay={renderConvertPrompt}>
                     <div
                         id={this._id}
                         style={{...this.style, background}}
                         onDoubleClick={this.dbclick}
-                        onMouseOver={this.showPrompt}
-
                     >
                         {title}
                     </div>
                  </OverlayTrigger>
             )
         }
-    }
-
-    showPrompt() {
-        return <h5>{CONVERT_PROMPT}</h5>
     }
 
     //одинарное нажатие
