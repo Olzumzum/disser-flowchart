@@ -8,9 +8,10 @@ import {
     DATA_INSERTION_ERROR,
     DATA_LOADING_ERROR,
     ERROR_ADDING_BLOCK
-} from "../../assets/errorMessadges";
+} from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
 
 const creatorBlocks: IBlockFactory = new CreatorBlock()
 const originalBlocks = creatorBlocks.getOriginBlock()
@@ -41,6 +42,7 @@ export const fetchOriginalBlocks = () => {
 }
 
 /**
+ *
  * загрузить список всех добавленных на панель редактирования блоков
  *
  */
@@ -76,6 +78,7 @@ export const addBlocks = (block: IBlock) => {
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
+            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK

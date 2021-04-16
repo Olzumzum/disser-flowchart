@@ -8,7 +8,7 @@ import {BlockTypes} from "./BlockTypes";
 export class ConditionBlockParent implements IBlock {
 
     //родитель всех блоков, общие методы
-    private parentBlock: ParentBlock = new ParentBlock()
+    // private parentBlock: ParentBlock = new ParentBlock()
     //экземпляр класса
     private _blockCondInstance: FC<BlockProps> | undefined
     private title = "Condition"
@@ -18,23 +18,23 @@ export class ConditionBlockParent implements IBlock {
         left: number,
         top: number
     ) {
-        this.parentBlock.id = id
-        this.parentBlock.left = left
-        this.parentBlock.top = top
+        // this.parentBlock.id = id
+        // this.parentBlock.left = left
+        // this.parentBlock.top = top
     }
 
 
     //вернуть экземпляр класса
     get block(): React.FC<BlockProps> {
 
-        this.parentBlock.blockBackImg(blockImage)
-        this._blockCondInstance = this.parentBlock.blockInstance
+        // this.parentBlock.blockBackImg(blockImage)
+        // this._blockCondInstance = this.parentBlock.blockInstance
 
         return this._blockCondInstance!!;
     }
 
     getId(): string {
-        return this.parentBlock.id!!;
+        return "this.parentBlock.id!!";
     }
 
     getTypeBlock(): string {
@@ -49,8 +49,8 @@ export class ConditionBlockParent implements IBlock {
 
     render(): JSX.Element {
 
-        return <this.block title={this.title}
-                           left={this.parentBlock.left} top={this.parentBlock.top}/>;
+        return <this.block title={this.title}/>
+                           // left={this.parentBlock.left} top={this.parentBlock.top}/>;
     }
 
     getTitle(): string {
@@ -58,36 +58,41 @@ export class ConditionBlockParent implements IBlock {
     }
 
     getLeft(): number {
-        return this.parentBlock.left;
+        // return this.parentBlock.left;
+        return 0;
     }
 
     getTop(): number {
-        return this.parentBlock.top;
+        // return this.parentBlock.top;
+return 0;
     }
 
     setLeft(left: number): void {
-        this.parentBlock.left = left;
+        // this.parentBlock.left = left;
     }
 
     setTop(top: number): void {
-        this.parentBlock.top = top;
+        // this.parentBlock.top = top;
     }
 
     setPreviousNeighbor(id: string): void {
-        this.parentBlock.prevBlock = id
+        // this.parentBlock.prevBlock = id
     }
 
     setSubsequentNeighbor(id: string): void {
-        this.parentBlock.nextBlock = id
+        // this.parentBlock.nextBlock = id
     }
 
     getPreviousNeighbor(): string {
-        return this.parentBlock.prevBlock;
+        // return this.parentBlock.prevBlock;
+return ""
     }
 
     getSubsequentNeighbor(): string {
-        return this.parentBlock.nextBlock;
+        // return this.parentBlock.nextBlock;
+        return ""
     }
+
 
 
 }

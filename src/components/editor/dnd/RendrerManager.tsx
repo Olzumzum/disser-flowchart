@@ -7,7 +7,7 @@ import {DraggableBlock} from "./DraggableBlock";
  * для отображения
  */
 
-export interface BlockMap1
+export interface BlockMap
 {top: number; left: number; title: string, typeBlock: string, id: string }
 
 
@@ -18,9 +18,10 @@ export class RendrerManager {
      * @param blocks
      */
 
-    convert(blocks: Array<IBlock>): Array<BlockMap1> {
-        let convertBlocks = new Array<BlockMap1>()
+    convert(blocks: Array<IBlock>): Array<BlockMap> {
+        let convertBlocks = new Array<BlockMap>()
         blocks.forEach(item => {
+            console.log(item)
             convertBlocks.push(
                 {
 

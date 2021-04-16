@@ -41,7 +41,7 @@ export const EditorApp: FC = () => {
                     </Row>
                     <Row>
                         <Col xs={2}>
-                            <ComponentPanel/>
+                            {/*<ComponentPanel/>*/}
                         </Col>
                         <Col xs={10}>
 

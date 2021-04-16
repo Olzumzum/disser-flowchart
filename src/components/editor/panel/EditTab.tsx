@@ -1,6 +1,6 @@
 import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter} from "../connections/CanvasPainter";
-import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
+import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {getWidthComponentPanel} from "../calculationCoordinats/panelCalc";
 import {checkCoordinatesBlock} from "../../../store/action-creators/blocks";
@@ -13,6 +13,8 @@ import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {Tab} from "react-bootstrap";
+import {BlockTypes} from "../blocks/primitives/BlockTypes";
+import {START_TITLE} from "../../../assets/strings/editor_strings";
 
 
 const styles: CSSProperties = {
@@ -39,7 +41,7 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
     const creator: IBlockFactory = new CreatorBlock()
 
     const {originBlocks, blocks, loading} = blocksTypedSelector(state => state.blocks)
-    let renderBlocks: Array<BlockMap1> = renderManager.convert(blocks)
+    let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink, addEditTab} = useActions()
 
 
@@ -79,7 +81,6 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
     )
 
 
-
     /**
      * реакция на dnd
      */
@@ -104,11 +105,30 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
         },
     })
 
+    const createBlock = () => {
+        let idNew: string = generateId()
+        addBlocks(creator.createBlock(
+            BlockTypes.BLOCK,
+            150,
+            150,
+            idNew
+        )!!)
+        console.log(blocks.length)
+    }
+
     if (loading) {
         return <h1>Идет загрузка...</h1>
     }
 
-    return (
+    if (blocks.length === 0)
+        return (
+            <div style={styles} onClick={createBlock}>
+                <h4>
+                    {START_TITLE}
+                </h4>
+            </div>
+        )
+    else return (
 
         <div id={"edit_panel"} ref={drop} style={styles} onDoubleClick={addEditTab}>
             {Object.keys(renderBlocks).map((id) =>

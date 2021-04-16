@@ -1,7 +1,7 @@
 import {CSSProperties, useEffect} from "react";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
-import {BlockMap1, RendrerManager} from "../dnd/RendrerManager";
+import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blockReducer} from "../../../store/reducers/blockReducer";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
@@ -23,7 +23,7 @@ const renderManager = new RendrerManager()
 
 export const ComponentPanel = () => {
     const {originBlocks, loading, error} = blocksTypedSelector(state => state.blocks)
-    let fd: Array<BlockMap1> = renderManager.convert(originBlocks)
+    let fd: Array<BlockMap> = renderManager.convert(originBlocks)
     const {fetchOriginalBlocks} = useActions()
 
     useEffect(() => {

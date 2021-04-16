@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
 import {EditTabsAction} from "../types/editTabs";
 import {EditTabsActionTypes} from "../actions/EditTabActionTypes";
-import {DATA_LOADING_ERROR} from "../../assets/errorMessadges";
+import {DATA_LOADING_ERROR} from "../../assets/strings/errorMessadges";
 import {createEditTab} from "../../components/editor/panel/EditTab";
 
 const tabs = Array<any>(createEditTab("Main tab"))
