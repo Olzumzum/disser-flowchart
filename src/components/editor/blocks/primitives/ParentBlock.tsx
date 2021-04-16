@@ -1,10 +1,12 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
-import {addEditTab} from "../../../../store/action-creators/editTabs";
-import {EditPanel} from "../../panel/EditPanel";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
+import {CONVERT_PROMPT} from "../../../../assets/strings/editor_strings";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import {renderTooltip} from "../../prompt/block_prompt";
+
 
 
 /**
@@ -59,7 +61,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                 top: number) {
         this._id = id
         this._left = left
-        this._top =top
+        this._top = top
     }
 
     //создать экземпляр
@@ -73,14 +75,27 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
             this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
-            return <div
-                id={this._id}
-                style={{...this.style, background}}
-                onDoubleClick={this.dbclick}
-            >
-                {title}
-            </div>
+            return (
+                <OverlayTrigger
+                placement={"right"}
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}>
+                    <div
+                        id={this._id}
+                        style={{...this.style, background}}
+                        onDoubleClick={this.dbclick}
+                        onMouseOver={this.showPrompt}
+
+                    >
+                        {title}
+                    </div>
+                 </OverlayTrigger>
+            )
         }
+    }
+
+    showPrompt() {
+        return <h5>{CONVERT_PROMPT}</h5>
     }
 
     //одинарное нажатие
@@ -122,7 +137,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._prevBlock;
     }
 
-    getSubsequentNeighbor(): string| undefined{
+    getSubsequentNeighbor(): string | undefined {
         return this._nextBlock;
     }
 
@@ -142,7 +157,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     render(): JSX.Element {
         this.blockBackImg(blockImage)
         return <this.blockInstance title={this._typeBlock}
-                           left={this._left} top={this._top}/>;
+                                   left={this._left} top={this._top}/>;
 
 
     }
@@ -164,3 +179,5 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 
 }
+
+
