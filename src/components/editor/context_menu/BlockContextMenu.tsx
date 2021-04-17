@@ -1,30 +1,36 @@
-import {FC} from "react";
+import {Component, CSSProperties, FC} from "react";
 
 import {Fade, Menu, MenuItem} from "@material-ui/core";
 
-
-interface BlockContextMenuProps{
-
+type BlockContextMenuProps = {
+    style: CSSProperties
 }
 
-export const handleClose = () =>{
-
+let styleMenu: CSSProperties = {
+    display: "none"
 }
 
-export const BlockContextMenu: FC<BlockContextMenuProps> = (props) => {
+export class BlockContextMenu extends Component<any, BlockContextMenuProps> {
 
-    return (
-        <Menu
-            id="fade-menu"
-            // anchorEl=anchorEl
-            keepMounted
-            open
-            onClose={handleClose}
-            TransitionComponent={Fade}>
 
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
-        </Menu>
-    )
+    constructor(props: BlockContextMenuProps) {
+        super(props);
+        this.state = {
+            style: styleMenu
+        }
+    }
+
+    show(){
+        this.state.style.display = "flex"
+    }
+
+    render() {
+        return (
+            <div id="myDropdown" className="dropdown-content" style={this.state.style}>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        )
+    }
 }

@@ -5,8 +5,8 @@ import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-import {handleClose} from "../../context_menu/BlockContextMenu";
-import {Fade, Menu, MenuItem} from "@material-ui/core";
+import {BlockContextMenu} from "../../context_menu/BlockContextMenu";
+
 
 
 /**
@@ -25,6 +25,11 @@ export interface BlockProps {
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
+}
+
+const ContMenu = <BlockContextMenu/>
+const changeStyle: CSSProperties = {
+    display: "flex"
 }
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
@@ -90,28 +95,19 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         {title}
                     </div>
                  </OverlayTrigger>
-
-            {/*<Menu*/}
-            {/*    id="fade-menu"*/}
-            {/*    // anchorEl=anchorEl*/}
-            {/*    keepMounted*/}
-            {/*    open*/}
-            {/*    onClose={handleClose}*/}
-            {/*    TransitionComponent={Fade}>*/}
-
-            {/*    <MenuItem onClick={handleClose}>Profile</MenuItem>*/}
-            {/*    <MenuItem onClick={handleClose}>My account</MenuItem>*/}
-            {/*    <MenuItem onClick={handleClose}>Logout</MenuItem>*/}
-            {/*</Menu>*/}
+                    {ContMenu}
                 </div>
             )
         }
     }
 
+
+
     mouseDownClick(e: React.MouseEvent<HTMLElement>){
         if (e.button === 2) {
-            console.log("правая")
-            return
+            console.log("здесь")
+            const element = document.getElementById("myDropdown")!!;
+            ContMenu.props = changeStyle
         }
     }
 
