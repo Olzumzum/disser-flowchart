@@ -7,7 +7,6 @@ export function load_file(){
 
 //Чтение файла пользователя
 export function read_file(){
-    //debugger
     let text = "";
     let file = document.getElementById("uploaded_file").files[0];
     let file_name = file.name;
@@ -25,49 +24,35 @@ export function read_file(){
 // Обработка выбранного файла - преобразование во внутренний формат
 function compile_in(text) {
     text = text.replaceAll('\t','');
-    alert (text);
+    // alert (text);
     var lines = text.split('\n'); //делим файл на строки
     for (var line = 0; line < lines.length; line++) { // перебор строк
-        for (var i = 0; i < constructions_list.length; i++) { //поиск языковых конструкций в строке
-            if (search_result(lines[line], constructions_list[i])) { //ЯК найдена
-                var str="";
-                var block = search_block(lines, line);
-                if (block[0].line != block[1].line) { // если блок в {...}
-                    str = lines[block[0].line].substring(block[0].pos + 1, lines[block[0].line].length);
-                    for (var y = block[0].line + 1; y < block[1].line; y++)
-                        str += lines[y];
-                    str += lines[block[1].line].substring(0, block[1].pos-1);
-                } else
-                    str = lines[block[0].line].substring(block[0].pos, block[1].pos);
-                alert("Тело конструкции " + constructions_list[i] + ": " + str);
-               /* for (var y = 0; y< block.length; y++)
-                    for (var z = 0; z<block[y].length; z++)
-                        alert(block[y][z]);
-
-                */
-            }
+        //поиск языковых конструкций в строке
+        if (search_construction_result(lines, line)) { //ЯК найдена
+            var str="";
+            var constr_arr = search_construction(lines, line);
+            var block = search_block(lines, line, constr_arr);
+            if (block[0].line != block[1].line) { // если блок в {...}
+                str = lines[block[0].line].substring(block[0].pos, lines[block[0].line].length);
+                for (var y = block[0].line + 1; y < block[1].line; y++)
+                    str += lines[y];
+                str += lines[block[1].line].substring(0, block[1].pos);
+            } else
+                str = lines[block[0].line].substring(block[0].pos, block[1].pos);
+            alert("Тело конструкции: " +  str);
+            line = block[1].line;
         }
-
-
-        /*
-      var words;
-      var lines = text.split('\n'); //делим файл на строки
-      for (var line=0; line < lines.length; line++){
-          words = lines[line].split(" "); //делим строки на слова
-          for (var word=0; word < words.length; word++)
-              alert(words[word]);
-      }
-       */
     }
 }
 
+//функция нахождения позиции символа в тексте
 function search(text, c, i) {
     if (typeof i !== "undefined"){
         return text.indexOf(c,i);
     } else
         return  text.indexOf(c);
 }
-
+//функция нахождения символа в тексте
 function search_result(text, c, i){
     if (typeof i !== "undefined") {
         if (search(text, c, i) != -1)
@@ -75,22 +60,42 @@ function search_result(text, c, i){
         else
             return false;
     }else
-        if (search(text, c) != -1)
+    if (search(text, c) != -1)
+        return true;
+    else
+        return false;
+}
+
+function search_construction_result(lines, line){
+    for (var i=0; i<constructions_list.length; i++){
+        if (search_result(lines[line], constructions_list[i])){
             return true;
-        else
-            return false;
+        }
+    }
+    return false;
+}
+
+function search_construction(lines, line){
+    var start_pos, end_pos;
+    for (var i=0; i<constructions_list.length; i++){
+        if (search_result(lines[line], constructions_list[i])){
+            start_pos = search(lines[line], constructions_list[i]);
+            end_pos = start_pos + constructions_list[i].length;
+            return [end_pos, constructions_list[i]];
+        }
+    }
+    return false;
 }
 
 //фнкция поиска блока ЯК
-function search_block(lines, line) {
-    var nested_constructions_numb = 0; //кол-во вложденных конструкций
+function search_block(lines, line, const_arr) {
+    var nested_constructions_numb = 0; //кол-во вложенных конструкций
     var block_start, block_end = {};
     var type;//тип написания блока
 
-
-    if (search_result(lines[line],'{')) //после ключевого слова ЯК указывается '{'
+    if (search_result(lines[line],'{', const_arr[0])) //после ключевого слова ЯК указывается '{'
         type = 1;
-    else if ((search_result(lines[line+1],'{')) && (search(lines[line+1],'{')<1)) { // '{' указывается на следующей строке после ключевого слова
+    else if ((search_result(lines[line+1],'{') && (search(lines[line+1],'{')<1))) { // '{' указывается на следующей строке после ключевого слова
         type = 1;
         line++;
     }
@@ -100,8 +105,8 @@ function search_block(lines, line) {
     switch (type){
         case 1:
             //объект хранения координат начала блока
-                block_start = {
-                pos: search(lines[line], '{'),
+            block_start = {
+                pos: search(lines[line], '{')+1,
                 line: line
             };
             if (!search_result(lines[line], '}', block_start.pos)) { //если блок записан в разные строки
@@ -126,7 +131,7 @@ function search_block(lines, line) {
                     }
                 }
                 block_end = {
-                    pos: pos_end_block,
+                    pos: pos_end_block-1,
                     line: line
                 }
                 return [block_start, block_end];
@@ -141,9 +146,9 @@ function search_block(lines, line) {
             break;
         case 2:
             //поиск блока на следующей строке
-            if (!search_result(lines[line],';')){
+            if (!search_result(lines[line],';', lines[line].length - 2)){
                 line++;
-                if(search_result(lines[line],';')) {
+                if(search_result(lines[line],';', lines[line].length - 2)) {
                     block_start = {
                         pos: 0,
                         line: line
@@ -152,20 +157,24 @@ function search_block(lines, line) {
                         pos: search(lines[line],';')+1,
                         line: line
                     }
-                } else {
-                    //написать функцию по поиску новой языковой конструкции
-                    block_start = {
-                        pos: 0,
-                        line: line
-                    };
-                    block_end = {
-                        pos: search(lines[line],';')+1,
-                        line: line
+                } else { //если в строке использована ЯК
+                    if(search_construction_result(lines, line)){
+                        var tmp2 = search_construction(lines,line);
+                        var tmp = search_block(lines, line, tmp2);
+                        block_start = {
+                            pos: 0,
+                            line: line
+                        };
+                        block_end = {
+                            pos: tmp[1].pos,
+                            line: tmp[1].line
+                        }
                     }
+
                 }
             } else{  //поиск блока в одной строке c ключевым словом
                 block_start = {
-                    pos: search(lines[line],')')+1,
+                    pos: search(lines[line],')'),
                     line: line
                 };
                 block_end = {
@@ -178,16 +187,5 @@ function search_block(lines, line) {
             break;
         default:
             alert("Ошибка написания языковой конструкции в строке " + line);
-
-
     }
-
-
-    if (search_result(lines[line],'{')) {
-
-
-        //Проверка на то, записан ли блок в одну строку
-
-    }
-
 }
