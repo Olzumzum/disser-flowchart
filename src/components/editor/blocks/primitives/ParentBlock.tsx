@@ -3,10 +3,10 @@ import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
-import {CONVERT_PROMPT} from "../../../../assets/strings/editor_strings";
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-
+import {handleClose} from "../../context_menu/BlockContextMenu";
+import {Fade, Menu, MenuItem} from "@material-ui/core";
 
 
 /**
@@ -76,6 +76,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
             this._top = top
             const background = yellow ? 'yellow' : blockImage
             return (
+                <div>
                 <OverlayTrigger
                 placement={"right"}
                 delay={{ show: 250, hide: 400 }}
@@ -84,11 +85,33 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         id={this._id}
                         style={{...this.style, background}}
                         onDoubleClick={this.dbclick}
+                        onMouseDown={this.mouseDownClick}
                     >
                         {title}
                     </div>
                  </OverlayTrigger>
+
+            {/*<Menu*/}
+            {/*    id="fade-menu"*/}
+            {/*    // anchorEl=anchorEl*/}
+            {/*    keepMounted*/}
+            {/*    open*/}
+            {/*    onClose={handleClose}*/}
+            {/*    TransitionComponent={Fade}>*/}
+
+            {/*    <MenuItem onClick={handleClose}>Profile</MenuItem>*/}
+            {/*    <MenuItem onClick={handleClose}>My account</MenuItem>*/}
+            {/*    <MenuItem onClick={handleClose}>Logout</MenuItem>*/}
+            {/*</Menu>*/}
+                </div>
             )
+        }
+    }
+
+    mouseDownClick(e: React.MouseEvent<HTMLElement>){
+        if (e.button === 2) {
+            console.log("правая")
+            return
         }
     }
 
