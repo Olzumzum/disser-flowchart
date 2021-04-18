@@ -1,5 +1,8 @@
 {
   "name": "disser",
   "version": "0.1.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "react-motion": "^0.5.2"
+  }
 }

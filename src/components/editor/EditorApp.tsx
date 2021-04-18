@@ -3,7 +3,6 @@ import {CustomDragLayer} from "./dnd/CustomDragLayer";
 import {EditPanel} from "./panel/EditPanel"
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
-import {ComponentPanel} from "./panel/ComponentPanel";
 import {Col, Container, Row} from "react-bootstrap";
 import {Provider} from "react-redux";
 import {store} from "../../store";
@@ -18,6 +17,8 @@ const styles: CSSProperties = {
     backgroundColor: "red",
 
 }
+
+
 //отключить открытие стандартного браузерного контекстного меню
 document.addEventListener("contextmenu", (event) => {
     event.preventDefault();

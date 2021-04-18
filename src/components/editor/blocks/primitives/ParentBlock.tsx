@@ -1,4 +1,4 @@
-import {CSSProperties, FC} from "react";
+import {Component, CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 import {IBlock} from "./IBlock";
@@ -6,6 +6,7 @@ import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import ReactDOM from "react-dom";
+import {ContextMenu} from "../../context_menu/BlockContextMeny";
 
 /**
  * Родитель всех блоков
@@ -91,10 +92,12 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                             {title}
                         </div>
                     </OverlayTrigger>
+                    <ContextMenu menu={() => <CustomMenu/>}/>
                 </div>
             )
         }
     }
+
 
     mouseDownClick(e: React.MouseEvent<HTMLElement>) {
         if (e.button === 2) {
@@ -102,6 +105,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
         }
     }
+
     //одинарное нажатие
     click(e: React.MouseEvent<HTMLElement>) {
         oneClickBlock(e.currentTarget.id)
@@ -181,9 +185,13 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     setTop(top: number): void {
         this._top = top
     }
-
 }
-
-
+    const CustomMenu: FC = () => (
+    <ul className="menu">
+        <li>Login</li>
+        <li>Register</li>
+        <li>Open Profile</li>
+    </ul>
+);
 
 
