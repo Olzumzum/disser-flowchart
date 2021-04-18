@@ -1,4 +1,6 @@
 import {Component} from "react";
+import Motion from "react-motion/lib/Motion";
+import spring from "react-motion/lib/spring";
 
 export class ContextMenu extends Component {
     state = {
@@ -32,7 +34,10 @@ export class ContextMenu extends Component {
     render() {
         const {showMenu, yPos, xPos} = this.state;
         return (
-            <div>
+            <Motion
+                defaultStyle={{ opacity: 0 }}
+                style={{ opacity: !showMenu ? spring(0) : spring(1) }}
+            >
                 {(interpolatedStyle) => (
                     <>
                         {showMenu ? (
@@ -44,7 +49,11 @@ export class ContextMenu extends Component {
                                     opacity: interpolatedStyle.opacity,
                                 }}
                             >
-                                {this.props.menu}
+                                <ul className="menu">
+                                    <li>Login</li>
+                                    <li>Register</li>
+                                    <li>Open Profile</li>
+                                </ul>
                             </div>
                         ) : (
                             <></>
@@ -52,6 +61,6 @@ export class ContextMenu extends Component {
                     </>
 
                 )}
-            </div>
+            </Motion>
         )}
 }
