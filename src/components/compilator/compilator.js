@@ -26,19 +26,7 @@ function compile_in(text) {
         text = text.replaceAll('\t', '');
         // alert (text);
         var lines = text.split('\n'); //делим файл на строки
-        for (var line = 0; line < lines.length; line++) { // перебор строк
-            //поиск языковых конструкций в строке
-            if (search_construction_result(lines, line)) { //ЯК найдена
-                var str = "";
-                var constr_arr = search_construction(lines, line);
-                var block = search_block(lines, line, constr_arr);
-                var bl = create_block(lines, line, block, constr_arr[1]);
-                alert("инфо о найденном блоке: содержимое - " + bl.content);
-                alert("кол-во вложенных структур: " + bl.internal_structures);
-                alert("тип блока: " + bl.type);
-                line = block[1].line;
-            }
-        }
+        switch_block(lines);
     }
 }
 
@@ -88,14 +76,16 @@ function search_construction(lines, line){
 }
 
 //функция нахождения вложенного блока
-function search_inner_construction(lines, line){
-    var tmp1 = search_construction(lines, line);
-    var tmp2 = search_block(lines, line, tmp1);
-    return tmp2;
+function search_inner_construction(lines, line, id, blocks){
+    id++;
+    var tmp = search_construction(lines, line);
+    var block = search_block(lines, line, tmp, id);
+    create_block(id, blocks, lines,line,block, tmp[1]);
+    return block;
 }
 
 //функция поиска блока ЯК
-function search_block(lines, line, const_arr) {
+function search_block(lines, line, const_arr, id, blocks) {
     var nested_constructions_numb = 0; //кол-во вложенных конструкций
     var block_start = {}, block_end = {};
     var type;//тип написания блока
@@ -124,7 +114,8 @@ function search_block(lines, line, const_arr) {
                     //если внутри блока использована ЯК
                     if(search_construction_result(lines, line)) {
                         nested_constructions_numb++;
-                        var tmp = search_inner_construction(lines, line);
+                        var tmp = search_inner_construction(lines, line, id, blocks);
+                        id++;
                         pos = tmp[1].pos+1;
                         line = tmp[1].line;
                         //ВЫЗЫВАЕМ ФУНКЦИЮ ПО СОЗДАНИЮ БЛОКА
@@ -188,7 +179,8 @@ function search_block(lines, line, const_arr) {
                 } else { //если в строке использована ЯК
                     if(search_construction(lines, line)){
                         nested_constructions_numb++;
-                        var tmp = search_inner_construction(lines,line);
+                        var tmp = search_inner_construction(lines,line,id,blocks);
+                        id++;
                         block_start = {
                             pos: 0,
                             line: line
@@ -218,8 +210,32 @@ function search_block(lines, line, const_arr) {
     return [block_start, block_end, nested_constructions_numb];
 }
 
+//функция определения параметров поиска в зависимости от использованной ЯК
+function switch_block(lines){
+    var blocks=[];
+    var id = 0; //id каждого блока
+    var block,bl;
+    var neighbour = false;
+    for (var line = 0; line < lines.length; line++) { // перебор строк
+        //поиск языковых конструкций в строке
+
+
+        if (search_construction_result(lines, line)) { //ЯК найдена
+            var constr_arr = search_construction(lines, line);
+            switch (constr_arr[1]){
+                case 'else':
+                    neighbour = true;
+                    break;
+            }
+            block = search_block(lines, line, constr_arr, id, blocks);
+            create_block(id, blocks, lines, line, block, constr_arr[1]);
+            line = block[1].line;
+        }
+    }
+}
+
 //функция формирования объекта
-function create_block(lines, line, block, type){
+function create_block(id, blocks, lines, line, block, type){
     //Формирование содержиого блока
     var content = "";
     if (block[0].line != block[1].line) { // если блок в {...}
@@ -232,10 +248,11 @@ function create_block(lines, line, block, type){
 
     //создание объекта
     var object_block = {
-      content: content,
-      type: type,
-      internal_structures: block[2],
+        id: id,
+        content: content,
+        type: type,
+        internal_structures: block[2],
     };
-    return object_block;
+    blocks.push(object_block);
 }
 
