@@ -95,7 +95,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         {title}
                     </div>
                  </OverlayTrigger>
-                    {ContMenu}
+
                 </div>
             )
         }
@@ -106,8 +106,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     mouseDownClick(e: React.MouseEvent<HTMLElement>){
         if (e.button === 2) {
             console.log("здесь")
-            const element = document.getElementById("myDropdown")!!;
-            ContMenu.props = changeStyle
+
         }
     }
 

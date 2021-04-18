@@ -21,7 +21,6 @@ export class RendrerManager {
     convert(blocks: Array<IBlock>): Array<BlockMap> {
         let convertBlocks = new Array<BlockMap>()
         blocks.forEach(item => {
-            console.log(item)
             convertBlocks.push(
                 {
 
