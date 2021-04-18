@@ -56,12 +56,6 @@ export class ContextMenu extends Component {
                                 <ul className="menu">
                                     {menu.map((i) => <li>{i}</li>)}
                                 </ul>
-
-                                {/*<ul className="menu">*/}
-                                {/*    <li>Login</li>*/}
-                                {/*    <li>Register</li>*/}
-                                {/*    <li>Open Profile</li>*/}
-                                {/*</ul>*/}
                             </div>
                         ) : (
                             <></>

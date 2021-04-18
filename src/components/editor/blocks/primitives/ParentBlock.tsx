@@ -6,6 +6,7 @@ import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMeny";
+import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 
 /**
  * Родитель всех блоков
@@ -186,10 +187,6 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 }
 
-    const itemsContexMenu = ["123", "456"]
-    const CustomMenu: FC = () => (<ul className="menu">
-        {itemsContexMenu.map((e) => <li>e</li>)}
-    </ul>)
 
 
 
