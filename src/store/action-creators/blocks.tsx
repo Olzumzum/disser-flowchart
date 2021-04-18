@@ -12,9 +12,10 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
 import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
+import {creatorBlocks} from "../../index";
 
-const creatorBlocks: IBlockFactory = new CreatorBlock()
-const originalBlocks = creatorBlocks.getOriginBlock()
+
+// const originalBlocks = creatorBlocks.getOriginBlock()
 const blocks = new Array<IBlock>()
 
 
@@ -26,7 +27,7 @@ export const fetchOriginalBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            const response = originalBlocks
+            const response = blocks
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })

@@ -113,13 +113,13 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
             150,
             idNew
         )!!)
-        console.log(blocks.length)
     }
 
     if (loading) {
         return <h1>Идет загрузка...</h1>
     }
 
+    //отображение надписи старта при отстутсвии элементов
     if (blocks.length === 0)
         return (
             <div style={styles} onClick={createBlock}>
@@ -130,7 +130,7 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
         )
     else return (
 
-        <div id={"edit_panel"} ref={drop} style={styles} onDoubleClick={addEditTab}>
+        <div id={"edit_panel"} ref={drop} style={styles}>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
@@ -138,6 +138,7 @@ export const EditTab: FC<EditTabProps> = ({snapToGrid}) => {
 
     )
 }
+
 
 export function createEditTab(idTab: string): JSX.Element {
     const editTab = <EditTab snapToGrid/>
@@ -147,3 +148,5 @@ export function createEditTab(idTab: string): JSX.Element {
         </Tab>
     )
 }
+
+

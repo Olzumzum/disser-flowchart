@@ -5,9 +5,7 @@ import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-import {BlockContextMenu} from "../../context_menu/BlockContextMenu";
-
-
+import ReactDOM from "react-dom";
 
 /**
  * Родитель всех блоков
@@ -22,14 +20,10 @@ export interface BlockProps {
     left?: number
 }
 
+
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
-}
-
-const ContMenu = <BlockContextMenu/>
-const changeStyle: CSSProperties = {
-    display: "flex"
 }
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
@@ -48,6 +42,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         justifyContent: "center",
         margin: "10px"
     }
+
 
     private _id: string = ""
     //ссылка на следующий блок
@@ -82,34 +77,31 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
             const background = yellow ? 'yellow' : blockImage
             return (
                 <div>
-                <OverlayTrigger
-                placement={"right"}
-                delay={{ show: 250, hide: 400 }}
-                overlay={renderConvertPrompt}>
-                    <div
-                        id={this._id}
-                        style={{...this.style, background}}
-                        onDoubleClick={this.dbclick}
-                        onMouseDown={this.mouseDownClick}
-                    >
-                        {title}
-                    </div>
-                 </OverlayTrigger>
 
+                    <OverlayTrigger
+                        placement={"right"}
+                        delay={{show: 250, hide: 400}}
+                        overlay={renderConvertPrompt}>
+                        <div
+                            id={this._id}
+                            style={{...this.style, background}}
+                            onDoubleClick={this.dbclick}
+                            onMouseDown={this.mouseDownClick}
+                        >
+                            {title}
+                        </div>
+                    </OverlayTrigger>
                 </div>
             )
         }
     }
 
-
-
-    mouseDownClick(e: React.MouseEvent<HTMLElement>){
+    mouseDownClick(e: React.MouseEvent<HTMLElement>) {
         if (e.button === 2) {
             console.log("здесь")
 
         }
     }
-
     //одинарное нажатие
     click(e: React.MouseEvent<HTMLElement>) {
         oneClickBlock(e.currentTarget.id)
@@ -191,5 +183,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 
 }
+
+
 
 

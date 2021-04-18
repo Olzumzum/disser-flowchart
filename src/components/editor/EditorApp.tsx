@@ -18,6 +18,11 @@ const styles: CSSProperties = {
     backgroundColor: "red",
 
 }
+//отключить открытие стандартного браузерного контекстного меню
+document.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+});
+
 export const EditorApp: FC = () => {
 
     const [snapToGridAfterDrop, setSnapToGridAfterDrop] = useState(false)

@@ -14,10 +14,8 @@ export class CreatorBlock implements IBlockFactory {
         top: number,
         id: string
     ): IBlock | undefined {
-        // console.log("create block " + typeBlock)
         switch (typeBlock) {
             case BlockTypes.CONDITION: {
-                // console.log("ConditionBlock " + id + " " + left + " " + top)
                 return new ConditionBlockParent(id, left, top)
             }
             case BlockTypes.BLOCK:
