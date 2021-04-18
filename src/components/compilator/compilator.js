@@ -80,7 +80,7 @@ function search_inner_construction(lines, line, id, blocks){
     id++;
     var tmp = search_construction(lines, line);
     var block = search_block(lines, line, tmp, id);
-    create_block(id, blocks, lines,line,block, tmp[1]);
+    create_block(id, blocks, lines,line,blocks, tmp[1]);
     return block;
 }
 
