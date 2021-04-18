@@ -1,9 +1,12 @@
-import {CSSProperties, FC} from "react";
-import blockImage from "../../../../assets/images/block.png";
+import {Component, CSSProperties, FC} from "react";
+import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
-import {addEditTab} from "../../../../store/action-creators/editTabs";
-import {EditPanel} from "../../panel/EditPanel";
-
+import {IBlock} from "./IBlock";
+import {BlockTypes} from "./BlockTypes";
+import {OverlayTrigger} from "react-bootstrap";
+import {renderConvertPrompt} from "../../prompt/block_prompt";
+import ReactDOM from "react-dom";
+import {ContextMenu} from "../../context_menu/BlockContextMeny";
 
 /**
  * Родитель всех блоков
@@ -18,12 +21,13 @@ export interface BlockProps {
     left?: number
 }
 
+
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
 
-export class ParentBlock implements StyleBlockBuilder {
+export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //общий стиль для блоков
     protected styles: CSSProperties = {
@@ -40,7 +44,8 @@ export class ParentBlock implements StyleBlockBuilder {
         margin: "10px"
     }
 
-    private _id: string | undefined
+
+    private _id: string = ""
     //ссылка на следующий блок
     private _nextBlock: string | undefined = undefined
     //ссылка на предыдущий блок
@@ -49,8 +54,16 @@ export class ParentBlock implements StyleBlockBuilder {
     private _top: number | undefined
     private _left: number | undefined
     //экземпляр класса
-    private _blockInstance: FC<BlockProps> | undefined
+    private _blockInstance: React.FC<BlockProps> | undefined
+    private _typeBlock: string = ""
 
+    constructor(id: string,
+                left: number,
+                top: number) {
+        this._id = id
+        this._left = left
+        this._top = top
+    }
 
     //создать экземпляр
     createBlock() {
@@ -63,13 +76,33 @@ export class ParentBlock implements StyleBlockBuilder {
             this._left = left
             this._top = top
             const background = yellow ? 'yellow' : blockImage
-            return <div
-                id={this._id}
-                style={{...this.style, background}}
-                onDoubleClick={this.dbclick}
-            >
-                {title}
-            </div>
+            return (
+                <div>
+
+                    <OverlayTrigger
+                        placement={"right"}
+                        delay={{show: 250, hide: 400}}
+                        overlay={renderConvertPrompt}>
+                        <div
+                            id={this._id}
+                            style={{...this.style, background}}
+                            onDoubleClick={this.dbclick}
+                            onMouseDown={this.mouseDownClick}
+                        >
+                            {title}
+                        </div>
+                    </OverlayTrigger>
+                    <ContextMenu menu={() => <CustomMenu/>}/>
+                </div>
+            )
+        }
+    }
+
+
+    mouseDownClick(e: React.MouseEvent<HTMLElement>) {
+        if (e.button === 2) {
+            console.log("здесь")
+
         }
     }
 
@@ -81,34 +114,7 @@ export class ParentBlock implements StyleBlockBuilder {
     //двойное нажатие
     dbclick(e: React.MouseEvent<HTMLElement>) {
         // console.log("dbclick " + e.currentTarget.id)
-        // addEditTab()
-
     }
-
-    get id(): string | undefined {
-        return this._id
-    }
-
-    set id(i) {
-        this._id = i
-    }
-
-    get top(): number {
-        return this._top!
-    }
-
-    set top(t: number) {
-        this._top = t
-    }
-
-    get left(): number {
-        return this._left!!
-    }
-
-    set left(l: number) {
-        this._left = l
-    }
-
 
     //вернуть экземпляр блока
     get blockInstance(): FC<BlockProps> {
@@ -127,21 +133,65 @@ export class ParentBlock implements StyleBlockBuilder {
         return this.styles
     }
 
+    getId(): string {
+        return this._id;
+    }
 
-    set prevBlock(id: string) {
+    getLeft(): number {
+        return this._left!!;
+    }
+
+    getPreviousNeighbor(): string | undefined {
+        return this._prevBlock;
+    }
+
+    getSubsequentNeighbor(): string | undefined {
+        return this._nextBlock;
+    }
+
+    getTitle(): string {
+        return "";
+    }
+
+    getTop(): number {
+        return this._top!!;
+    }
+
+    getTypeBlock(): string {
+        return BlockTypes.BLOCK;
+    }
+
+
+    render(): JSX.Element {
+        this.blockBackImg(blockImage)
+        return <this.blockInstance title={this._typeBlock}
+                                   left={this._left} top={this._top}/>;
+
+
+    }
+
+    setLeft(left: number): void {
+        this._left = left
+    }
+
+    setPreviousNeighbor(id: string): void {
         this._prevBlock = id
     }
 
-    get prevBlock(): string {
-        return this._prevBlock!!
-    }
-
-    set nextBlock(id: string) {
+    setSubsequentNeighbor(id: string): void {
         this._nextBlock = id
     }
 
-    get nextBlock(): string {
-        return this._nextBlock!!
+    setTop(top: number): void {
+        this._top = top
     }
-
 }
+    const CustomMenu: FC = () => (
+    <ul className="menu">
+        <li>Login</li>
+        <li>Register</li>
+        <li>Open Profile</li>
+    </ul>
+);
+
+

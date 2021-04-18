@@ -2,7 +2,7 @@ import {IBlock} from "../primitives/IBlock";
 import {BlockTypes} from "../primitives/BlockTypes";
 import {IBlockFactory} from "./IBlockFactory";
 import {ConditionBlockParent} from "../primitives/ConditionBlock";
-import {SubroutineBlock} from "../primitives/SubroutineBlockEx";
+import {ParentBlock} from "../primitives/ParentBlock";
 
 /**
  * Создать блок, который будет существовать на панели редактирования
@@ -14,14 +14,12 @@ export class CreatorBlock implements IBlockFactory {
         top: number,
         id: string
     ): IBlock | undefined {
-        // console.log("create block " + typeBlock)
         switch (typeBlock) {
             case BlockTypes.CONDITION: {
-                // console.log("ConditionBlock " + id + " " + left + " " + top)
                 return new ConditionBlockParent(id, left, top)
             }
             case BlockTypes.BLOCK:
-                return new SubroutineBlock()
+                return new ParentBlock(id,left,top)
 
         }
         return undefined;
@@ -50,7 +48,7 @@ export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | und
     // }
     // switch (typeBlock){
     //     case BlockTypes.CONDITION:
-            return new ConditionBlockParent("preview", 0, 0)
+            return new ParentBlock("preview", 0, 0)
 
     // }
 }
