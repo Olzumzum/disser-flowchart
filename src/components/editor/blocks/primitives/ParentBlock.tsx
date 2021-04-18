@@ -1,11 +1,10 @@
-import {Component, CSSProperties, FC} from "react";
+import {CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-import ReactDOM from "react-dom";
 import {ContextMenu} from "../../context_menu/BlockContextMeny";
 
 /**
@@ -92,7 +91,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                             {title}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={() => <CustomMenu/>}/>
+                    <ContextMenu menu={itemsContexMenu}/>
                 </div>
             )
         }
@@ -186,12 +185,13 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._top = top
     }
 }
-    const CustomMenu: FC = () => (
-    <ul className="menu">
-        <li>Login</li>
-        <li>Register</li>
-        <li>Open Profile</li>
-    </ul>
-);
+
+    const itemsContexMenu = ["123", "456"]
+    const CustomMenu: FC = () => (<ul className="menu">
+        {itemsContexMenu.map((e) => <li>e</li>)}
+    </ul>)
+
+
+
 
 
