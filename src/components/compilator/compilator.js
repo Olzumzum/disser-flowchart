@@ -77,10 +77,10 @@ function search_construction(lines, line){
 
 //функция нахождения вложенного блока
 function search_inner_construction(lines, line, id, blocks){
-    id++;
     var tmp = search_construction(lines, line);
-    var block = search_block(lines, line, tmp, id);
-    create_block(id, blocks, lines,line,blocks, tmp[1]);
+    var block = search_block(lines, line, tmp, id, blocks);
+    id = block[3];
+    create_block(id, blocks, lines,line,block, tmp[1]);
     return block;
 }
 
@@ -115,8 +115,8 @@ function search_block(lines, line, const_arr, id, blocks) {
                     if(search_construction_result(lines, line)) {
                         nested_constructions_numb++;
                         var tmp = search_inner_construction(lines, line, id, blocks);
-                        id++;
                         pos = tmp[1].pos+1;
+                        id = tmp[3]+1;
                         line = tmp[1].line;
                         //ВЫЗЫВАЕМ ФУНКЦИЮ ПО СОЗДАНИЮ БЛОКА
                         /*
@@ -131,24 +131,6 @@ function search_block(lines, line, const_arr, id, blocks) {
                         flag = 0;
                         pos = search(lines[line],'}',pos) + 1;
                     }
-
-                    /*
-
-                    while (search_result(lines[line], '}', pos_end_block)){
-                        flag--;
-                        pos_end_block = search(lines[line],'}', pos_end_block);
-                        pos_end_block++;
-                    }
-                    //нахождение вложенных блоков {...}
-                    if (search_result(lines[line], '{'), pos_start_block) {
-                        pos_start_block = search(lines[line],'}', pos_start_block)+1;
-                        //если в одной строке заканчивается и начинается разные блоки
-                        if((flag != 0) || (flag == 0) && (pos_start_block < pos_end_block)){
-                            nested_constructions_numb++;
-                            flag++;
-                        }
-                    }
-                    */
                 }
                 block_end = {
                     pos: pos-1,
@@ -160,7 +142,6 @@ function search_block(lines, line, const_arr, id, blocks) {
                     pos: search(lines[line], '}', block_start.pos+1),
                     line: line
                 };
-                return [block_start, block_end];
             }
             break;
         case 2:
@@ -180,7 +161,7 @@ function search_block(lines, line, const_arr, id, blocks) {
                     if(search_construction(lines, line)){
                         nested_constructions_numb++;
                         var tmp = search_inner_construction(lines,line,id,blocks);
-                        id++;
+                        id = tmp[3]+1;
                         block_start = {
                             pos: 0,
                             line: line
@@ -207,19 +188,17 @@ function search_block(lines, line, const_arr, id, blocks) {
             alert("Ошибка написания языковой конструкции в строке " + line);
             break;
     }
-    return [block_start, block_end, nested_constructions_numb];
+    return [block_start, block_end, nested_constructions_numb,id];
 }
 
 //функция определения параметров поиска в зависимости от использованной ЯК
 function switch_block(lines){
+    var id = 0;
     var blocks=[];
-    var id = 0; //id каждого блока
     var block,bl;
     var neighbour = false;
     for (var line = 0; line < lines.length; line++) { // перебор строк
         //поиск языковых конструкций в строке
-
-
         if (search_construction_result(lines, line)) { //ЯК найдена
             var constr_arr = search_construction(lines, line);
             switch (constr_arr[1]){
@@ -227,16 +206,42 @@ function switch_block(lines){
                     neighbour = true;
                     break;
             }
+            var p_bool = true;
             block = search_block(lines, line, constr_arr, id, blocks);
-            create_block(id, blocks, lines, line, block, constr_arr[1]);
+            id = block[3];
+            create_block(id, blocks, lines, line, block, constr_arr[1], p_bool);
             line = block[1].line;
+            id++;
         }
     }
+   /* for (var l=0; l<blocks.length; l++)
+        alert(blocks[l].id);*/
 }
 
 //функция формирования объекта
-function create_block(id, blocks, lines, line, block, type){
+function create_block(id, blocks, lines, line, block, type, p_bool){
     //Формирование содержиого блока
+    var parent_bool;
+    if (typeof p_bool !== "undefined")
+        parent_bool = p_bool;
+    else
+        parent_bool = false;
+    var content = content_maker(lines, line, block);
+    var parent = parent_finder(block[2], id, blocks, parent_bool);
+    //создание объекта
+    var object_block = {
+        id: id,                                 //id блока
+        content: content,                       //содержимое / тело блока
+        type: type,                             //тип блока if/while/for e.t.c.
+        inner_structures_numb: block[2],        //количество вложенных структур
+        parent: parent,                         //id блока-родителя
+        parent_bool: parent_bool
+    };
+    blocks.push(object_block);
+}
+
+//функция по формированию текста - содержимого блока
+function content_maker(lines, line, block){
     var content = "";
     if (block[0].line != block[1].line) { // если блок в {...}
         content = lines[block[0].line].substring(block[0].pos, lines[block[0].line].length);
@@ -245,14 +250,27 @@ function create_block(id, blocks, lines, line, block, type){
         content += lines[block[1].line].substring(0, block[1].pos);
     } else
         content = lines[block[0].line].substring(block[0].pos, block[1].pos);
-
-    //создание объекта
-    var object_block = {
-        id: id,
-        content: content,
-        type: type,
-        internal_structures: block[2],
-    };
-    blocks.push(object_block);
+    return content;
 }
 
+//функция нахождения родительских блоков
+function parent_finder(inner_constr_numb, id, blocks, p_bool){
+    //указание id данного блока в качестве родительского для вложенных блоков
+    var size = blocks.length - 1;
+    if (inner_constr_numb != 0){
+        for (var i = size; i >= 0; i--){
+            if (!blocks[i].parent_bool && blocks[i].parent == -1)
+                blocks[i].parent = id;
+        }
+    }
+    //
+    if (p_bool){
+        for (var i = size; i>=0; i--){
+            if(blocks[i].parent_bool){
+                return i;
+            }
+        }
+        return -1;
+    } else
+        return -1;
+}
