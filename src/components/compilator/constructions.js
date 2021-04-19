@@ -10,6 +10,7 @@ export class block_constr{
 export const constructions_list = [
     'while',
     'for',
-    'if'
+    'if',
+    'else'
 ]
 
