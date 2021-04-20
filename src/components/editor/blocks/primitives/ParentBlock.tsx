@@ -1,4 +1,4 @@
-import {CSSProperties, FC} from "react";
+import {Component, CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
 import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 import {IBlock} from "./IBlock";
@@ -7,6 +7,7 @@ import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMeny";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
+import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
 
 /**
  * Родитель всех блоков
@@ -21,13 +22,17 @@ export interface BlockProps {
     left?: number
 }
 
+type IState = {
+    showmenu: boolean; // or the type of your input
+}
 
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
 
-export class ParentBlock implements IBlock, StyleBlockBuilder {
+
+export class ParentBlock extends Component<{}, IState> implements IBlock, StyleBlockBuilder {
 
     //общий стиль для блоков
     protected styles: CSSProperties = {
@@ -57,13 +62,25 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _blockInstance: React.FC<BlockProps> | undefined
     private _typeBlock: string = ""
 
+    // private _contextMenu =  <ContextMenu menu={itemsContexMenu} showMenu={this.state.showmenu}/>
+
+
     constructor(id: string,
                 left: number,
-                top: number) {
+                top: number, props: any) {
+        super(props)
         this._id = id
         this._left = left
         this._top = top
+        this.mouseDownClick = this.mouseDownClick.bind(this)
+
+        this.state = {
+            showmenu: false,
+        }
     }
+
+    private g = false
+
 
     //создать экземпляр
     createBlock() {
@@ -92,18 +109,15 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                             {title}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={itemsContexMenu}/>
+                    <ContextMenu menu={itemsContexMenu} showmenu={false}/>
                 </div>
             )
         }
     }
 
 
-    mouseDownClick(e: React.MouseEvent<HTMLElement>) {
-        if (e.button === 2) {
-            console.log("здесь")
-
-        }
+    mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
+        ContextMenuEventEmitter.dispatch('changeShowMenu', {showMenu : true})
     }
 
     //одинарное нажатие
@@ -185,6 +199,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     setTop(top: number): void {
         this._top = top
     }
+
 }
 
 
