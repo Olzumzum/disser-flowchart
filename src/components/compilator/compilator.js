@@ -54,16 +54,27 @@ function search_result(text, c, i) {
 
 //функция отображения результата нахождения ЯК в строке
 function search_construction_result(lines, line, l) {
+    if (typeof l !== "indefined") {
+        for (var i = 0; i < constructions_list.length; i++)
+            if (search_result(lines[line], constructions_list[i], l)) {
+                return true;
+            }
+    } else
+        for (var i = 0; i < constructions_list.length; i++) {
+            if (search_result(lines[line], constructions_list[i])) {
+                return true;
+            }
+        }
+
     if (typeof l !== "indefined")
         for (var i = 0; i < constructions_list.length; i++)
             if (search_result(lines[line], constructions_list[i], l)) {
                 return true;
             } else
-                for (var i = 0; i < constructions_list.length; i++) {
-                    if (search_result(lines[line], constructions_list[i])) {
-                        return true;
-                    }
-                }
+                i++;
+    else i++;
+
+
     return false;
 }
 
@@ -142,12 +153,13 @@ function block_processing(lines) {
 
         }
     }
+    return blocks;
 }
 
 //функция формирования блока ЯК
 function search_block(lines, line, constr_arr, id, blocks, inner_lvl) {
-    var nested_constructions_numb = 0; //кол-во вложенных конструкций
-    var block_start = {}, block_end = {};
+    var inner_constructions_numb = 0; //кол-во вложенных конструкций
+    var block_start = {}, block_end = false;
 
     let type = constr_arr[1];
     let constr_pos = constr_arr[0];
@@ -157,16 +169,17 @@ function search_block(lines, line, constr_arr, id, blocks, inner_lvl) {
     block_start = block_start_finder(lines, line, constr_pos, params, constr_type);
     let pos = block_start.pos;
     line = block_start.line;
-    block_end = block_end_finder(lines, line, pos, params, constr_type);
+    //block_end = block_end_finder(lines, line, pos, params, constr_type);
     //определяется окончание блока в тексте
-    if (block_end == false) {
+    while (block_end == false) {
         var flag = 1;
-        pos = 0;
-        while (flag != 0) {
-            line++;
+
+      //  while (flag != 0) {
             block_end = block_end_finder(lines, line, pos, params, constr_type);
+            line++;
+            pos = 0;
             if (search_construction_result(lines, line, pos)) {    //если внутри блока использована ЯК
-                nested_constructions_numb++;
+                inner_constructions_numb++;
                 var tmp = search_inner_construction(lines, line, id, blocks, inner_lvl);
                 pos = tmp[1].pos + 1;
                 id = tmp[3] + 1;
@@ -175,62 +188,10 @@ function search_block(lines, line, constr_arr, id, blocks, inner_lvl) {
                 flag = 0;
             } else
                 pos = 0;
-        }
+      //  }
     }
-    /*
 
-    switch (constr_type) {
-        case 1:
-            block_end = block_end_finder(lines,line,pos, params, constr_type);
-            if (block_end == false) {
-                var flag = 1, pos;
-                //определяется окончание блока в тексте
-                while (flag != 0) {
-                    block_end = block_end_finder(lines, line, pos, params, constr_type);
-                    if (block_end != false) {
-                        flag = 0;
-                    } else
-                        if (search_construction_result(lines, line)) {    //если внутри блока использована ЯК
-                            nested_constructions_numb++;
-                            var tmp = search_inner_construction(lines, line, id, blocks, inner_lvl);
-                            pos = tmp[1].pos + 1;
-                            id = tmp[3] + 1;
-                            line = tmp[1].line;
-                        }
-                    pos = 0;
-                    line++;
-                }
-            }
-            break;
-        case 2:
-            if (search_construction(lines, line,)) {
-                nested_constructions_numb++;
-                var tmp = search_inner_construction(lines, line, id, blocks, inner_lvl);
-                id = tmp[3] + 1;
-                block_start = {
-                    pos: 0,
-                    line: line
-                };
-                block_end = {
-                    pos: tmp[1].pos,
-                    line: tmp[1].line
-                }
-            } else {
-                block_start = {
-                    pos: search(lines[line], ')') + 1,
-                    line: line
-                };
-                block_end = {
-                    pos: search(lines[line], ';', search(lines[line], ')')) + 1,
-                    line: line
-                }
-            }
-            break;
-        default:
-            alert("Ошибка написания языковой конструкции в строке " + line);
-            break;
-    }*/
-    return [block_start, block_end, nested_constructions_numb, id, inner_lvl];
+    return [block_start, block_end, inner_constructions_numb, id, inner_lvl];
 }
 
 //функция формирования объекта на основе блока ЯК

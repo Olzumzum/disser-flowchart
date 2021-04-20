@@ -8,19 +8,19 @@
  */
 
 // сперва объявлю эти сраные пременные, чтобы не было ошибки при запуске проекта
-let id, content, type, p_bool, parent, block = [], neighbour, parameter;
+let id, content, type, p_bool, parent_id, block = [], neighbour_id, parameter;
 //Есди будут какие-то изменения я уведомлю Вас и занесу их в данный файл.
 
 export let object_block = {
-    id: id,                                 //id блока
-    content: content,                       //содержимое / тело блока
-    type: type,                             //тип блока if/while/for e.t.c.
-    inner_structures_numb: block[2],        //количество вложенных структур
-    parent: parent,                         //id блока-родителя
-    parent_bool: p_bool,
+    id: id,
+    parent_id: parent_id,
+    neighbour_id: neighbour_id,
+    type: type,
     inner_lvl: block[4],
-    neighbour: neighbour,
-    parameter: parameter
+    content: content,
+    inner_structures_numb: block[2],
+    parameter: parameter,
+    parent_bool: p_bool,
 };
 
 //ID
@@ -62,7 +62,7 @@ export let object_block = {
     пока что у главного блока INNER_LVL = -1, блоки, что скрываются за ним, имеют INNER_LVL = 0
  */
 
-//PARENT
+//PARENT_ID
 /*
     целочисленный формат
     ID блока, от которого ответвляется данный блок
@@ -94,7 +94,7 @@ export let object_block = {
     возможно, Вам не пригодится, но пускай будет на всякий
  */
 
-//NEIGHBOUR
+//NEIGHBOUR_ID
 /*
      целочисленный формат
      ID блока - соседа (!у этого соседа при этом указывается иной сосед)
