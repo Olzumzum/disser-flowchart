@@ -11,6 +11,7 @@ export const constructions_list = [
     'while',
     'for',
     'if',
-    'else'
+    'else',
+    'switch'
 ]
 
