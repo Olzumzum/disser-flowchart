@@ -8,6 +8,7 @@ import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMeny";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
+import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 
 /**
  * Родитель всех блоков
@@ -117,7 +118,8 @@ export class ParentBlock extends Component<{}, IState> implements IBlock, StyleB
 
 
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
-        ContextMenuEventEmitter.dispatch('changeShowMenu', {showMenu : true})
+        ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            "Строка")
     }
 
     //одинарное нажатие

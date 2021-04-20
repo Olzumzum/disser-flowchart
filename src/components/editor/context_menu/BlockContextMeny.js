@@ -2,22 +2,25 @@ import {Component} from "react";
 import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
+import {ContextMenuActionType} from "./ContextMenuActionType";
 
+/**
+ * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
+ * Отображает список возможных действий (преобразований) с текущим элементом (блоком)
+ */
 export class ContextMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
             Pos: "0px",
             yPos: "0px",
-            showMenu: this.props.showmenu,
-            data: [],
+            showMenu: false,
+            data: []
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
-        ContextMenuEventEmitter.subscribe('changeShowMenu',
-            (event) => this.handleContextMenu(event))
+        ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            (data) => this.handleContextMenu(data))
     }
-
-
 
     componentDidMount() {
         document.addEventListener("click", this.handleClick);
@@ -25,16 +28,16 @@ export class ContextMenu extends Component {
 
     componentWillUnmount() {
         document.removeEventListener("click", this.handleClick);
-        document.removeEventListener("contextmenu", this.handleContextMenu);
+
     }
 
     handleClick = (e) => {
         if (this.state.showMenu) this.setState({showMenu: false});
     }
 
-    handleContextMenu = (e) => {
+    handleContextMenu = (e, data) => {
 
-        console.log("show контекст меню")
+        console.log("show контекст меню " + data)
 
         this.setState({
             xPos: `${e.pageX}px`,

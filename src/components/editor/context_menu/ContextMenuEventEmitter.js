@@ -1,3 +1,7 @@
+/**
+ *Излучатель сообщает о событиях в источнике (блоке)
+ * подписчику (контекстному меню)
+ */
 export const ContextMenuEventEmitter = {
     events: {},
     dispatch: function (event, data){
