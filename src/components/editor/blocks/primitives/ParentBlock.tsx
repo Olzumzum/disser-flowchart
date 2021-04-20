@@ -1,6 +1,5 @@
-import {Component, CSSProperties, FC} from "react";
+import { CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
-import {oneClickBlock} from "../../../../store/action-creators/clickOnBlocks";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
@@ -116,12 +115,12 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //одинарное нажатие
     click(e: React.MouseEvent<HTMLElement>) {
-        oneClickBlock(e.currentTarget.id)
+
     }
 
     //двойное нажатие
     dbclick(e: React.MouseEvent<HTMLElement>) {
-        // console.log("dbclick " + e.currentTarget.id)
+
     }
 
     //вернуть экземпляр блока

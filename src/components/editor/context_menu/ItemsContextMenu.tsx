@@ -3,7 +3,7 @@ import {
     CONDITIONAL_OPERATOR,
     LOOP_FOR, LOOP_UNTIL,
     LOOP_WHILE
-} from "../../../assets/strings/ConstItemsContextBlockMenu";
+} from "../../../assets/strings/BlockTransformationTypes";
 
 export const itemsContexMenu = [
     ADD_TWO_BLOCKS,

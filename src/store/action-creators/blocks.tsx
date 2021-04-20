@@ -1,8 +1,7 @@
 import {BlocksAction} from "../types/blocks";
 import {Dispatch} from "redux";
 import {BlocksActionTypes} from "../actions/BlocksActionTypes";
-import {IBlockFactory} from "../../components/editor/blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
+
 import {
     COORDINATE_CHANGE_ERROR,
     DATA_INSERTION_ERROR,
@@ -11,11 +10,7 @@ import {
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
-import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
-import {creatorBlocks} from "../../index";
 
-
-// const originalBlocks = creatorBlocks.getOriginBlock()
 const blocks = new Array<IBlock>()
 
 
