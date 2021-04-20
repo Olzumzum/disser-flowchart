@@ -69,7 +69,9 @@ export class ContextMenu extends Component {
                                 }}
                             >
                                 <ul className="menu">
-                                    {menu.map((i) => <li key={i} onClick={clickItemMenu}>{i}</li>)}
+                                    {menu.map((i) =>
+                                        <li id={i.id} onClick={clickItemMenu}>{i.message}</li>
+                                    )}
                                 </ul>
                             </div>
                         ) : (
@@ -83,6 +85,6 @@ export class ContextMenu extends Component {
     }
 }
 
-function clickItemMenu(id) {
-    console.log("кликнули " + id.toString())
+function clickItemMenu(e) {
+    console.log("кликнули " + e.currentTarget.id)
 }

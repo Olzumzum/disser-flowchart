@@ -6,7 +6,7 @@ import {
 } from "../../../assets/strings/ConstItemsContextBlockMenu";
 
 export const itemsContexMenu = [
-    ADD_TWO_BLOCKS,
+     ADD_TWO_BLOCKS,
     CONDITIONAL_OPERATOR,
     LOOP_WHILE,
     LOOP_FOR,
