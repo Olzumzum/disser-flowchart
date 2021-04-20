@@ -23,9 +23,6 @@ export interface BlockProps {
     left?: number
 }
 
-type IState = {
-    showmenu: boolean; // or the type of your input
-}
 
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
@@ -33,7 +30,7 @@ interface StyleBlockBuilder {
 }
 
 
-export class ParentBlock extends Component<{}, IState> implements IBlock, StyleBlockBuilder {
+export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //общий стиль для блоков
     protected styles: CSSProperties = {
@@ -69,15 +66,10 @@ export class ParentBlock extends Component<{}, IState> implements IBlock, StyleB
     constructor(id: string,
                 left: number,
                 top: number, props: any) {
-        super(props)
+
         this._id = id
         this._left = left
         this._top = top
-        this.mouseDownClick = this.mouseDownClick.bind(this)
-
-        this.state = {
-            showmenu: false,
-        }
     }
 
     private g = false
@@ -116,7 +108,7 @@ export class ParentBlock extends Component<{}, IState> implements IBlock, StyleB
         }
     }
 
-
+    //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             "Строка")
