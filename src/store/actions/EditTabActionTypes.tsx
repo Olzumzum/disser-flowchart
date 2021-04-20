@@ -1,5 +1,0 @@
-export enum EditTabsActionTypes {
-    FETCH_EDIT_TABS = 'FETCH_EDIT_TABS',
-    FETCH_EDOT_TABS_ERROR = 'FETCH_EDOT_TABS_ERROR',
-    ADD_EDIT_TAB = 'ADD_EDIT_TAB',
-}

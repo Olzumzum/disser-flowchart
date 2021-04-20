@@ -1,20 +1,20 @@
 import {CSSProperties, FC, useCallback, useState} from "react";
 import {CustomDragLayer} from "./dnd/CustomDragLayer";
-import {EditPanel} from "./panel/EditPanel"
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
-import {Col, Container, Row} from "react-bootstrap";
+import {Container, Row} from "react-bootstrap";
 import {Provider} from "react-redux";
 import {store} from "../../store";
 import {ErrorMessage} from "./error/ErrorMessage";
 import Toolbar from "../Toolbar";
+import {EditPanel} from "./panel/EditPanel";
+import {CompilerOutputConsole} from "./panel/CompilerOutputConsole";
 
 const styles: CSSProperties = {
     width: "100%",
     height: "100%",
     margin: 0,
     padding: 0,
-    backgroundColor: "red",
 
 }
 
@@ -46,15 +46,12 @@ export const EditorApp: FC = () => {
                         <Toolbar/>
                     </Row>
                     <Row>
-                        <Col xs={2}>
-                            {/*<ComponentPanel/>*/}
-                        </Col>
-                        <Col xs={10}>
-
-                            <EditPanel snapToGrid={snapToGridAfterDrop}/>
-                            <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
-                        </Col>
+                        <EditPanel snapToGrid={snapToGridAfterDrop}/>
+                        <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                         <ErrorMessage/>
+                    </Row>
+                    <Row>
+                        <CompilerOutputConsole/>
                     </Row>
                 </Container>
             </DndProvider>
