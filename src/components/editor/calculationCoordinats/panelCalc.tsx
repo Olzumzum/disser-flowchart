@@ -1,13 +1,6 @@
 import {getHeightElement, getWidthElement} from "./elementSizeCalc";
 
 /**
- * Получить ширину панели компонентов
- */
-export function getWidthComponentPanel(): number | null {
-    return getWidthElement("component_panel")
-}
-
-/**
  * Получить ширину панели редактироваания
  */
 export function getWidthEditPanel(): number | null {
@@ -19,5 +12,14 @@ export function getWidthEditPanel(): number | null {
  */
 export function getHeightEditPanel(): number | null {
     return getHeightElement("edit_panel")
+}
+
+export function getWidthCanvas() : number | null {
+    const element = document.getElementById("edit_panel")
+    return (getWidthEditPanel()!! - parseInt(window.getComputedStyle(element!!, null).padding))
+}
+export function getHeightCanvas(): number | null {
+    const element = document.getElementById("edit_panel")
+    return (getHeightEditPanel()!! - parseInt(window.getComputedStyle(element!!, null).padding))
 }
 

@@ -1,5 +1,10 @@
 import React, {FC, useEffect, useRef} from "react";
-import {getHeightEditPanel, getWidthEditPanel} from "../calculationCoordinats/panelCalc";
+import {
+    getHeightCanvas,
+    getHeightEditPanel,
+    getWidthCanvas,
+    getWidthEditPanel
+} from "../calculationCoordinats/panelCalc";
 
 /**
  * Возврщает конекст канвас, где будут рисоваться связи
@@ -20,8 +25,8 @@ export const CanvasPainter: FC =
         useEffect(() => {
             contextCanvas = canvasRef.current!!.getContext('2d')!!
 
-            contextCanvas.canvas.width = getWidthEditPanel()!!
-            contextCanvas.canvas.height = getHeightEditPanel()!!
+            contextCanvas.canvas.width = getWidthCanvas()!!
+            contextCanvas.canvas.height = getHeightCanvas()!!
         }, [])
 
         return (
