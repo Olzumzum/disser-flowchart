@@ -1,0 +1,5 @@
+export const ADD_TWO_BLOCKS = "Добавить два блока"
+export const CONDITIONAL_OPERATOR = "Условный оператор"
+export const LOOP_WHILE = "Цикл while"
+export const LOOP_FOR = "Цикл for"
+export const LOOP_UNTIL = "Цикл until"

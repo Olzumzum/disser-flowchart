@@ -5,8 +5,10 @@ import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-import ReactDOM from "react-dom";
 import {ContextMenu} from "../../context_menu/BlockContextMeny";
+import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
+import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
+import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 
 /**
  * Родитель всех блоков
@@ -26,6 +28,7 @@ export interface BlockProps {
 interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
+
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
 
@@ -57,13 +60,20 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _blockInstance: React.FC<BlockProps> | undefined
     private _typeBlock: string = ""
 
+    // private _contextMenu =  <ContextMenu menu={itemsContexMenu} showMenu={this.state.showmenu}/>
+
+
     constructor(id: string,
                 left: number,
-                top: number) {
+                top: number, props: any) {
+
         this._id = id
         this._left = left
         this._top = top
     }
+
+    private g = false
+
 
     //создать экземпляр
     createBlock() {
@@ -92,18 +102,16 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                             {title}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={() => <CustomMenu/>}/>
+                    <ContextMenu menu={itemsContexMenu} showmenu={false}/>
                 </div>
             )
         }
     }
 
-
-    mouseDownClick(e: React.MouseEvent<HTMLElement>) {
-        if (e.button === 2) {
-            console.log("здесь")
-
-        }
+    //вызов контекстного меню блока
+    mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
+        ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            "Строка")
     }
 
     //одинарное нажатие
@@ -185,13 +193,11 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     setTop(top: number): void {
         this._top = top
     }
+
 }
-    const CustomMenu: FC = () => (
-    <ul className="menu">
-        <li>Login</li>
-        <li>Register</li>
-        <li>Open Profile</li>
-    </ul>
-);
+
+
+
+
 
 

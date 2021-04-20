@@ -19,7 +19,7 @@ export class CreatorBlock implements IBlockFactory {
                 return new ConditionBlockParent(id, left, top)
             }
             case BlockTypes.BLOCK:
-                return new ParentBlock(id,left,top)
+                return new ParentBlock(id,left,top, null)
 
         }
         return undefined;
@@ -48,7 +48,7 @@ export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | und
     // }
     // switch (typeBlock){
     //     case BlockTypes.CONDITION:
-            return new ParentBlock("preview", 0, 0)
+            return new ParentBlock("preview", 0, 0, null)
 
     // }
 }

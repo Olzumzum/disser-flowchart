@@ -1,42 +1,59 @@
 import {Component} from "react";
 import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
+import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
+import {ContextMenuActionType} from "./ContextMenuActionType";
 
+/**
+ * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
+ * Отображает список возможных действий (преобразований) с текущим элементом (блоком)
+ */
 export class ContextMenu extends Component {
-    state = {
-        xPos: "0px",
-        yPos: "0px",
-        showMenu: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            Pos: "0px",
+            yPos: "0px",
+            showMenu: false,
+            data: []
+        }
+        this.handleContextMenu = this.handleContextMenu.bind(this)
+        ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            (data) => this.handleContextMenu(data))
     }
 
     componentDidMount() {
         document.addEventListener("click", this.handleClick);
-        document.addEventListener("contextmenu", this.handleContextMenu);
     }
 
     componentWillUnmount() {
         document.removeEventListener("click", this.handleClick);
-        document.removeEventListener("contextmenu", this.handleContextMenu);
+
     }
 
     handleClick = (e) => {
         if (this.state.showMenu) this.setState({showMenu: false});
     }
 
-    handleContextMenu = (e) => {
+    handleContextMenu = (e, data) => {
+
+        console.log("show контекст меню " + data)
+
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,
-            showMenu: true,
+            showMenu: true
         });
+
     }
 
     render() {
         const {showMenu, yPos, xPos} = this.state;
+        const menu = this.props.menu
         return (
             <Motion
-                defaultStyle={{ opacity: 0 }}
-                style={{ opacity: !showMenu ? spring(0) : spring(1) }}
+                defaultStyle={{opacity: 0}}
+                style={{opacity: !showMenu ? spring(0) : spring(1)}}
             >
                 {(interpolatedStyle) => (
                     <>
@@ -47,12 +64,12 @@ export class ContextMenu extends Component {
                                     top: yPos,
                                     left: xPos,
                                     opacity: interpolatedStyle.opacity,
+                                    backgroundColor: "white",
+                                    padding: "9px",
                                 }}
                             >
                                 <ul className="menu">
-                                    <li>Login</li>
-                                    <li>Register</li>
-                                    <li>Open Profile</li>
+                                    {menu.map((i) => <li key={i} onClick={clickItemMenu}>{i}</li>)}
                                 </ul>
                             </div>
                         ) : (
@@ -62,5 +79,10 @@ export class ContextMenu extends Component {
 
                 )}
             </Motion>
-        )}
+        )
+    }
+}
+
+function clickItemMenu(id) {
+    console.log("кликнули " + id.toString())
 }
