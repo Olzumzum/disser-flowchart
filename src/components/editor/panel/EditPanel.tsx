@@ -108,6 +108,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             150,
             idNew
         )!!)
+
+
     }
 
     if (loading) {
