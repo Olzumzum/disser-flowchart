@@ -1,8 +1,6 @@
 import React, {FC, useEffect, useRef} from "react";
 import {
-    getHeightCanvas,
     getHeightEditPanel,
-    getWidthCanvas,
     getWidthEditPanel
 } from "../calculationCoordinats/panelCalc";
 
@@ -25,8 +23,8 @@ export const CanvasPainter: FC =
         useEffect(() => {
             contextCanvas = canvasRef.current!!.getContext('2d')!!
 
-            contextCanvas.canvas.width = getWidthCanvas()!!
-            contextCanvas.canvas.height = getHeightCanvas()!!
+            contextCanvas.canvas.width = getWidthEditPanel()!!
+            contextCanvas.canvas.height = getHeightEditPanel()!!
         }, [])
 
         return (

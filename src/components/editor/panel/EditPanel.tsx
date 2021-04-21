@@ -26,7 +26,6 @@ const styles: CSSProperties = {
     border: '1px solid black',
     backgroundColor: 'aqua',
     marginRight: 6,
-    padding: 30,
 }
 
 interface EditPanelProps {
