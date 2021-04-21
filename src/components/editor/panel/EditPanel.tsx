@@ -5,7 +5,7 @@ import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {checkCoordinatesBlock} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../blocks/factory/CreatorBlock";
+import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
 import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
@@ -14,10 +14,6 @@ import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 
-//генерация уникального id
-export function generateId(): string {
-    return `f${(~~(Math.random() * 1e8)).toString(16)}`
-}
 
 const styles: CSSProperties = {
     float: "right",
@@ -60,12 +56,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             if (originBlocks[Number(id)] !== undefined) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
-                addBlocks(creator.createBlock(
-                    originBlocks[Number(id)].getTypeBlock(),
-                    left,
-                    top,
-                    idNew
-                )!!)
+                // addBlocks(creator.createBlock(
+                //     originBlocks[Number(id)].getTypeBlock(),
+                //     left,
+                //     top,
+                //     idNew
+                // )!!)
             } else {
                 // blockMovement(blocks[1], 150)
                 if (!checkCoordinatesBlock(id, left, top))
@@ -76,7 +72,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     connectBlocksLink(id)
             }
         },
-        [addBlocks],
+        [],
     )
 
 

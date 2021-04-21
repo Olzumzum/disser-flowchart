@@ -3,11 +3,13 @@ import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
 import {ContextMenuActionType} from "./ContextMenuActionType";
+import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
  * Отображает список возможных действий (преобразований) с текущим элементом (блоком)
  */
+
 export class ContextMenu extends Component {
     constructor(props) {
         super(props);
@@ -36,9 +38,6 @@ export class ContextMenu extends Component {
     }
 
     handleContextMenu = (e, data) => {
-
-        console.log("show контекст меню " + data)
-
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,
@@ -86,5 +85,5 @@ export class ContextMenu extends Component {
 }
 
 function clickItemMenu(e) {
-    console.log("кликнули " + e.currentTarget.id)
+    BlockConversionManager(e.target.id)
 }

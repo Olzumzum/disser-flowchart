@@ -66,6 +66,7 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
+    console.log("Добавила")
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             const response = blocks
