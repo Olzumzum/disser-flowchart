@@ -49,6 +49,8 @@ export class ContextMenu extends Component {
     render() {
         const {showMenu, yPos, xPos} = this.state;
         const menu = this.props.menu
+        console.log("Рендеринг конекстного меню")
+
         return (
             <Motion
                 defaultStyle={{opacity: 0}}
@@ -69,7 +71,11 @@ export class ContextMenu extends Component {
                             >
                                 <ul className="menu">
                                     {menu.map((i) =>
-                                        <li id={i.id} onClick={clickItemMenu}>{i.message}</li>
+                                        <li id={i.id} onClick={(e) => {
+                                            if (showMenu)
+                                                clickItemMenu(e)
+                                        }
+                                        }>{i.message}</li>
                                     )}
                                 </ul>
                             </div>
@@ -85,5 +91,7 @@ export class ContextMenu extends Component {
 }
 
 function clickItemMenu(e) {
-    BlockConversionManager(e.target.id)
+
+    console.log("id " + e.target.id)
+    BlockConversionManager({id: e.target.id})
 }

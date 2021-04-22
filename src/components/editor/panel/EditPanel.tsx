@@ -13,6 +13,8 @@ import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
+import {ContextMenuEventEmitter} from "../context_menu/ContextMenuEventEmitter";
+import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 
 
 const styles: CSSProperties = {
@@ -35,10 +37,18 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
 
-    const {originBlocks, blocks, loading} = blocksTypedSelector(state => state.blocks)
+    const {blocks, loading} = blocksTypedSelector(state => state.blocks)
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink} = useActions()
 
+    ContextMenuEventEmitter.subscribe("BlockTransformationTypes.ADD_TWO_BLOCKS", () => addBlocks(
+        creator.createBlock(
+            BlockTypes.BLOCK,
+            150,
+            150,
+            "idNew1"
+        )!!
+    ))
 
     useEffect(() => {
         fetchBlocks()
@@ -53,7 +63,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             //проверка - блок добавляется с панели перечисления
             // возможных компонентов (Component Panel) или
             //пепетаскивается существующий на панели редактирования блок
-            if (originBlocks[Number(id)] !== undefined) {
+            // if (originBlocks[Number(id)] !== undefined) {
                 //создаем новый id для добавляемого блока
                 let idNew: string = generateId()
                 // addBlocks(creator.createBlock(
@@ -62,7 +72,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 //     top,
                 //     idNew
                 // )!!)
-            } else {
+            // } else {
                 // blockMovement(blocks[1], 150)
                 if (!checkCoordinatesBlock(id, left, top))
                     //перетаскиваем блок
@@ -70,10 +80,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 else
                     //соединяем блоки
                     connectBlocksLink(id)
-            }
+            // }
         },
         [],
     )
+
 
 
     /**
@@ -108,8 +119,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             150,
             idNew
         )!!)
-
-
     }
 
     if (loading) {
@@ -119,15 +128,15 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отображение надписи старта при отстутсвии элементов
     if (blocks.length === 0)
         return (
-            <div style={styles} onClick={createBlock}>
+            <div style={styles} onClick={createBlock} >
                 <h4>
                     {START_TITLE}
+
                 </h4>
             </div>
         )
     else return (
-
-        <div id={"edit_panel"} ref={drop} style={styles}>
+        <div id={"edit_panel"} ref={drop} style={styles} >
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
@@ -135,6 +144,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     )
 }
+
 
 
 

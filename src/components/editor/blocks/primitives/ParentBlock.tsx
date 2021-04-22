@@ -1,4 +1,4 @@
-import { CSSProperties, FC} from "react";
+import {CSSProperties, FC} from "react";
 import blockImage from "../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
@@ -109,8 +109,9 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
-        ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-            "Строка")
+        if (e.button === 2)
+            ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+                "Строка")
     }
 
     //одинарное нажатие

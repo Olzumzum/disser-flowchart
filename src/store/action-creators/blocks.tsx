@@ -43,6 +43,7 @@ export const fetchOriginalBlocks = () => {
  *
  */
 export const fetchBlocks = () => {
+    console.log("Количество элементов " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
@@ -66,16 +67,15 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
-    console.log("Добавила")
+    console.log("Добавила " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            const response = blocks
-            response.push(block)
+            blocks.push(block)
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
-            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
