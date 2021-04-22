@@ -7,20 +7,24 @@
 Если вам будет удобно, то я проведу сортироваку по уровню вложенности и родительскому элементу
  */
 
-export let obj_array = [];
+//массив объектов, который необходимо получать
+export const obj_array = [];
 
-export let object_block = {
-    id: -1,
-    parent_id: -1,
-    neighbour_id: -1,
-    type: "",
-    inner_lvl: -1,
-    content: "",
-    inner_structures_numb: 0,
-    parameter: "",
-    parent_bool: false,
-    comment: "",
-};
+//функцция, создающая объект, который описывает блок
+export function object_block(id, parent_id, neighbour_id, type, inner_lvl, content, inner_structures_numb, parameter, parent_bool, comment){
+    return {
+        id,
+        parent_id,
+        neighbour_id,
+        type,
+        inner_lvl,
+        content,
+        inner_structures_numb,
+        parameter,
+        parent_bool,
+        comment
+    };
+}
 
 //ID
 /*

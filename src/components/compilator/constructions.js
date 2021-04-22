@@ -11,17 +11,34 @@ export const c_inic_construction = [
     'double'
 ]
 
+export const c_action_operators = [
+    '=',
+    '+=',
+    '-=',
+    '*=',
+    '/=',
+    '%=',
+    '&=',
+    '|=',
+    '^=',
+    '>>=',
+    '<<='
+]
+
 //выбор набора конструкций для ранзых ЯП и ЯК
-export function block_params(type, lang) {
+export function get_language_params(type, lang) {
     //будущий код
     let simple_block_construction;
     let block_construction;
     let block_params;
     let block_end = ';';
-    let inic_construction;
+    let iniz_construction; //типы переменных для конкретного языка
+    let action_operators;
+
     switch (lang) {
         case 'c':
-            inic_construction = c_inic_construction;
+            iniz_construction = c_inic_construction;
+            action_operators = c_action_operators;
             break;
         default:
             break;
@@ -42,7 +59,8 @@ export function block_params(type, lang) {
         block_construction: block_construction,
         block_params: block_params,
         block_end: block_end,
-        inic_construction: inic_construction,
+        inic_construction: iniz_construction,
+        action_operators: action_operators,
     }
     return params;
 

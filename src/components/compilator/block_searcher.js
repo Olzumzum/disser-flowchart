@@ -1,6 +1,6 @@
 //пакет функций по нахождению блоков ЯК в тексте кода
 
-import {block_params, c_inic_construction, constructions_list} from "./constructions";
+import {get_language_params, c_inic_construction, constructions_list} from "./constructions";
 import {
     search,
     search_construction,
@@ -9,7 +9,10 @@ import {
 } from "./text_searcher";
 import {content_maker, create_block} from "./block_creator";
 import {neighbour_block} from "./neigbour";
-import {search_inic, search_inic_construction} from "./variables";
+import {search_iniz_block, search_iniz_construction} from "./variables";
+import {obj_array} from "./object_block";
+import {arr_list, var_list} from "./var_list";
+import {search_action_block} from "./action";
 
 //функция нахождения ЯК
 export function block_processing(lines, lang) {
@@ -21,20 +24,19 @@ export function block_processing(lines, lang) {
     let content = ''; //УДАЛИТЬ
     for (var line = 0; line < lines.length; line++) { // перебор строк
         //поиск языковых конструкций в строке
-        let block = search_inic(lines, line, lang);
+        let block = search_iniz_block(lines, line, lang);
         if (block != false) {
-            content = content_maker(lines, block);
-            id++;
-
-            let type = "action";
-           // create_block(id,blocks,lines,line, block, type, true);
+            let test = obj_array;
         } else if (search_construction_result(lines, line)) { //ЯК найдена
             block = search_inner_construction(lines, line, id, blocks, inner_lvl);
-            id = block[3] + 1;
-            line = block[1].line;
-
+        } else {
+            block = search_action_block(lines,line,lang);
         }
+        line = block[1].line;
     }
+    let test = obj_array;
+    let test2 = var_list;
+    let test3 = arr_list;
     return blocks;
 }
 
@@ -62,7 +64,7 @@ export function search_block(lines, line, constr_arr, id, blocks, inner_lvl) {
 
     let type = constr_arr[1];
     let constr_pos = constr_arr[0];
-    let params = block_params(type);
+    let params = get_language_params(type);
 
     let constr_type = block_type_find(lines, line, params.block_construction, constr_pos); // сложность блока
     block_start = block_start_finder(lines, line, constr_pos, params, constr_type);

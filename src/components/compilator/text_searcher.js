@@ -1,6 +1,6 @@
 //пакет функций по поиску символов и ЯК в тексте кода
 
-import {block_params, constructions_list} from "./constructions";
+import {get_language_params, constructions_list} from "./constructions";
 
 
 //функция отображения результата поиска символа в тексте

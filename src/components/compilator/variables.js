@@ -1,15 +1,28 @@
 //функция нахождения объявления, определения переменных
-import {block_params} from "./constructions";
+import {get_language_params} from "./constructions";
 import {search, search_result} from "./text_searcher";
 import {content_maker, create_block} from "./block_creator";
-import {var_list} from "./var_list"
-import {ob, ob_array} from "./object_block";
+import {arr_list, newArr, newVar, var_list} from "./var_list"
+import {object_block, obj_array} from "./object_block";
+
+
+export function search_iniz_block(lines, line, lang) {
+    let content;
+    let block = search_iniz_construction(lines, line, lang);
+    if (block != false) {
+        content = content_maker(lines, block);
+        variables_searcher(content, block);
+    }
+    return block;
+}
 
 //возвращает позиции начала и конца блока объявления переменных
-export function search_inic_construction(lines, line, lang, l) {
+
+//L чисто для подстраховки, при ненадобности - удалить
+export function search_iniz_construction(lines, line, lang, l) {
     let block_start, block_end;
     var start_pos, end_pos;
-    let params = block_params('', lang);
+    let params = get_language_params('', lang);
     let i_c = params.inic_construction;
     let b_e = params.block_end;         //конструкция, обозначающая конец блока
     if (typeof l !== "undefined") {
@@ -40,7 +53,7 @@ export function search_inic_construction(lines, line, lang, l) {
         line++;
 
 
-    if (block_start.pos == line)
+    if (block_start.line == line)
         end_pos = search(lines[line], b_e, block_start.pos) + 1;
     else
         end_pos = search(lines[line], b_e) + 1;
@@ -53,25 +66,16 @@ export function search_inic_construction(lines, line, lang, l) {
 }
 
 //основная функция по нахождению объявления, определению переменных и созданию объекта
-export function search_inic(lines, line, lang) {
-    let type = "action";
-    let content;
-    let block = search_inic_construction(lines, line, lang);
-    if (block != false) {
-        content = content_maker(lines, block);
-        variables_searcher(content, block);
-    }
 
-}
 
-function variables_searcher(text, bl) {
+function variables_searcher(text, bl, in_lvl) {
+
     let variable;
-    let pos = 0;
-    let pos_equal = -1;
-    let pos_dat = -1;
-    let pos_s = 0;
+    let pos = 0, pos_equal = -1, pos_dat = -1, pos_s = 0;
     let block;
-    let hey;
+    let neighbour_id = -1;
+    let type = bl[2];
+
     while (pos != text.length) {
         if (search_result(text, '=', pos))
             pos_equal = search(text, '=', pos) + 1;
@@ -97,32 +101,54 @@ function variables_searcher(text, bl) {
         if (pos_equal < pos_dat) {
             //определение переменной
             block = equal_finder(text, pos_equal, pos_dat, pos_s);
-            var_list.push([text.substring(block[0].start, block[0].end), bl[2]]);
+            variable = text.substring(block[0].start, block[0].end);
+            if (!search_result(variable, '[')) { //если не массив
+                var_list.push(newVar(variable, type));
+            } else {
+                let size = variable.substring(search(variable, '['), variable.length);
+                variable = variable.substring(0, search(variable, '['));
+                arr_list.push(newArr(variable, type, size));
+            }
+
+
+            obj_array[obj_array.length] = object_block(
+                obj_array.length,
+                -1,
+                neighbour_id,
+                "initializing",
+                in_lvl,
+                text.substring(block[0].start, block[1].end),
+                -1,
+                bl[2],
+                false,
+                "");
+
         } else {
-            var_list.push([text.substring(pos_s, pos_dat), bl[2]]);
-            let b = ob;
-            b.id = 0;
-            b.type = 'inic';
-            b.parent_bool = true;
-            b.content = text.substring(pos_s, pos_dat);
-            b.inner_lvl = 0;
-            b.inner_structures_numb = 0;
-            b.neighbour_id = -1;
-            b.parameter = bl[2];
-            b.parent_id = -1;
-            ob_array.push(b);
-           // create_block(0, blocks, 0, );
-            hey = var_list;
+            variable = text.substring(pos_s, pos_dat);
+            var_list.push(newVar(variable, type));
+            let arr = obj_array; //после отладки удалить
+            obj_array[obj_array.length] = object_block(
+                obj_array.length,
+                -1,
+                neighbour_id,
+                "declaring",
+                in_lvl,
+                text.substring(pos_s, pos_dat),
+                -1,
+                bl[2],
+                false,
+                "");
+
         }
+        neighbour_id = obj_array.length - 1;
         pos_s = pos_dat + 1;
     }
 }
 
-
 //возвращает значение, присваеваемое переменной
 function equal_finder(text, pos_s, pos_e, pos) {
     let start_eq, end_eq;
-    let s_c = [['{','}'], ['"','"'], ["'", "'"], ['`','`']];
+    let s_c = [['{', '}'], ['"', '"'], ["'", "'"], ['`', '`']];
 
     for (let i = 0; i < s_c.length; i++)
         if (search_result(text, s_c[i][0], pos_s)) {
