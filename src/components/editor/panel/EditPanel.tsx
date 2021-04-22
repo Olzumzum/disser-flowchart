@@ -47,9 +47,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     useEffect(() => {
 
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (id: string) => {
-            console.log("log " + id)
-
-            const creator: IBlockFactory = new CreatorBlock()
             addBlocks(
                 creator.createBlock(
                     BlockTypes.BLOCK,
@@ -129,7 +126,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             }}>
                 <h4>
                     {START_TITLE}
-
                 </h4>
             </div>
         )
