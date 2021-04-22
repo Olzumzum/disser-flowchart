@@ -23,7 +23,6 @@ export class ContextMenu extends Component {
         this.handleContextMenu = this.handleContextMenu.bind(this)
         ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             (data) => {
-                console.log("передаваемый id " + data + " имеющийся id " + this.state.idBlock)
                 if (!data.toString().localeCompare(this.state.idBlock))
                     this.handleContextMenu(data)
                 else {
@@ -48,7 +47,6 @@ export class ContextMenu extends Component {
     }
 
     handleContextMenu = (e, data) => {
-        // console.log("Событие ")
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,

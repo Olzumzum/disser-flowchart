@@ -59,20 +59,15 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _blockInstance: React.FC<BlockProps> | undefined
     private _typeBlock: string = ""
 
-    // private _contextMenu =  <ContextMenu menu={itemsContexMenu} showMenu={this.state.showmenu}/>
-
 
     constructor(id: string,
                 left: number,
-                top: number, props: any) {
+                top: number) {
 
         this._id = id
         this._left = left
         this._top = top
     }
-
-    private g = false
-
 
     //создать экземпляр
     createBlock() {
@@ -87,7 +82,6 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
             const background = yellow ? 'yellow' : blockImage
             return (
                 <div>
-
                     <OverlayTrigger
                         placement={"right"}
                         delay={{show: 250, hide: 400}}
@@ -95,7 +89,6 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         <div
                             id={this._id}
                             style={{...this.style, background}}
-                            onDoubleClick={this.dbclick}
                             onMouseDown={this.mouseDownClick}
                         >
                             {title}
@@ -107,6 +100,15 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         }
     }
 
+    //Отобразить
+    render(): JSX.Element {
+        this.blockBackImg(blockImage)
+        return <this.blockInstance title={this._typeBlock}
+                                   left={this._left} top={this._top}/>;
+
+
+    }
+
     //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
@@ -116,12 +118,6 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //одинарное нажатие
     click(e: React.MouseEvent<HTMLElement>) {
-
-    }
-
-    //двойное нажатие
-    dbclick(e: React.MouseEvent<HTMLElement>) {
-
     }
 
     //вернуть экземпляр блока
@@ -145,53 +141,36 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._id;
     }
 
+    getTypeBlock(): string {
+        return BlockTypes.BLOCK;
+    }
+
     getLeft(): number {
         return this._left!!;
     }
-
-    getPreviousNeighbor(): string | undefined {
-        return this._prevBlock;
-    }
-
-    getSubsequentNeighbor(): string | undefined {
-        return this._nextBlock;
-    }
-
-    getTitle(): string {
-        return "";
+    setLeft(left: number): void {
+        this._left = left
     }
 
     getTop(): number {
         return this._top!!;
     }
-
-    getTypeBlock(): string {
-        return BlockTypes.BLOCK;
+    setTop(top: number): void {
+        this._top = top
     }
 
-
-    render(): JSX.Element {
-        this.blockBackImg(blockImage)
-        return <this.blockInstance title={this._typeBlock}
-                                   left={this._left} top={this._top}/>;
-
-
+    getPreviousNeighbor(): string | undefined {
+        return this._prevBlock;
     }
-
-    setLeft(left: number): void {
-        this._left = left
-    }
-
     setPreviousNeighbor(id: string): void {
         this._prevBlock = id
     }
 
+    getSubsequentNeighbor(): string | undefined {
+        return this._nextBlock;
+    }
     setSubsequentNeighbor(id: string): void {
         this._nextBlock = id
-    }
-
-    setTop(top: number): void {
-        this._top = top
     }
 
 }

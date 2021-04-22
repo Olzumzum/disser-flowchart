@@ -99,9 +99,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
         if (top !== -1) item.setTop(top)
         flag = true
     }
-
-
-
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {

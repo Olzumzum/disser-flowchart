@@ -52,7 +52,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                     BlockTypes.BLOCK,
                     150,
                     150,
-                    generateId()
                 )!!
             )
         })
@@ -64,27 +63,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
      */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
-            //проверка - блок добавляется с панели перечисления
-            // возможных компонентов (Component Panel) или
-            //пепетаскивается существующий на панели редактирования блок
-            // if (originBlocks[Number(id)] !== undefined) {
-            //создаем новый id для добавляемого блока
-            let idNew: string = generateId()
-            // addBlocks(creator.createBlock(
-            //     originBlocks[Number(id)].getTypeBlock(),
-            //     left,
-            //     top,
-            //     idNew
-            // )!!)
-            // } else {
-            // blockMovement(blocks[1], 150)
-            if (!checkCoordinatesBlock(id, left, top))
                 //перетаскиваем блок
                 changingBlockCoor(id, left, top)
-            else
+
                 //соединяем блоки
-                connectBlocksLink(id)
-            // }
+                // connectBlocksLink(id)
         },
         [],
     )

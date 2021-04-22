@@ -35,7 +35,7 @@ function selectTypeBlock(
     typeBlock: string, title: string, left: number, top: number, id: string
 ): IBlock | undefined {
     const blockFactory: IBlockFactory = new CreatorBlock()
-    return blockFactory.createBlock(typeBlock, left, top, id)
+    return blockFactory.createBlock(typeBlock, left, top)
 }
 
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
