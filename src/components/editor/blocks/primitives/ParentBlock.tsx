@@ -4,7 +4,7 @@ import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
-import {ContextMenu} from "../../context_menu/BlockContextMeny";
+import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
