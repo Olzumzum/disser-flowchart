@@ -101,7 +101,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                             {title}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={itemsContexMenu} showmenu={false}/>
+                    <ContextMenu menu={itemsContexMenu} showmenu={false} idBlock={this.getId()}/>
                 </div>
             )
         }
@@ -111,7 +111,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
             ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-                "Строка")
+                this.getId())
     }
 
     //одинарное нажатие

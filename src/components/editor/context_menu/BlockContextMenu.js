@@ -17,11 +17,21 @@ export class ContextMenu extends Component {
             Pos: "0px",
             yPos: "0px",
             showMenu: false,
+            idBlock: props.idBlock,
             data: []
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
         ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-            (data) => this.handleContextMenu(data))
+            (data) => {
+                console.log("передаваемый id " + data + " имеющийся id " + this.state.idBlock)
+                if (!data.toString().localeCompare(this.state.idBlock))
+                    this.handleContextMenu(data)
+                else {
+                    if(this.state.showMenu){
+                        this.handleClick()
+                    }
+                }
+            })
     }
 
     componentDidMount() {
