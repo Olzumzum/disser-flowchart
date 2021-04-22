@@ -7,20 +7,19 @@
 Если вам будет удобно, то я проведу сортироваку по уровню вложенности и родительскому элементу
  */
 
-// сперва объявлю эти сраные пременные, чтобы не было ошибки при запуске проекта
-let id, content, type, p_bool, parent_id, block = [], neighbour_id, parameter;
-//Есди будут какие-то изменения я уведомлю Вас и занесу их в данный файл.
+export let obj_array = [];
 
 export let object_block = {
-    id: id,
-    parent_id: parent_id,
-    neighbour_id: neighbour_id,
-    type: type,
-    inner_lvl: block[4],
-    content: content,
-    inner_structures_numb: block[2],
-    parameter: parameter,
-    parent_bool: p_bool,
+    id: -1,
+    parent_id: -1,
+    neighbour_id: -1,
+    type: "",
+    inner_lvl: -1,
+    content: "",
+    inner_structures_numb: 0,
+    parameter: "",
+    parent_bool: false,
+    comment: "",
 };
 
 //ID
@@ -112,6 +111,11 @@ export let object_block = {
        if (i == y) // parameter = "i == y"
        for (int i=0; i < y; i++) // parameter = "i == y"
        и т.д.
+ */
+
+//COMMENT
+/*
+    комментарии из кода
  */
 
 //ПАМЯТКА
