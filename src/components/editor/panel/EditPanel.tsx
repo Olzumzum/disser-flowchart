@@ -2,10 +2,10 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, checkCoordinatesBlock} from "../../../store/action-creators/blocks";
+import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
+import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
@@ -44,8 +44,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         fetchBlocks()
     }, [])
 
-    useEffect(() => {
 
+    //добаввить новый блок
+    useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (id: string) => {
             addBlocks(
                 creator.createBlock(
@@ -63,11 +64,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
      */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
-                //перетаскиваем блок
-                changingBlockCoor(id, left, top)
+            //перетаскиваем блок
+            changingBlockCoor(id, left, top)
 
-                //соединяем блоки
-                // connectBlocksLink(id)
+            //соединяем блоки
+            // connectBlocksLink(id)
         },
         [],
     )
@@ -105,7 +106,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     if (blocks.length === 0)
         return (
             <div style={styles} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, "id ident")
+                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS)
             }}>
                 <h4>
                     {START_TITLE}

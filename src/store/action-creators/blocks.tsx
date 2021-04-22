@@ -13,30 +13,6 @@ import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/
 
 const blocks = new Array<IBlock>()
 
-
-/**
- * загрузить список всех оригинальных блоков, расположенных
- * на панели компонентов
- */
-export const fetchOriginalBlocks = () => {
-    return async (dispatch: Dispatch<BlocksAction>) => {
-        try {
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            const response = blocks
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
-            dispatch({
-                type: BlocksActionTypes.FETCH_ORIGIN_BLOCKS_SUCCESS, payload: response
-            })
-        } catch (e) {
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
-            })
-        }
-    }
-}
-
 /**
  *
  * загрузить список всех добавленных на панель редактирования блоков
