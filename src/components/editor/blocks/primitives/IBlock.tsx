@@ -2,8 +2,6 @@
 export interface IBlock {
     getId(): string,
 
-    getTitle(): string,
-
     getTop(): number,
     setTop(top: number): void,
 

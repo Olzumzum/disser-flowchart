@@ -17,11 +17,20 @@ export class ContextMenu extends Component {
             Pos: "0px",
             yPos: "0px",
             showMenu: false,
+            idBlock: props.idBlock,
             data: []
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
         ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-            (data) => this.handleContextMenu(data))
+            (data) => {
+                if (!data.toString().localeCompare(this.state.idBlock))
+                    this.handleContextMenu(data)
+                else {
+                    if(this.state.showMenu){
+                        this.handleClick()
+                    }
+                }
+            })
     }
 
     componentDidMount() {
@@ -69,7 +78,11 @@ export class ContextMenu extends Component {
                             >
                                 <ul className="menu">
                                     {menu.map((i) =>
-                                        <li id={i.id} onClick={clickItemMenu}>{i.message}</li>
+                                        <li id={i.id} onClick={(e) => {
+                                            if (showMenu)
+                                                clickItemMenu(e)
+                                        }
+                                        }>{i.message}</li>
                                     )}
                                 </ul>
                             </div>
@@ -85,5 +98,5 @@ export class ContextMenu extends Component {
 }
 
 function clickItemMenu(e) {
-    BlockConversionManager(e.target.id)
+    BlockConversionManager({id: e.target.id})
 }

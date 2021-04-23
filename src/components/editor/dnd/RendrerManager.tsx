@@ -25,7 +25,7 @@ export class RendrerManager {
                 {
 
                     id: item.getId()!.toString(),
-                    title: item.getTitle(),
+                    title: item.getTypeBlock(),
                     left: item.getLeft(),
                     top: item.getTop(),
                     typeBlock: item.getTypeBlock(),
