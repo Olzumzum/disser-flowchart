@@ -28,11 +28,33 @@ interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
 
+// function g(){
+//     const c = stylesBlokc
+// }
+
+//общий стиль для блоков
+const stylesBlokc: CSSProperties = {
+    border: '1px dashed gray',
+    padding: '0.5rem 1rem',
+    cursor: 'move',
+    width: "40px",
+    height: "40px",
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'contain',
+    display: "flex",
+    justifyContent: "center",
+    margin: "10px"
+}
+
+export function getStyleBlock(){
+    return stylesBlokc
+}
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //общий стиль для блоков
-    protected styles: CSSProperties = {
+    protected stylesBlokc: CSSProperties = {
         border: '1px dashed gray',
         padding: '0.5rem 1rem',
         cursor: 'move',
@@ -130,11 +152,11 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //задать фоновое изображение блока
     blockBackImg(img: string): void {
-        this.styles.backgroundImage = `url(${img})`
+        this.stylesBlokc.backgroundImage = `url(${img})`
     }
 
     get style(): CSSProperties {
-        return this.styles
+        return this.stylesBlokc
     }
 
     getId(): string {
@@ -148,6 +170,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     getLeft(): number {
         return this._left!!;
     }
+
     setLeft(left: number): void {
         this._left = left
     }
@@ -155,6 +178,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     getTop(): number {
         return this._top!!;
     }
+
     setTop(top: number): void {
         this._top = top
     }
@@ -162,6 +186,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     getPreviousNeighbor(): string | undefined {
         return this._prevBlock;
     }
+
     setPreviousNeighbor(id: string): void {
         this._prevBlock = id
     }
@@ -169,6 +194,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     getSubsequentNeighbor(): string | undefined {
         return this._nextBlock;
     }
+
     setSubsequentNeighbor(id: string): void {
         this._nextBlock = id
     }

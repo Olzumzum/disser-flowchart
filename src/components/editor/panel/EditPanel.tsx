@@ -5,7 +5,7 @@ import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../blocks/factory/CreatorBlock";
+import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
 import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
@@ -15,15 +15,20 @@ import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
+import {calcCoordinates} from "../calculationCoordinats/blockCoordinates";
 
 
-const styles: CSSProperties = {
+const stylesEditPanel: CSSProperties = {
     float: "right",
     width: "100%",
     height: 400,
     border: '1px solid black',
     backgroundColor: 'aqua',
     marginRight: 6,
+}
+
+export function getStyleEditPanel(){
+    return stylesEditPanel
 }
 
 interface EditPanelProps {
@@ -47,12 +52,16 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     //добаввить новый блок
     useEffect(() => {
-        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (id: string) => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
+            const newId = generateId()
+            const coor = calcCoordinates(BlockTypes.BLOCK)
+
             addBlocks(
                 creator.createBlock(
+                    newId,
                     BlockTypes.BLOCK,
-                    150,
-                    150,
+                    coor[0],
+                    coor[1],
                 )!!
             )
         })
@@ -105,8 +114,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отображение надписи старта при отстутсвии элементов
     if (blocks.length === 0)
         return (
-            <div style={styles} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS)
+            <div style={stylesEditPanel} onClick={() => {
+                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, true)
             }}>
                 <h4>
                     {START_TITLE}
@@ -114,7 +123,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             </div>
         )
     else return (
-        <div id={"edit_panel"} ref={drop} style={styles}>
+        <div id={"edit_panel"} className={"edit_panel"} ref={drop} style={stylesEditPanel}>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>

@@ -8,13 +8,14 @@ import {ParentBlock} from "../primitives/ParentBlock";
  */
 export class CreatorBlock implements IBlockFactory {
     createBlock(
+        id: string,
         typeBlock: string,
         left: number,
         top: number,
     ): IBlock | undefined {
         switch (typeBlock) {
             case BlockTypes.BLOCK:
-                return new ParentBlock(generateId(),left,top)
+                return new ParentBlock(id,left,top)
 
         }
         return undefined;

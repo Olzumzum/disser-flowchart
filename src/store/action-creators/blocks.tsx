@@ -148,10 +148,6 @@ export const connectBlocksLink = (idOne: string) => {
     else console.log("Обработать ошибку")
 
     if (itemOne !== undefined && itemTwo !== undefined) {
-        //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
-        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
-        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
-        // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
 
         //установить соседство блоков
         setNeighbors(itemOne, itemTwo)
