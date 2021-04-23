@@ -8,13 +8,12 @@ export function calcCoordinates(type: string): number[] {
     return blockMiddleEditor(type)
 }
 
-
 function blockMiddleEditor(type: string): number[] {
 
     const styleEditPanel = getStyleEditPanel()
-
     const width= styleEditPanel.width
-    const height = styleEditPanel.height - styleEditPane
+    const height = 0
+        // styleEditPanel.height - styleEditPane
     console.log("coor panel " + width + " " + height)
 
     const sizeBlock = getStyleSizeOfTypeBlock(type)

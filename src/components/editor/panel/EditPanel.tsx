@@ -27,7 +27,7 @@ const stylesEditPanel: CSSProperties = {
     marginRight: 6,
 }
 
-export function getStyleEditPanel(){
+export function getStyleEditPanel() {
     return stylesEditPanel
 }
 

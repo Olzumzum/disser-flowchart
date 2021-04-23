@@ -1,4 +1,3 @@
-
 export interface IBlock {
     getId(): string,
 
@@ -19,4 +18,3 @@ export interface IBlock {
     getSubsequentNeighbor(): string | undefined
 
 }
-
