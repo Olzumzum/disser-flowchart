@@ -1,30 +1,7 @@
-//пакет функции, которые формируют объект массива (блок)
+//пакет функции, которые помогают формировать код
 
+import {getCurrentPosition, getTextInfo} from "./text_searcher";
 
-//функция создает объект (блок) и заносит в массив
-export function create_block(id, blo, lines, line, block, type, p_bool) {
-    //Формирование содержиого блока
-    var content = content_maker(lines, block);
-    var parent_id = parent_finder(block[2], id, blo, p_bool);
-    var neighbour_id = neighbour_search(type, blo, block[4]);
-    let parameter;
-    //создание объекта
-    let object_block = {
-        content: content,
-        id: id,
-        parent_id: parent_id,
-        neighbour_id: neighbour_id,
-        type: type,
-        inner_lvl: block[4],
-        inner_structures_numb: block[2],
-        parameter: parameter,
-        parent_bool: p_bool,
-    };
-    blo.push(object_block);
-  //  blocks.push(object_block);
-}
-
-//функция нахождения id соседнего блока
 function neighbour_search(type, blocks, in_lvl) {
     let flag;
     let neighbour = -1;
@@ -70,15 +47,17 @@ function parent_finder(inner_constr_numb, id, blocks, p_bool) {
 }
 
 //функция по формированию текста содержимого блока
-export function content_maker(lines, block) {
-    var content = "";
-    if (block[0].line != block[1].line) { // если блок в {...}
-        content = lines[block[0].line].substring(block[0].pos, lines[block[0].line].length);
-        for (var y = block[0].line + 1; y < block[1].line; y++)
-            content += lines[y];
-        content += lines[block[1].line].substring(0, block[1].pos);
+export function content_maker(block) {
+    let content = "";
+    let t_i = getTextInfo();
+    let c_p = getCurrentPosition();
+    if (block.line != c_p.line) { // если блок в {...}
+        content = t_i.text[block.line].substring(block.pos, t_i.text[block.line].length);
+        for (var y = block.line + 1; y < c_p.line; y++)
+            content += t_i.text[y];
+        content += t_i.text[c_p.line].substring(0, c_p.pos);
     } else
-        content = lines[block[0].line].substring(block[0].pos, block[1].pos);
+        content = t_i.text[block.line].substring(block.pos, c_p.pos);
     content = content.replaceAll(' ', '');
     return content;
 }

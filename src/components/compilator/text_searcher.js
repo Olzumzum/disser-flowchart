@@ -2,6 +2,44 @@
 
 import {get_language_params, constructions_list} from "./constructions";
 
+//объект, который хранит загруженный текст, рассматриваемую строку и номер символа
+export const text_info = {
+    lang: "",
+    text: "",
+}
+
+//функция создания
+export function newText(lang, text) {
+    text_info.lang = lang;
+    text_info.text = text;
+}
+
+export function getTextInfo() {
+    return text_info;
+}
+
+export const CurrentPosition = {
+    line: 0,
+    pos: 0,
+}
+
+
+export function getCurrentPosition() {
+    return CurrentPosition;
+}
+
+export function updateCurrentPosition(pos, line) {
+    if (typeof line !== "undefined")
+        CurrentPosition.line = line;
+    let test = text_info.text[CurrentPosition.line].length;
+    let test2 = text_info.text[CurrentPosition.line];
+    if (text_info.text[CurrentPosition.line].length - pos <= 2) {
+        CurrentPosition.line++;
+        CurrentPosition.pos = 0;
+    } else
+        CurrentPosition.pos = pos;
+}
+
 
 //функция отображения результата поиска символа в тексте
 export function search_result(text, c, i) {
@@ -25,50 +63,29 @@ export function search(text, c, i) {
 }
 
 //функция отображения результата нахождения ЯК в строке
-export function search_construction_result(lines, line, l) {
-    if (typeof l !== "indefined") {
-        for (var i = 0; i < constructions_list.length; i++)
-            if (search_result(lines[line], constructions_list[i], l)) {
-                return true;
-            }
-    } else
-        for (var i = 0; i < constructions_list.length; i++) {
-            if (search_result(lines[line], constructions_list[i])) {
-                return true;
-            }
-        }
-
-    if (typeof l !== "indefined")
-        for (var i = 0; i < constructions_list.length; i++)
-            if (search_result(lines[line], constructions_list[i], l)) {
-                return true;
-            } else
-                i++;
-    else i++;
-
-
+export function search_construction_result() {
+    for (var i = 0; i < constructions_list.length; i++)
+        if (search_result(getTextInfo().text[getCurrentPosition().line], constructions_list[i], getCurrentPosition().pos))
+            return true;
     return false;
 }
 
 //функция нахождения координаты ЯК в строке
-export function search_construction(lines, line, l) {
-    var start_pos, end_pos;
-    if (typeof l !== "undefined")
-        for (var i = 0; i < constructions_list.length; i++) {
-            if (search_result(lines[line], constructions_list[i], l)) {
-                start_pos = search(lines[line], constructions_list[i], l);
-                end_pos = start_pos + constructions_list[i].length;
-                return [end_pos, constructions_list[i]];
-            }
+export function search_construction() {
+
+    let lines = getTextInfo().text;
+    let line = getCurrentPosition().line;
+    let l = getCurrentPosition().pos;
+    let start_pos, end_pos;
+
+    for (var i = 0; i < constructions_list.length; i++)
+        if (search_result(lines[line], constructions_list[i], l)) {
+            start_pos = search(lines[line], constructions_list[i], l);
+            end_pos = start_pos + constructions_list[i].length;
+            updateCurrentPosition(end_pos);
+            return constructions_list[i];
         }
-    else
-        for (var i = 0; i < constructions_list.length; i++) {
-            if (search_result(lines[line], constructions_list[i])) {
-                start_pos = search(lines[line], constructions_list[i]);
-                end_pos = start_pos + constructions_list[i].length;
-                return [end_pos, constructions_list[i]];
-            }
-        }
+
     return false;
 }
 

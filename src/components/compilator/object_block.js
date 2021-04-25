@@ -1,17 +1,33 @@
 
-/* в результате поиска блока создаю вот такой объект или хз как это называется
+//функция создает объект и записывает его в массив
+export function createBlock(p_id, n_id, type, in_lvl, content,
+                            in_str_numb, param, com){
+    let id = obj_array.length;
+    obj_array[id] = object_block(id, p_id, n_id, type, in_lvl, content, in_str_numb, param, com);
+}
 
-переменная с доступом к данным через ключевые слова.
+export function updateBlockContent(id, content){
+    obj_array[id].content = content;
+}
 
-Вам, Ольга, уйдет массив с данными объектами.
-Если вам будет удобно, то я проведу сортироваку по уровню вложенности и родительскому элементу
- */
+export function getLastBlockInfo(){
+    let lastBlock = obj_array[obj_array.length-1];
+    let id = lastBlock.id;
+    let p_id = lastBlock.parent_id;
+    let n_id = lastBlock.neighbour_id;
+    return {
+        id,
+        p_id,
+        n_id
+    };
+}
 
 //массив объектов, который необходимо получать
 export const obj_array = [];
 
 //функцция, создающая объект, который описывает блок
-export function object_block(id, parent_id, neighbour_id, type, inner_lvl, content, inner_structures_numb, parameter, parent_bool, comment){
+export function object_block(id, parent_id, neighbour_id, type, inner_lvl,
+                             content, inner_structures_numb, parameter, comment){
     return {
         id,
         parent_id,
@@ -21,7 +37,6 @@ export function object_block(id, parent_id, neighbour_id, type, inner_lvl, conte
         content,
         inner_structures_numb,
         parameter,
-        parent_bool,
         comment
     };
 }
@@ -89,13 +104,6 @@ export function object_block(id, parent_id, neighbour_id, type, inner_lvl, conte
       при этом, при разворачивании блока while, стрелка к блоку for должна идти именно от блока i++;
       !т.о. у двух несвязанных друг с другом блока может быть один родитель
 */
-
-//PARENT_BLOCK
-/*
-    булевый формат
-    используется в моей программе для дальнейшего рассчета PARENT
-    возможно, Вам не пригодится, но пускай будет на всякий
- */
 
 //NEIGHBOUR_ID
 /*

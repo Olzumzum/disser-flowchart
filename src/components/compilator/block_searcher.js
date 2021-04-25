@@ -2,102 +2,130 @@
 
 import {get_language_params, c_inic_construction, constructions_list} from "./constructions";
 import {
+    getCurrentPosition,
+    getTextInfo,
+    newText,
     search,
     search_construction,
     search_construction_result,
-    search_result
+    search_result, updateCurrentPosition
 } from "./text_searcher";
-import {content_maker, create_block} from "./block_creator";
+import {content_maker} from "./block_creator";
 import {neighbour_block} from "./neigbour";
-import {search_iniz_block, search_iniz_construction} from "./variables";
-import {obj_array} from "./object_block";
+import {search_init_block, search_init_construction} from "./variables";
+import {object_block, obj_array, createBlock, getLastBlockInfo, updateBlockContent} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_action_block} from "./action";
 
+
 //функция нахождения ЯК
 export function block_processing(lines, lang) {
-    var id = 0;
-    var blocks = [];                    //массив из объектов-блоков
-    var block;
-    var neighbour = false;
-    var inner_lvl = -1;              //уровень вложенности
-    let content = ''; //УДАЛИТЬ
-    for (var line = 0; line < lines.length; line++) { // перебор строк
-        //поиск языковых конструкций в строке
-        let block = search_iniz_block(lines, line, lang);
-        if (block != false) {
-            let test = obj_array;
-        } else if (search_construction_result(lines, line)) { //ЯК найдена
-            block = search_inner_construction(lines, line, id, blocks, inner_lvl);
-        } else {
-            block = search_action_block(lines,line,lang);
-        }
-        line = block[1].line;
+    let inner_lvl = 0;              //уровень вложенности
+    let parent_id = -1;
+    let neighbour_id = -1;
+    let inner_structure_numb = 0; //количество вложенных структур да следующей уровне
+
+    //let block;
+    newText(lang, lines);
+    let l = getCurrentPosition().line;
+    let t = getTextInfo().text.length;
+    while (l != t) {
+        //let block =
+        search_block(parent_id, neighbour_id, inner_lvl);
+        l = getCurrentPosition().line;
+        let info = getLastBlockInfo();
+
+        neighbour_id = info.id;
+        inner_structure_numb++;
+        let test = obj_array;
+        let t = "nothing";
     }
+
+
+    /*
+    по завершению создаю объект с парметрами
+    inner_lvl = 0;
+    либо
+        parent_id = id - ссылается сам на себя
+    либо
+        parent_id = -1
+        id = -1
+    но это дичь
+     */
     let test = obj_array;
     let test2 = var_list;
     let test3 = arr_list;
-    return blocks;
+
 }
 
 //основная функция по нахождению ЯК, определению блока и созданию объекта
-function search_inner_construction(lines, line, id, blocks, inner_lvl,) {
-    var p_bool = false;
-    let tmp;
-    tmp = search_construction(lines, line);
-    inner_lvl++;
-    if (inner_lvl == 0)
-        p_bool = true;
-    var block = search_block(lines, line, tmp, id, blocks, inner_lvl);
-    id = block[3];
-    create_block(id, blocks, lines, line, block, tmp[1], p_bool);
-    block = neighbour_block(lines, block, tmp[1], id, blocks, inner_lvl, p_bool);
-    id = block[3] + 1;
+function search_block(p_id, n_id, in_lvl) {
+
+    let in_str_numb = 0;
+    in_lvl++;
+
+    let block = search_init_block(p_id, n_id, in_lvl);
+    if (block != false) {
+        let test = obj_array;
+    } else if (search_construction_result()) { //ЯК найдена
+        let construction = search_construction();
+        let params = get_language_params(construction);
+        //нужна функция поиска параметров блока ()
+        let parameter = "пока пусто"; //написать функцию поиска параметра
+        let comment = ""; //написать функцию по поиску комментария
+
+        createBlock(p_id, n_id, construction, in_lvl, "",
+            0, parameter, comment);
+
+        let block_id = getLastBlockInfo().id;
+
+        let constr_type = construction_type_find(construction, params);
+        block_start_finder(constr_type, params);
+        //записал начало блока
+        let block_start = {
+            line: getCurrentPosition().line,
+            pos: getCurrentPosition().pos
+        }
+        do{
+            let neighbour_id = getLastBlockInfo().id;
+            block = search_block(block_id, neighbour_id, in_lvl);
+            in_str_numb++;
+        } while (!block_end_finder(constr_type, params))
+
+
+        let content = content_maker(block_start);
+
+
+       updateBlockContent(block_id, content);
+
+    } else {
+        block = search_action_block(p_id, n_id, in_lvl);
+        if (block != false)
+            block = block; // заглушка
+        else {
+            updateCurrentPosition(0, getCurrentPosition().line + 1);
+            search_block(p_id,n_id,in_lvl-1);
+        }
+    }
+
+    //удалить в финальной версии
+    let test1 = getCurrentPosition();
+    let test2 = var_list;
+    let test3 = arr_list;
+    let test = obj_array;
     return block;
 }
 
-
-//функция формирования блока ЯК
-export function search_block(lines, line, constr_arr, id, blocks, inner_lvl) {
-    var inner_constructions_numb = 0; //кол-во вложенных конструкций
-    var block_start = {}, block_end = false;
-
-    let type = constr_arr[1];
-    let constr_pos = constr_arr[0];
-    let params = get_language_params(type);
-
-    let constr_type = block_type_find(lines, line, params.block_construction, constr_pos); // сложность блока
-    block_start = block_start_finder(lines, line, constr_pos, params, constr_type);
-    let pos = block_start.pos;
-    line = block_start.line;
-    //block_end = block_end_finder(lines, line, pos, params, constr_type);
-    //определяется окончание блока в тексте
-    while (block_end == false) {
-        var flag = 1;
-
-        //  while (flag != 0) {
-        //   pos = 0;
-        if (search_construction_result(lines, line, pos)) {    //если внутри блока использована ЯК
-            inner_constructions_numb++;
-            var tmp = search_inner_construction(lines, line, id, blocks, inner_lvl);
-            pos = tmp[1].pos + 1;
-            id = tmp[3] + 1;
-            line = tmp[1].line - 1;
-        } else
-            pos = 0;
-        block_end = block_end_finder(lines, line, pos, params, constr_type);
-        line++;
-        //  }
-    }
-
-    return [block_start, block_end, inner_constructions_numb, id, inner_lvl];
-}
-
 //возможно, ненужная функция по определению типа блока (с {} / без {})
-function block_type_find(lines, line, b_c, constr_pos) {
-    let sc = b_c[0];
+function construction_type_find(construction, params) {
+    let t_i = getTextInfo();
+    let c_p = getCurrentPosition();
+    let lines = t_i.text;
+    let line = c_p.line;
+    let sc = params.block_construction[0];
     let constr_type;
-    if (search_result(lines[line], sc, constr_pos)) //после ключевого слова ЯК указывается '{'
+
+    if (search_result(lines[line], sc, getCurrentPosition())) //после ключевого слова ЯК указывается '{'
         constr_type = 1; //блок начинается на одной строке с ЯК
     else if ((search_result(lines[line + 1], sc) && (search(lines[line + 1], sc) < 1))) { // '{' указывается на следующей строке после ключевого слова
         constr_type = 1; // блок начинается на следующей строке
@@ -107,10 +135,14 @@ function block_type_find(lines, line, b_c, constr_pos) {
     return constr_type;
 }
 
-
 //ПЕРЕПИСАТЬ
 //возвращает координаты начала блока
-function block_start_finder(lines, line, pos, params, c_t) {
+function block_start_finder(c_t, params) {
+    let t_i = getTextInfo();
+    let c_p = getCurrentPosition();
+    let lines = t_i.text;
+    let line = c_p.line;
+    let pos = c_p.pos;
     let block, l, p;
     switch (c_t) {
         case 1:
@@ -123,61 +155,21 @@ function block_start_finder(lines, line, pos, params, c_t) {
             }
             break;
         case 2:
-            if (search_result(lines[line], params.block_end, search(lines[line], params.block_params[1], pos))) {
-                l = line;
-                p = search(lines[line], params.block_params[1]) + 1;
-            } else {
-                l = line + 1;
-                p = 0;
-            }
-
+            return true;
             break;
     }
-    block = {
-        line: l,
-        pos: p
-    };
-    return block;
+    updateCurrentPosition(p, l);
 }
 
-/*
-function block_start_finder(lines, line, pos, params, c_t, w_f) {
-    let block, l, p;
-    let what_find = w_f;
-    switch (c_t) {
-        case 1:
-            if (search_result(lines[line], w_f, pos)) {
-                l = line;
-                p = search(lines[line], w_f, pos) + w_f.length;
-            } else if (search_result(lines[line + 1], w_f)) {
-                l = line + 1;
-                p = search(lines[l], w_f) + w_f.length;
-            }
-            break;
-        case 2:
-            if (search_result(lines[line], params.block_end, pos)) {
-                l = line;
-                p = search(lines[line], params.block_params[1]) + 1;
-            } else {
-                l = line + 1;
-                p = 0;
-            }
 
-            break;
-    }
-    block = {
-        line: l,
-        pos: p
-    };
-    return block;
-}
-*/
-
-//ПЕРЕПИСАТЬ
-//возвращает координаты конца блока
-function block_end_finder(lines, line, pos, params, c_t) {
+function block_end_finder(c_t, params) {
     //это все костыли, пока не научу прогармму находить все блоки
-    let block, l, p, s = params.block_construction[1];
+    let t_i = getTextInfo();
+    let c_p = getCurrentPosition();
+    let lines = t_i.text;
+    let line = c_p.line;
+    let pos = c_p.pos;
+    let l, p, s = params.block_construction[1];
     switch (c_t) {
         case 1:
             if (search_result(lines[line], s, pos)) {
@@ -187,21 +179,12 @@ function block_end_finder(lines, line, pos, params, c_t) {
                 return false;
             break;
         case 2:
-            //МЕГА КОСТЫЛЬ НА ВРЕМЯ (ПОКА НЕ НАУЧУ НАХОДИТЬ БЛОКИ ОБЪЯВЛЕНИЙ И ОПРЕДЕЛЕНИЙ)
-            if (lines[line].length > (search(lines[line], params.block_params[1])) + 1) {
-                l = line;
-                p = lines[line].length;
-            } else {
-                l = line + 1;
-                p = lines[l].length;
-            }
+            return true;
             break;
     }
-    block = {
-        line: l,
-        pos: p
-    };
-    return block;
+    updateCurrentPosition(p, l);
+
+    return true;
 }
 
 
