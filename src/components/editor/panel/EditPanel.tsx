@@ -125,7 +125,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
-            {/*<CanvasPainter/>*/}
+            <CanvasPainter/>
         </div>
 
     )
