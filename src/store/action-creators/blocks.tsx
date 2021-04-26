@@ -18,7 +18,6 @@ const blocks = new Array<IBlock>()
  *
  */
 export const fetchBlocks = () => {
-    console.log("Количество элементов " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
@@ -42,7 +41,6 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
-    console.log("Добавила " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             blocks.push(block)
@@ -106,7 +104,10 @@ let idItemTwo: string | undefined = undefined
  */
 export function getBlockById(id: string): IBlock | undefined {
     let block: IBlock | undefined = undefined
+    console.log("пришло " + id)
     blocks.forEach(item => {
+        console.log(item.getId())
+
         if (!item.getId().localeCompare(id))
             block = item
 

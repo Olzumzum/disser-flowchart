@@ -20,6 +20,7 @@ export class ContextMenu extends Component {
             idBlock: props.idBlock,
             data: []
         }
+
         this.handleContextMenu = this.handleContextMenu.bind(this)
         ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             (data) => {
@@ -80,7 +81,7 @@ export class ContextMenu extends Component {
                                     {menu.map((i) =>
                                         <li id={i.id} onClick={(e) => {
                                             if (showMenu)
-                                                clickItemMenu(e)
+                                                this.clickItemMenu(e)
                                         }
                                         }>{i.message}</li>
                                     )}
@@ -95,8 +96,9 @@ export class ContextMenu extends Component {
             </Motion>
         )
     }
+
+    clickItemMenu(e) {
+        BlockConversionManager({id: e.target.id, idBlock: this.state.idBlock})
+    }
 }
 
-function clickItemMenu(e) {
-    BlockConversionManager({id: e.target.id})
-}

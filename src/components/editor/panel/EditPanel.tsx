@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -53,15 +53,26 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     //добаввить новый блок
     useEffect(() => {
-        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
-            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, isInit)
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
+
+            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, data[0])
+            const block = creator.createBlock(
+                generateId(),
+                BlockTypes.BLOCK,
+                coor[0],
+                coor[1],
+            )!!
+
+            if (!data[0].isInit) {
+                const prevBlock = getBlockById(data[1].idBlock)
+                if (prevBlock !== undefined) {
+                    block.setParentId(prevBlock?.getId())
+                    block.setInnerLevel(prevBlock.getInnerLevel())
+                }
+            }
+
             addBlocks(
-                creator.createBlock(
-                    generateId(),
-                    BlockTypes.BLOCK,
-                    coor[0],
-                    coor[1],
-                )!!
+                block
             )
         })
     }, [])
@@ -111,7 +122,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     if (blocks.length === 0)
         return (
             <div style={stylesEditPanel} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, true)
+                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
             }}>
                 <h4>
                     {START_TITLE}
