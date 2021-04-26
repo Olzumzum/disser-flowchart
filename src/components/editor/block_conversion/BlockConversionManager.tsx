@@ -15,7 +15,7 @@ export const BlockConversionManager  = (props: BlockConversionManagerProps) => {
     switch (id) {
         case BlockTransformationTypes.ADD_TWO_BLOCKS:
             console.log("Менеджер добавляет ")
-            BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, "id ident")
+            BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, false)
             break;
 
         case BlockTransformationTypes.LOOP_FOR:

@@ -15,8 +15,7 @@ import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
-import {calcCoordinates} from "../calculationCoordinats/blockCoordinates";
-
+import {CoordinateCalculator} from "../calculationCoordinats/blockCoordinates";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -40,25 +39,25 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const renderManager = new RendrerManager()
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
-
+    //
+    const coorCalc = new CoordinateCalculator()
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
+    //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
+    // действия
     const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink} = useActions()
 
     useEffect(() => {
         fetchBlocks()
     }, [])
 
-
     //добаввить новый блок
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
-            const newId = generateId()
-            const coor = calcCoordinates(BlockTypes.BLOCK)
-
+            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, isInit)
             addBlocks(
                 creator.createBlock(
-                    newId,
+                    generateId(),
                     BlockTypes.BLOCK,
                     coor[0],
                     coor[1],
@@ -123,7 +122,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             </div>
         )
     else return (
-        <div id={"edit_panel"} className={"edit_panel"} ref={drop} style={stylesEditPanel}>
+        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
