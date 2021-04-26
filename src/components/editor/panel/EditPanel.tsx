@@ -45,7 +45,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor, connectBlocksLink} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -74,9 +74,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         (id: string, left: number, top: number) => {
             //перетаскиваем блок
             changingBlockCoor(id, left, top)
-
-            //соединяем блоки
-            // connectBlocksLink(id)
         },
         [],
     )

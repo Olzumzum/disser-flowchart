@@ -9,7 +9,6 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
 
 const blocks = new Array<IBlock>()
 
@@ -100,76 +99,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
 //id блока с которым будет создаваться связь
 let idItemTwo: string | undefined = undefined
 
-/**
- * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
- * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
- * и не перемещать блок
- * @param id перемещаемого блока
- * @param left - координата перемещаемого блока
- * @param top - координата перемещаемого блока
- */
-export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
-    let flag = false
-
-    blocks.forEach((item, i) => {
-
-        if (!flag && item.getId()?.localeCompare(id)) {
-            const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
-            const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
-
-            if ((left >= item.getLeft() || (left + blockWidth) >= item.getLeft()) &&
-                (left <= item.getLeft() + blockWidth) &&
-                (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
-                (top <= item.getTop() + blockTop)
-            ) {
-                idItemTwo = item.getId()
-                flag = true
-
-            }
-        }
-    })
-
-    return flag
-}
-
-
-/**
- * Задать соседство блоков
- * @param idOne - блок, идущий первым
- * @param idTwo - следующий блок
- */
-export const connectBlocksLink = (idOne: string) => {
-    let itemOne: IBlock | undefined
-    let itemTwo: IBlock | undefined
-
-
-    itemOne = getBlockById(idOne)
-    if (idItemTwo !== undefined) itemTwo = getBlockById(idItemTwo)
-    else console.log("Обработать ошибку")
-
-    if (itemOne !== undefined && itemTwo !== undefined) {
-
-        //установить соседство блоков
-        setNeighbors(itemOne, itemTwo)
-        checkCoorBlocksByFollow(itemOne, itemTwo)
-        //нарисовать связь
-        paintConnection(itemOne, itemTwo)
-        return async (dispatch: Dispatch<BlocksAction>) => {
-            dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
-        }
-    }
-
-}
-
-/**
- * Задать ссылки для двух элементов
- * @param itemOne
- * @param itemTwo
- */
-const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
-    itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
-    itemTwo.setPreviousNeighbor(itemOne.getId()!!)
-}
 
 /**
  * Поиска блока по идентификатору

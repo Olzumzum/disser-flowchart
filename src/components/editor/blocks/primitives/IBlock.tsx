@@ -11,10 +11,18 @@ export interface IBlock {
 
     render(): JSX.Element
 
-    setPreviousNeighbor(id: string): void
-    getPreviousNeighbor(): string | undefined
+    getParentId(): string
+    setParentId(parentId: string): void
 
-    setSubsequentNeighbor(id: string): void
-    getSubsequentNeighbor(): string | undefined
+    getNeighborId(): string
+    setNeighborId(neighbor: string): void
 
+    getInnerLevel(): number
+    setInnerLevel(innerLevel: number): void
+
+    getParameter(): string
+    setParameter(): string
+
+    getComment(): string
+    setComment(comment: string): void
 }

@@ -28,10 +28,6 @@ interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
 
-// function g(){
-//     const c = stylesBlokc
-// }
-
 //общий стиль для блоков
 const stylesBlokc: CSSProperties = {
     border: '1px dashed gray',
@@ -67,20 +63,28 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         justifyContent: "center",
         margin: "10px"
     }
-
-
+    //уникальный ключ
     private _id: string = ""
-    //ссылка на следующий блок
-    private _nextBlock: string | undefined = undefined
-    //ссылка на предыдущий блок
-    private _prevBlock: string | undefined = undefined
+
     //координаты блока
     private _top: number | undefined
     private _left: number | undefined
+
     //экземпляр класса
     private _blockInstance: React.FC<BlockProps> | undefined
+    //тип блока
     private _typeBlock: string = ""
 
+    //предыдущий блок
+    private _parentId: string = "-1"
+    //последующий блок
+    private _neighborId: string = "-1"
+    //уровень вложенности блока
+    private _innerLevel: number = -1
+    //выражение, которое хранится в скобках
+    private _parameter: string = ""
+    //комментарии из кода
+    private _comment: string = ""
 
     constructor(id: string,
                 left: number,
@@ -183,20 +187,44 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._top = top
     }
 
-    getPreviousNeighbor(): string | undefined {
-        return this._prevBlock;
+    getComment(): string {
+        return this._comment;
     }
 
-    setPreviousNeighbor(id: string): void {
-        this._prevBlock = id
+    getInnerLevel(): number {
+        return this._innerLevel;
     }
 
-    getSubsequentNeighbor(): string | undefined {
-        return this._nextBlock;
+    getNeighborId(): string {
+        return this._neighborId;
     }
 
-    setSubsequentNeighbor(id: string): void {
-        this._nextBlock = id
+    getParameter(): string {
+        return this._parameter;
+    }
+
+    getParentId(): string {
+        return this._parentId;
+    }
+
+    setComment(comment: string): void {
+        this._comment = comment
+    }
+
+    setInnerLevel(innerLevel: number): void {
+        this._innerLevel = innerLevel
+    }
+
+    setNeighborId(neighbor: string): void {
+        this._neighborId = neighbor
+    }
+
+    setParameter(): string {
+        return this._parentId;
+    }
+
+    setParentId(parentId: string): void {
+        this._parentId = parentId
     }
 
 }
