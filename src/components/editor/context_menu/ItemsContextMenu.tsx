@@ -1,14 +1,13 @@
-import {
-    ADD_TWO_BLOCKS,
-    CONDITIONAL_OPERATOR,
-    LOOP_FOR, LOOP_UNTIL,
-    LOOP_WHILE
-} from "../../../assets/strings/BlockTransformationTypes";
+import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 
+/**
+ * Список возможных преобразований блока, оотображаемый в контекстном меню
+ * Дается расшифровка на русском языке каждой операции
+ */
 export const itemsContexMenu = [
-    ADD_TWO_BLOCKS,
-    CONDITIONAL_OPERATOR,
-    LOOP_WHILE,
-    LOOP_FOR,
-    LOOP_UNTIL
+    {id: BlockTransformationTypes.ADD_TWO_BLOCKS, message: "Добавить два блока"},
+    {id: BlockTransformationTypes.CONDITIONAL_OPERATOR, message: "Условный оператор"},
+    {id: BlockTransformationTypes.LOOP_WHILE, message: "Цикл while"},
+    {id: BlockTransformationTypes.LOOP_FOR, message: "Цикл for"},
+    {id: BlockTransformationTypes.LOOP_UNTIL, message: "Цикл until"}
 ]

@@ -9,33 +9,8 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {checkCoorBlocksByFollow, paintConnection} from "../../components/editor/connections/ConnectionPainter";
 
 const blocks = new Array<IBlock>()
-
-
-/**
- * загрузить список всех оригинальных блоков, расположенных
- * на панели компонентов
- */
-export const fetchOriginalBlocks = () => {
-    return async (dispatch: Dispatch<BlocksAction>) => {
-        try {
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            const response = blocks
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
-            dispatch({
-                type: BlocksActionTypes.FETCH_ORIGIN_BLOCKS_SUCCESS, payload: response
-            })
-        } catch (e) {
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
-            })
-        }
-    }
-}
 
 /**
  *
@@ -43,6 +18,7 @@ export const fetchOriginalBlocks = () => {
  *
  */
 export const fetchBlocks = () => {
+    console.log("Количество элементов " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
@@ -66,15 +42,15 @@ export const fetchBlocks = () => {
  * @param block
  */
 export const addBlocks = (block: IBlock) => {
+    console.log("Добавила " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            const response = blocks
-            response.push(block)
+            blocks.push(block)
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
-            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -98,9 +74,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
         if (top !== -1) item.setTop(top)
         flag = true
     }
-
-
-
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
@@ -126,80 +99,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
 //id блока с которым будет создаваться связь
 let idItemTwo: string | undefined = undefined
 
-/**
- * Проверить при перемещении блока, не пытается ли пользователь создать связь между блоками.
- * Проверка осуществляется сравнением координат - если площади блоков пересекаются - создать связь
- * и не перемещать блок
- * @param id перемещаемого блока
- * @param left - координата перемещаемого блока
- * @param top - координата перемещаемого блока
- */
-export const checkCoordinatesBlock = (id: string, left: number, top: number) => {
-    let flag = false
-
-    blocks.forEach((item, i) => {
-
-        if (!flag && item.getId()?.localeCompare(id)) {
-            const blockWidth: number = document.getElementById(item.getId()!!)!!.clientWidth
-            const blockTop: number = document.getElementById(item.getId()!!)!!.clientHeight
-
-            if ((left >= item.getLeft() || (left + blockWidth) >= item.getLeft()) &&
-                (left <= item.getLeft() + blockWidth) &&
-                (top >= item.getTop() || (top + blockTop) >= item.getTop()) &&
-                (top <= item.getTop() + blockTop)
-            ) {
-                idItemTwo = item.getId()
-                flag = true
-
-            }
-        }
-    })
-
-    return flag
-}
-
-
-/**
- * Задать соседство блоков
- * @param idOne - блок, идущий первым
- * @param idTwo - следующий блок
- */
-export const connectBlocksLink = (idOne: string) => {
-    let itemOne: IBlock | undefined
-    let itemTwo: IBlock | undefined
-
-
-    itemOne = getBlockById(idOne)
-    if (idItemTwo !== undefined) itemTwo = getBlockById(idItemTwo)
-    else console.log("Обработать ошибку")
-
-    if (itemOne !== undefined && itemTwo !== undefined) {
-        //ЗДЕСЬ НУЖНО БУДЕТ УЧЕСТЬ ТИП БЛОКА
-        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА" && itemTwo.getTypeBlock() == "БЛОК ВХОДА") ОШИБКА
-        // if(itemOne.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
-        // if(itemTwo.getTypeBlock() == "БЛОК ВХОДА") СДЕЛАТЬ ЕГО ПЕРВЫМ
-
-        //установить соседство блоков
-        setNeighbors(itemOne, itemTwo)
-        checkCoorBlocksByFollow(itemOne, itemTwo)
-        //нарисовать связь
-        paintConnection(itemOne, itemTwo)
-        return async (dispatch: Dispatch<BlocksAction>) => {
-            dispatch({type: BlocksActionTypes.PUT_DATA, payload: blocks})
-        }
-    }
-
-}
-
-/**
- * Задать ссылки для двух элементов
- * @param itemOne
- * @param itemTwo
- */
-const setNeighbors = (itemOne: IBlock, itemTwo: IBlock) => {
-    itemOne.setSubsequentNeighbor(itemTwo.getId()!!)
-    itemTwo.setPreviousNeighbor(itemOne.getId()!!)
-}
 
 /**
  * Поиска блока по идентификатору

@@ -3,11 +3,13 @@ import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
 import {ContextMenuActionType} from "./ContextMenuActionType";
+import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
  * Отображает список возможных действий (преобразований) с текущим элементом (блоком)
  */
+
 export class ContextMenu extends Component {
     constructor(props) {
         super(props);
@@ -15,11 +17,20 @@ export class ContextMenu extends Component {
             Pos: "0px",
             yPos: "0px",
             showMenu: false,
+            idBlock: props.idBlock,
             data: []
         }
         this.handleContextMenu = this.handleContextMenu.bind(this)
         ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-            (data) => this.handleContextMenu(data))
+            (data) => {
+                if (!data.toString().localeCompare(this.state.idBlock))
+                    this.handleContextMenu(data)
+                else {
+                    if(this.state.showMenu){
+                        this.handleClick()
+                    }
+                }
+            })
     }
 
     componentDidMount() {
@@ -36,9 +47,6 @@ export class ContextMenu extends Component {
     }
 
     handleContextMenu = (e, data) => {
-
-        console.log("show контекст меню " + data)
-
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,
@@ -70,7 +78,11 @@ export class ContextMenu extends Component {
                             >
                                 <ul className="menu">
                                     {menu.map((i) =>
-                                        <li id={i.id} onClick={clickItemMenu}>{i.message}</li>
+                                        <li id={i.id} onClick={(e) => {
+                                            if (showMenu)
+                                                clickItemMenu(e)
+                                        }
+                                        }>{i.message}</li>
                                     )}
                                 </ul>
                             </div>
@@ -86,5 +98,5 @@ export class ContextMenu extends Component {
 }
 
 function clickItemMenu(e) {
-    console.log("кликнули " + e.currentTarget.id)
+    BlockConversionManager({id: e.target.id})
 }
