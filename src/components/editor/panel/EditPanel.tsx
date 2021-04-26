@@ -16,6 +16,7 @@ import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
 import {CoordinateCalculator} from "../calculationCoordinats/blockCoordinates";
+import {IBlock} from "../blocks/primitives/IBlock";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -54,8 +55,17 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //добаввить новый блок
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
+            const prevBlock: IBlock | undefined = undefined
+            let coor: number[]
 
-            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, data[0])
+            if (data[0].isInit) {
+
+                coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, data[0].isInit, null)
+            } else {
+                const prevBlock = getBlockById(data[1].idBlock)!!
+                coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, data[0].isInit,
+                    [prevBlock.getLeft(), prevBlock!.getTop()])
+            }
             const block = creator.createBlock(
                 generateId(),
                 BlockTypes.BLOCK,

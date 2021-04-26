@@ -104,10 +104,8 @@ let idItemTwo: string | undefined = undefined
  */
 export function getBlockById(id: string): IBlock | undefined {
     let block: IBlock | undefined = undefined
-    console.log("пришло " + id)
-    blocks.forEach(item => {
-        console.log(item.getId())
 
+    blocks.forEach(item => {
         if (!item.getId().localeCompare(id))
             block = item
 
