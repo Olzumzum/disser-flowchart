@@ -52,13 +52,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //добаввить новый блок
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
-            const newId = generateId()
-            const coor = calcCoordinates(BlockTypes.BLOCK
-                )
-
+            const coor = calcCoordinates(BlockTypes.BLOCK, isInit)
             addBlocks(
                 creator.createBlock(
-                    newId,
+                    generateId(),
                     BlockTypes.BLOCK,
                     coor[0],
                     coor[1],
@@ -101,7 +98,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             }
 
             moveBlock(item.id, left, top)
-            console.log("коор при перемещении " + left + " top " + top)
+
             return undefined
         },
     })
