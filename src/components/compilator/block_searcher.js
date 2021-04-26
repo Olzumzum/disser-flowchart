@@ -7,13 +7,20 @@ import {
     newText,
     search,
     search_construction,
-    search_construction_result,
+    search_construction_result, search_content,
     search_result, updateCurrentPosition
 } from "./text_searcher";
 import {content_maker} from "./block_creator";
 import {neighbour_block} from "./neigbour";
 import {search_init_block, search_init_construction} from "./variables";
-import {object_block, obj_array, createBlock, getLastBlockInfo, updateBlockContent} from "./object_block";
+import {
+    object_block,
+    obj_array,
+    createBlock,
+    getLastBlockInfo,
+    updateBlockContent,
+    updateBlockInnerStructureNumb
+} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_action_block} from "./action";
 
@@ -28,17 +35,16 @@ export function block_processing(lines, lang) {
     //let block;
     newText(lang, lines);
     let l = getCurrentPosition().line;
-    let t = getTextInfo().text.length;
+    let t = getTextInfo().text.length - 1;
     while (l != t) {
         //let block =
-        search_block(parent_id, neighbour_id, inner_lvl);
+
+        neighbour_id = search_block(parent_id, neighbour_id, inner_lvl);
         l = getCurrentPosition().line;
         let info = getLastBlockInfo();
-
-        neighbour_id = info.id;
         inner_structure_numb++;
         let test = obj_array;
-        let t = "nothing";
+        let t = "t";
     }
 
 
@@ -61,32 +67,43 @@ export function block_processing(lines, lang) {
 //основная функция по нахождению ЯК, определению блока и созданию объекта
 function search_block(p_id, n_id, in_lvl) {
 
+    let block_id;
+
     let in_str_numb = 0;
     in_lvl++;
 
     let block = search_init_block(p_id, n_id, in_lvl);
     if (block != false) {
         let test = obj_array;
+        block_id = getLastBlockInfo().id;
     } else if (search_construction_result()) { //ЯК найдена
+        let block_start;
+        let parameter;
+        let l = getCurrentPosition();
         let construction = search_construction();
         let params = get_language_params(construction);
         //нужна функция поиска параметров блока ()
-        let parameter = "пока пусто"; //написать функцию поиска параметра
+        block_start = {
+            line: getCurrentPosition().line,
+            pos: getCurrentPosition().pos
+        }
+        if (search_content(params.block_params))
+            parameter = content_maker(block_start); //написать функцию поиска параметра
         let comment = ""; //написать функцию по поиску комментария
 
         createBlock(p_id, n_id, construction, in_lvl, "",
             0, parameter, comment);
 
-        let block_id = getLastBlockInfo().id;
+        block_id = getLastBlockInfo().id;
 
         let constr_type = construction_type_find(construction, params);
         block_start_finder(constr_type, params);
         //записал начало блока
-        let block_start = {
+        block_start = {
             line: getCurrentPosition().line,
             pos: getCurrentPosition().pos
         }
-        do{
+        do {
             let neighbour_id = getLastBlockInfo().id;
             block = search_block(block_id, neighbour_id, in_lvl);
             in_str_numb++;
@@ -95,16 +112,16 @@ function search_block(p_id, n_id, in_lvl) {
 
         let content = content_maker(block_start);
 
-
-       updateBlockContent(block_id, content);
+        updateBlockContent(block_id, content);
+        updateBlockInnerStructureNumb(block_id, in_str_numb);
 
     } else {
         block = search_action_block(p_id, n_id, in_lvl);
         if (block != false)
-            block = block; // заглушка
+            block_id = getLastBlockInfo().id;
         else {
             updateCurrentPosition(0, getCurrentPosition().line + 1);
-            search_block(p_id,n_id,in_lvl-1);
+            block_id = search_block(p_id, n_id, in_lvl - 1);
         }
     }
 
@@ -113,7 +130,7 @@ function search_block(p_id, n_id, in_lvl) {
     let test2 = var_list;
     let test3 = arr_list;
     let test = obj_array;
-    return block;
+    return block_id;
 }
 
 //возможно, ненужная функция по определению типа блока (с {} / без {})
@@ -155,7 +172,7 @@ function block_start_finder(c_t, params) {
             }
             break;
         case 2:
-            return true;
+            return;
             break;
     }
     updateCurrentPosition(p, l);

@@ -26,6 +26,7 @@ export function read_file() {
 function compile_in(text) {
     if (text !== undefined) {
         text = text.replaceAll('\t', '');
+        text = text.replace(/\n+/g,'\n');
         // alert (text);
         var lines = text.split('\n'); //делим файл на строки
         let lang = 'c'; //тут необходимо передавать используемый ЯП

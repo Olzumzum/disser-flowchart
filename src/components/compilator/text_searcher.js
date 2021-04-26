@@ -29,15 +29,20 @@ export function getCurrentPosition() {
 }
 
 export function updateCurrentPosition(pos, line) {
-    if (typeof line !== "undefined")
-        CurrentPosition.line = line;
-    let test = text_info.text[CurrentPosition.line].length;
-    let test2 = text_info.text[CurrentPosition.line];
+    let t_i = getTextInfo();
+    if (line < t_i.text.length)
+        if (typeof line !== "undefined")
+            if (line < t_i.text.length)
+                CurrentPosition.line = line;
     if (text_info.text[CurrentPosition.line].length - pos <= 2) {
-        CurrentPosition.line++;
-        CurrentPosition.pos = 0;
+        if (CurrentPosition.line < t_i.text.length) {
+            CurrentPosition.line++;
+            CurrentPosition.pos = 0;
+        } else
+            CurrentPosition.pos = t_i.text[CurrentPosition.line].length - 1;
     } else
         CurrentPosition.pos = pos;
+
 }
 
 
@@ -89,3 +94,41 @@ export function search_construction() {
     return false;
 }
 
+export function search_content(symb_block) {
+    let symb1 = symb_block[0];
+    let symb2 = symb_block[1];
+    let text = getTextInfo().text;
+    let current_pos = getCurrentPosition();
+    let line = current_pos.line;
+    let pos = current_pos.pos;
+    let start_pos, end_pos;
+    if (search_result(text[line], symb1, pos))
+        if (search_result(text[line], symb2, pos)) {
+            end_pos = search(text[line], symb2, pos);
+            start_pos = search(text[line], symb1, pos);
+            if (start_pos < end_pos) {
+                updateCurrentPosition(start_pos+1);
+                while (search_content(symb_block))
+                ;
+                return true;
+
+            } else {
+                updateCurrentPosition(end_pos+1);
+                return false;
+            }
+        } else {
+            start_pos = search(text[line], symb1, pos);
+            updateCurrentPosition(start_pos+1);
+            while (!search_content(symb_block))
+                ;
+            return true;
+        }
+    else if (search_result(text[line], symb2, pos)) {
+        let end_pos = search(text[line], symb2, pos);
+        updateCurrentPosition(end_pos+1);
+        return false;
+    } else {
+        updateCurrentPosition(0, getCurrentPosition().line + 1);
+        return true;
+    }
+}
