@@ -3,7 +3,8 @@ export const constructions_list = [
     'for',
     'if',
     'else',
-    'switch'
+    'switch',
+    'do'
 ]
 
 export const c_inic_construction = [

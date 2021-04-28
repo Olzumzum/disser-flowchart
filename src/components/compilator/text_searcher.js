@@ -34,7 +34,7 @@ export function updateCurrentPosition(pos, line) {
         if (typeof line !== "undefined")
             if (line < t_i.text.length)
                 CurrentPosition.line = line;
-    if (text_info.text[CurrentPosition.line].length - pos <= 2) {
+    if (text_info.text[CurrentPosition.line].length - pos < 1) {
         if (CurrentPosition.line < t_i.text.length) {
             CurrentPosition.line++;
             CurrentPosition.pos = 0;
