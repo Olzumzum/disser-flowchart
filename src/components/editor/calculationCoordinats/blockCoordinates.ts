@@ -1,6 +1,7 @@
 import {getStyleBlock} from "../blocks/primitives/ParentBlock";
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {getStyleEditPanel} from "../panel/EditPanel";
+import {getBlockById} from "../../../store/action-creators/blocks";
 
 const MIN_BLOCKS_DISTANCE = 15;
 
@@ -9,42 +10,44 @@ export class CoordinateCalculator {
     private styleEditPanel = getStyleEditPanel()
     private width = document.body.clientWidth
     private height = Number(this.styleEditPanel.height)
-    private parent: number[] | null = null
 
     //функция, в которую передаются все входные параметры для расчета
-    public calcCoordinates(type: string, isInit: boolean, parent: number[] | null): number[] {
-        if (parent !== null) this.parent = parent
-        return this.blockMiddleEditor(type, isInit)
+    public calcCoordinates(typeBlock: string, parentId: string): number[] {
+        let parent: number[] | null = null
+
+        if (parentId.localeCompare("-1")) {
+            const prevBlock = getBlockById(parentId)!!
+            parent = [prevBlock.getLeft(), prevBlock!.getTop()]
+        }
+
+        return this.calcDistanceBlocks(typeBlock, parent)
     }
 
+    //расчитать координаты для инициализирующего блока
+    private blockMiddleEditor(sizeBlock: number[]): number[] {
 
-    blockMiddleEditor(type: string, isInit: boolean): number[] {
-
-        //получить размеры блока
-        const sizeBlock = this.getStyleSizeOfTypeBlock(type)
         //итоговые координаты блока
         let left: number = 0
         let top: number = 0
 
-        if (isInit) {
-            console.log(" true")
-            //высчитать координаты для отрисовки по середине панели
-            left = this.width / 2 - (sizeBlock[0] / 2)
-            top = this.height / 2 - (sizeBlock[1] / 2)
-        } else {
-            console.log(" false")
-            left = this.parent!![0]
-            top = this.parent!![1] + sizeBlock[1] + MIN_BLOCKS_DISTANCE
-
-        }
-
-        console.log("cooor " + left + " " + top)
+        //высчитать координаты для отрисовки по середине панели
+        left = this.width / 2 - (sizeBlock[0] / 2)
+        top = this.height / 2 - (sizeBlock[1] / 2)
         return [left, top]
+    }
+
+    //расчитать коориданты для остальных блоков
+    private calcCoorOtherBlocks(sizeBlock: number[], parent: number[]) {
+        //итоговые координаты блока
+        let left: number = parent!![0]
+        let top: number = parent!![1] + sizeBlock[1] + MIN_BLOCKS_DISTANCE
+        return [left, top]
+
     }
 
 
     //получить размеры блока через его стиль
-    getStyleSizeOfTypeBlock(type: string): number[] {
+    private getStyleSizeOfTypeBlock(type: string): number[] {
         let size: any[] = []
         switch (type) {
             case BlockTypes.BLOCK:
@@ -64,7 +67,15 @@ export class CoordinateCalculator {
         return size
     }
 
-    calcDistanceBlocks(typeBlock: string) {
+    //расчитать координаты
+    calcDistanceBlocks(typeBlock: string, parent: number[] | null): number[] {
+        //получить размеры блока
+        const sizeBlock = this.getStyleSizeOfTypeBlock(typeBlock)
 
+        //если блок первый и не имеет родителей
+        if (parent === null)
+            return this.blockMiddleEditor(sizeBlock)
+        //если координаты блока высчитываются из координат окружающих блоков
+        else return this.calcCoorOtherBlocks(sizeBlock, parent);
     }
 }

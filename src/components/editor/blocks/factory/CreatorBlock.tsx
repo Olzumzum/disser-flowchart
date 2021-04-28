@@ -2,11 +2,19 @@ import {IBlock} from "../primitives/IBlock";
 import {BlockTypes} from "../primitives/BlockTypes";
 import {IBlockFactory} from "./IBlockFactory";
 import {ParentBlock} from "../primitives/ParentBlock";
+import {getBlockById} from "../../../../store/action-creators/blocks";
+import {CoordinateCalculator} from "../../calculationCoordinats/blockCoordinates";
 
 /**
  * Создать блок, который будет существовать на панели редактирования
  */
 export class CreatorBlock implements IBlockFactory {
+    private coorCalc: CoordinateCalculator
+    
+    constructor() {
+        this.coorCalc = new CoordinateCalculator()
+    }
+
     createBlock(
         id: string,
         typeBlock: string,
@@ -21,6 +29,8 @@ export class CreatorBlock implements IBlockFactory {
 
     }
 }
+
+
 
 export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | undefined {
     // let s: string = ""
