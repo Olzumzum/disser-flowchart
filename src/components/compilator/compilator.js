@@ -26,9 +26,11 @@ export function read_file() {
 function compile_in(text) {
     if (text !== undefined) {
         text = text.replaceAll('\t', '');
-        text = text.replace(/\n+/g,'\n');
+        //text = text.replace(/\n+/g,'\n');
         // alert (text);
-        var lines = text.split('\n'); //делим файл на строки
+        let lines = text.split('\n'); //делим файл на строки
+        for (let i = 0; i < lines.length; i++)
+            lines[i] = lines[i].replaceAll('\r', '');
         let lang = 'c'; //тут необходимо передавать используемый ЯП
         block_processing(lines, lang);
     }

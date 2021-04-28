@@ -55,8 +55,9 @@ export function content_maker(block) {
         content = t_i.text[block.line].substring(block.pos, t_i.text[block.line].length);
         for (var y = block.line + 1; y < c_p.line; y++)
             content += t_i.text[y];
-        content += t_i.text[c_p.line].substring(0, c_p.pos);
-    } else
+        if (c_p.pos != 0)
+            content += t_i.text[c_p.line].substring(0, c_p.pos);
+    } else if (c_p.pos != 0)
         content = t_i.text[block.line].substring(block.pos, c_p.pos);
     content = content.replaceAll(' ', '');
     return content;

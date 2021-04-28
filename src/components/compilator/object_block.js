@@ -20,6 +20,11 @@ export function updateBlockContent(id, content){
     obj_array[id].content = content;
 }
 
+//функция обновляет содержимое объекта-блока
+export function updateBlockParameter(id, parameter){
+    obj_array[id].parameter = parameter;
+}
+
 //функция обновляет число вложенных конструкций в объекте-блоке
 export function updateBlockInnerStructureNumb(id, numb){
     obj_array[id].inner_structures_numb = numb;
