@@ -9,6 +9,7 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
+import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
 
 const blocks = new Array<IBlock>()
 
@@ -56,6 +57,56 @@ export const addBlocks = (block: IBlock) => {
         }
     }
 }
+
+
+export const linkMaker = (currentBlockId: string,
+                          parentBlockId: string,) => {
+
+
+    // if (currentBlockId === undefined || currentBlockId.localeCompare("")) return Error
+    // if (parentBlockId === null || undefined) return Error
+    console.log("лИНКМЕЙК")
+    const currentBlock: IBlock | undefined = getBlockById(currentBlockId)
+    currentBlock?.setParentId(parentBlockId)
+    let parentBlock: IBlock | undefined
+
+    //если блок самый первый
+    if (parentBlockId.localeCompare("-1")) {
+
+        parentBlock = getBlockById(parentBlockId)
+
+        currentBlock?.setParentId(parentBlockId)
+        parentBlock?.setNeighborId(currentBlockId)
+    }
+
+    blocks.forEach(item => {
+        if (!item.getId().localeCompare(currentBlockId)){
+         item = currentBlock!!
+        }
+        if (!item.getId().localeCompare(parentBlockId)){
+            item = parentBlock!!
+        }
+    })
+    paintConnection(currentBlock!!, parentBlock!!)
+
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
+            // const response = originalBlocks
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
+            })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
+            })
+        }
+    }
+}
+
 
 /**
  * изменение координат блока с указанным id

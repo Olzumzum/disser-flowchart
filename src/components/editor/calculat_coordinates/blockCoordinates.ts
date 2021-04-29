@@ -1,4 +1,3 @@
-import {getStyleBlock} from "../blocks/primitives/ParentBlock";
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById} from "../../../store/action-creators/blocks";
@@ -12,7 +11,7 @@ export class CoordinateCalculator {
     private height = Number(this.styleEditPanel.height)
 
     //функция, в которую передаются все входные параметры для расчета
-    public calcCoordinates(typeBlock: string, parentId: string): number[] {
+    public calcCoordinates(idBlock: string, parentId: string): number[] {
         let parent: number[] | null = null
 
         if (parentId.localeCompare("-1")) {
@@ -20,7 +19,7 @@ export class CoordinateCalculator {
             parent = [prevBlock.getLeft(), prevBlock!.getTop()]
         }
 
-        return this.calcDistanceBlocks(typeBlock, parent)
+        return this.calcDistanceBlocks(idBlock, parent)
     }
 
     //расчитать координаты для инициализирующего блока
@@ -47,12 +46,12 @@ export class CoordinateCalculator {
 
 
     //получить размеры блока через его стиль
-    private getStyleSizeOfTypeBlock(type: string): number[] {
+    private getStyleSizeOfTypeBlock(idBlock: string): number[] {
         let size: any[] = []
-        switch (type) {
-            case BlockTypes.BLOCK:
-                size = [getStyleBlock().width, getStyleBlock().height]
-        }
+        const block = getBlockById(idBlock)
+        const styleBlock = block?.getStyleBlock()
+        size = [styleBlock?.width, styleBlock?.height]
+
 
         let i = 0
         size.forEach(item => {
@@ -68,9 +67,9 @@ export class CoordinateCalculator {
     }
 
     //расчитать координаты
-    calcDistanceBlocks(typeBlock: string, parent: number[] | null): number[] {
+    calcDistanceBlocks(idBlock: string, parent: number[] | null): number[] {
         //получить размеры блока
-        const sizeBlock = this.getStyleSizeOfTypeBlock(typeBlock)
+        const sizeBlock = this.getStyleSizeOfTypeBlock(idBlock)
 
         //если блок первый и не имеет родителей
         if (parent === null)

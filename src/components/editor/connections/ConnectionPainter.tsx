@@ -1,9 +1,9 @@
 import {IBlock} from "../blocks/primitives/IBlock";
-import {scaleCoorConnection} from "../calculationCoordinats/connectionCalc";
+import {scaleCoorConnection} from "../calculat_coordinates/connectionCalc";
 import {contextCanvas} from "./CanvasPainter";
 import {LinePartConnect} from "./LinePartConnect";
-import {getHeightElement} from "../calculationCoordinats/elementSizeCalc";
-import {getHeightEditPanel} from "../calculationCoordinats/panelCalc";
+import {getHeightElement} from "../calculat_coordinates/elementSizeCalc";
+import {getHeightEditPanel} from "../calculat_coordinates/panelCalc";
 import {changingBlockCoor} from "../../../store/action-creators/blocks";
 import {ConnectionBlocks} from "./ConnectionBlocks";
 
@@ -18,7 +18,10 @@ const CONNECTION_COLOR = '#000000';
  * @param itemTwo
  */
 export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
+    console.log("paint " + itemOne.getId())
+
     const context = contextCanvas
+
     const coor: any[] | null = scaleCoorConnection(itemOne, itemTwo)
     if (context !== null && coor !== null) {
         console.log("coord " + coor!![0] + " " + coor!![1] +

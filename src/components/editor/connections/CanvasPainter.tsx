@@ -2,7 +2,7 @@ import React, {FC, useEffect, useRef} from "react";
 import {
     getHeightEditPanel,
     getWidthEditPanel
-} from "../calculationCoordinats/panelCalc";
+} from "../calculat_coordinates/panelCalc";
 
 /**
  * Возврщает конекст канвас, где будут рисоваться связи

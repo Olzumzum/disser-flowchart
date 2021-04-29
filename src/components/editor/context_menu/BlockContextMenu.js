@@ -14,7 +14,7 @@ export class ContextMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Pos: "0px",
+            xPos: "0px",
             yPos: "0px",
             showMenu: false,
             idBlock: props.idBlock,
@@ -47,7 +47,7 @@ export class ContextMenu extends Component {
         if (this.state.showMenu) this.setState({showMenu: false});
     }
 
-    handleContextMenu = (e, data) => {
+    handleContextMenu = (e) => {
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,

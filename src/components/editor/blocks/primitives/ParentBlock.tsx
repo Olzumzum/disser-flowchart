@@ -43,9 +43,7 @@ const stylesBlokc: CSSProperties = {
     margin: "10px"
 }
 
-export function getStyleBlock(){
-    return stylesBlokc
-}
+
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
 
@@ -82,9 +80,9 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     //уровень вложенности блока
     private _innerLevel: number = -1
     //выражение, которое хранится в скобках
-    private _parameter: string = ""
+    private _parameterId: string = ""
     //комментарии из кода
-    private _comment: string = ""
+    private _commentId: string = ""
 
     constructor(id: string,
                 left: number,
@@ -93,6 +91,10 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._id = id
         this._left = left
         this._top = top
+    }
+
+    getStyleBlock(){
+        return stylesBlokc
     }
 
     //создать экземпляр
@@ -187,8 +189,8 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._top = top
     }
 
-    getComment(): string {
-        return this._comment;
+    getCommentId(): string {
+        return this._commentId;
     }
 
     getInnerLevel(): number {
@@ -199,16 +201,16 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._neighborId;
     }
 
-    getParameter(): string {
-        return this._parameter;
+    getParameterId(): string {
+        return this._parameterId;
     }
 
     getParentId(): string {
         return this._parentId;
     }
 
-    setComment(comment: string): void {
-        this._comment = comment
+    setCommentId(comment: string): void {
+        this._commentId = comment
     }
 
     setInnerLevel(innerLevel: number): void {
@@ -219,8 +221,8 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._neighborId = neighbor
     }
 
-    setParameter(): string {
-        return this._parentId;
+    setParameterId(parameterId: string): void {
+        this._parameterId = parameterId
     }
 
     setParentId(parentId: string): void {
