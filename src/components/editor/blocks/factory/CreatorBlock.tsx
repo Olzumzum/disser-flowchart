@@ -34,7 +34,6 @@ export class CreatorBlock implements IBlockFactory {
     }
 }
 
-
 export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | undefined {
     // let s: string = ""
     // if (typeof typeBlock === 'symbol') {
@@ -49,7 +48,6 @@ export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | und
 
     // }
 }
-
 
 //генерация уникального id
 export function generateId(): string {
