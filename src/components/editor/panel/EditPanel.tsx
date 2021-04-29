@@ -55,11 +55,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
             //координаты добавляемого блока
-            const newId = generateId()
-            const coor = coorCalc.calcCoordinates(newId,data[1].idBlock)
+
+            const coor = coorCalc.calcCoordinates(null, BlockTypes.BLOCK,data[1].idBlock)
 
             const block = creator.createBlock(
-                newId,
+                generateId(),
                 BlockTypes.BLOCK,
                 coor[0],
                 coor[1],

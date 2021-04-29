@@ -29,7 +29,7 @@ interface StyleBlockBuilder {
 }
 
 //общий стиль для блоков
-const stylesBlokc: CSSProperties = {
+const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
     padding: '0.5rem 1rem',
     cursor: 'move',
@@ -43,7 +43,9 @@ const stylesBlokc: CSSProperties = {
     margin: "10px"
 }
 
-
+export function getStyleParentBlock(): CSSProperties {
+    return stylesParentBlock
+}
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
 
@@ -94,7 +96,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 
     getStyleBlock(){
-        return stylesBlokc
+        return stylesParentBlock
     }
 
     //создать экземпляр
