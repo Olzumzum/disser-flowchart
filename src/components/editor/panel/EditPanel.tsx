@@ -14,7 +14,7 @@ import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
-import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 import {CoordinateCalculator} from "../calculat_coordinates/blockCoordinates";
 
 const stylesEditPanel: CSSProperties = {
@@ -55,11 +55,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
             //координаты добавляемого блока
-            const newId = generateId()
-            const coor = coorCalc.calcCoordinates(newId,data[1].idBlock)
+
+            const coor = coorCalc.calcCoordinates(null, BlockTypes.BLOCK,data[1].idBlock)
 
             const block = creator.createBlock(
-                newId,
+                generateId(),
                 BlockTypes.BLOCK,
                 coor[0],
                 coor[1],

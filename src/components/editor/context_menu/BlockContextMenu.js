@@ -1,9 +1,9 @@
 import {Component} from "react";
 import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
-import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
 import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
@@ -22,7 +22,7 @@ export class ContextMenu extends Component {
         }
 
         this.handleContextMenu = this.handleContextMenu.bind(this)
-        ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+        BlocksEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             (data) => {
                 if (!data.toString().localeCompare(this.state.idBlock))
                     this.handleContextMenu(data)

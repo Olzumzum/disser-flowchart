@@ -1,7 +1,6 @@
 
-import {ContextMenuEventEmitter} from "../context_menu/ContextMenuEventEmitter";
 import {BlockTransformationTypes} from "./BlockTransformationTypes";
-import {BlocksEventEmitter} from "./BlocksEmitter";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 
 
 interface BlockConversionManagerProps {
@@ -18,7 +17,7 @@ export const BlockConversionManager  = (props: BlockConversionManagerProps) => {
             break;
 
         case BlockTransformationTypes.LOOP_FOR:
-            return ContextMenuEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
+            return BlocksEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
     }
 
 

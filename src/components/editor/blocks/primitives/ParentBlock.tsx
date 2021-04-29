@@ -6,8 +6,8 @@ import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
-import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
+import {BlocksEventEmitter} from "../../BlocksEmitter";
 
 /**
  * Родитель всех блоков
@@ -29,7 +29,7 @@ interface StyleBlockBuilder {
 }
 
 //общий стиль для блоков
-const stylesBlokc: CSSProperties = {
+const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
     padding: '0.5rem 1rem',
     cursor: 'move',
@@ -43,7 +43,9 @@ const stylesBlokc: CSSProperties = {
     margin: "10px"
 }
 
-
+export function getStyleParentBlock(): CSSProperties {
+    return stylesParentBlock
+}
 
 export class ParentBlock implements IBlock, StyleBlockBuilder {
 
@@ -94,7 +96,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 
     getStyleBlock(){
-        return stylesBlokc
+        return stylesParentBlock
     }
 
     //создать экземпляр
@@ -140,7 +142,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
-            ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 this.getId())
     }
 

@@ -1,25 +1,31 @@
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById} from "../../../store/action-creators/blocks";
+import {convertStyleToReadableFormat} from "./elementSizeCalc";
+import {getStyleParentBlock, ParentBlock} from "../blocks/primitives/ParentBlock";
+import {CSSProperties} from "react";
+import {BlockTypes} from "../blocks/primitives/BlockTypes";
 
 const MIN_BLOCKS_DISTANCE = 15;
 
 export class CoordinateCalculator {
     //получить размер панели через ее стиль
     private styleEditPanel = getStyleEditPanel()
+    //ширина всей панели
     private width = document.body.clientWidth
+    //высота всей панели
     private height = Number(this.styleEditPanel.height)
 
     //функция, в которую передаются все входные параметры для расчета
-    public calcCoordinates(idBlock: string, parentId: string): number[] {
+    public calcCoordinates(idBlock: string | null, typeBlock: string | null, parentId: string): number[] {
         let parent: number[] | null = null
 
+        //если блок не первый
         if (parentId.localeCompare("-1")) {
             const prevBlock = getBlockById(parentId)!!
             parent = [prevBlock.getLeft(), prevBlock!.getTop()]
         }
 
-        return this.calcDistanceBlocks(idBlock, parent)
+        return this.calcDistanceBlocks(idBlock,typeBlock, parent)
     }
 
     //расчитать координаты для инициализирующего блока
@@ -44,33 +50,44 @@ export class CoordinateCalculator {
 
     }
 
+    //получить стиль блока по его типу (для случаев, когда блок только создается)
+    private getSizeBlockByType(typeBlock: string): number[]     {
+        let size: any[]
+        let styleBlock: CSSProperties | undefined
 
-    //получить размеры блока через его стиль
-    private getStyleSizeOfTypeBlock(idBlock: string): number[] {
+        switch (typeBlock){
+            case BlockTypes.BLOCK:
+                 styleBlock = getStyleParentBlock()
+        }
+
+        size = [convertStyleToReadableFormat(styleBlock?.width),
+            convertStyleToReadableFormat(styleBlock?.height)]
+
+        return size
+    }
+
+
+    //получить размеры блока через его стиль по идентификатору
+    private getSizeBlockById(idBlock: string): number[] {
         let size: any[] = []
         const block = getBlockById(idBlock)
+
         const styleBlock = block?.getStyleBlock()
-        size = [styleBlock?.width, styleBlock?.height]
-
-
-        let i = 0
-        size.forEach(item => {
-            if ((item) !== undefined) {
-                if (typeof item === "string") size[i] = parseInt(item)
-                else if (typeof item === "symbol") size[i] = Number(item)
-
-            }
-            i++
-        })
+        size = [convertStyleToReadableFormat(styleBlock?.width),
+            convertStyleToReadableFormat(styleBlock?.height)]
 
         return size
     }
 
     //расчитать координаты
-    calcDistanceBlocks(idBlock: string, parent: number[] | null): number[] {
+    calcDistanceBlocks(idBlock: string | null, typeBlock: string | null, parent: number[] | null): number[] {
         //получить размеры блока
-        const sizeBlock = this.getStyleSizeOfTypeBlock(idBlock)
+        let sizeBlock: number[] | undefined
 
+        if(idBlock === null)  sizeBlock = this.getSizeBlockByType(typeBlock!!)
+        else sizeBlock = this.getSizeBlockById(idBlock!!)
+
+        console.log("sizeBlock " + sizeBlock[0] + " " + sizeBlock[1])
         //если блок первый и не имеет родителей
         if (parent === null)
             return this.blockMiddleEditor(sizeBlock)
