@@ -1,4 +1,3 @@
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById} from "../../../store/action-creators/blocks";
 

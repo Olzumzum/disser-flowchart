@@ -28,7 +28,7 @@ export class CreatorBlock implements IBlockFactory {
 
         switch (typeBlock) {
             case BlockTypes.BLOCK:
-                return new ParentBlock(id, left, top)
+                return new ParentBlock(id, 150, 50)
         }
         return undefined;
     }

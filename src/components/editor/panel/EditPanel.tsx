@@ -14,7 +14,7 @@ import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
-import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 import {CoordinateCalculator} from "../calculat_coordinates/blockCoordinates";
 
 const stylesEditPanel: CSSProperties = {

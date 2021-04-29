@@ -6,8 +6,8 @@ import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
-import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
+import {BlocksEventEmitter} from "../../BlocksEmitter";
 
 /**
  * Родитель всех блоков
@@ -140,7 +140,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
-            ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 this.getId())
     }
 
