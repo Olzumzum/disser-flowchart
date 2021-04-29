@@ -7,4 +7,8 @@ export interface IBlockFactory {
         left: number,
         top: number,
     ): IBlock | undefined
+
+    createBlockByType(
+        typeBlock: string
+    ): IBlock | undefined
 }

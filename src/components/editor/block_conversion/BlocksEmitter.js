@@ -7,6 +7,5 @@ export const BlocksEventEmitter = {
     subscribe: function (event, callback){
         if(!this.events[event]) this.events[event] = []
         this.events[event].push(callback)
-        console.log("подписался " + event)
     }
 }

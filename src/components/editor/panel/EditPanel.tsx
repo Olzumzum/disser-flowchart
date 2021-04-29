@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById, linkMaker} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -15,7 +15,7 @@ import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
-import {CoordinateCalculator} from "../calculationCoordinats/blockCoordinates";
+import {CoordinateCalculator} from "../calculat_coordinates/blockCoordinates";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -45,7 +45,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, linkMaker} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -53,16 +53,25 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     //добаввить новый блок
     useEffect(() => {
-        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
-            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, isInit)
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
+            //координаты добавляемого блока
+            const newId = generateId()
+            const coor = coorCalc.calcCoordinates(newId,data[1].idBlock)
+
+            const block = creator.createBlock(
+                newId,
+                BlockTypes.BLOCK,
+                coor[0],
+                coor[1],
+            )!!
+
             addBlocks(
-                creator.createBlock(
-                    generateId(),
-                    BlockTypes.BLOCK,
-                    coor[0],
-                    coor[1],
-                )!!
+                block
             )
+
+            console.log("лИНКМЕЙК " + data[1].idBlock)
+            // linkMaker(block.getId(), data[1].idBlock)
+
         })
     }, [])
 
@@ -111,7 +120,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     if (blocks.length === 0)
         return (
             <div style={stylesEditPanel} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, true)
+                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
             }}>
                 <h4>
                     {START_TITLE}
