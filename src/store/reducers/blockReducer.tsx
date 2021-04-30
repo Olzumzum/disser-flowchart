@@ -23,6 +23,8 @@ export const blockReducer = (state: BlockState = initialState, action: BlocksAct
             return {...state, loading: false, originBlocks: action.payload}
         case BlocksActionTypes.PUT_DATA:
             return {...state, blocks: action.payload }
+        case BlocksActionTypes.UPDATE_BLOCKS:
+            return {...state}
         case BlocksActionTypes.CREATE_CONNECTION:
             return {...state, blocks: action.payload}
         default:

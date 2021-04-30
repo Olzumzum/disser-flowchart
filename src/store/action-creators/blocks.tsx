@@ -41,15 +41,19 @@ export const fetchBlocks = () => {
  * добавление нового блока из панели компонентов
  * @param block
  */
-export const addBlocks = (block: IBlock) => {
+export const addBlocks = (block: IBlock, idParent: string) => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             blocks.push(block)
+
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+
+            //установить соседей
+            settingUpNeighborhood(idParent, block.getId())
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -62,32 +66,7 @@ export const addBlocks = (block: IBlock) => {
 export const linkMaker = (currentBlockId: string,
                           parentBlockId: string,) => {
 
-
-    // if (currentBlockId === undefined || currentBlockId.localeCompare("")) return Error
-    // if (parentBlockId === null || undefined) return Error
-    console.log("лИНКМЕЙК")
-    const currentBlock: IBlock | undefined = getBlockById(currentBlockId)
-    currentBlock?.setParentId(parentBlockId)
-    let parentBlock: IBlock | undefined
-
-    //если блок самый первый
-    if (parentBlockId.localeCompare("-1")) {
-
-        parentBlock = getBlockById(parentBlockId)
-
-        currentBlock?.setParentId(parentBlockId)
-        parentBlock?.setNeighborId(currentBlockId)
-    }
-
-    blocks.forEach(item => {
-        if (!item.getId().localeCompare(currentBlockId)){
-         item = currentBlock!!
-        }
-        if (!item.getId().localeCompare(parentBlockId)){
-            item = parentBlock!!
-        }
-    })
-    paintConnection(currentBlock!!, parentBlock!!)
+    // paintConnection(currentBlock!!, parentBlock!!)
 
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
@@ -162,4 +141,64 @@ export function getBlockById(id: string): IBlock | undefined {
 
     })
     return block
+}
+
+/**
+ * Задать соседство блоков
+ * @param idParentBlock
+ * @param idNewBlock
+ */
+export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string) => {
+
+    //если родитель присутствует, мы задаем соседство
+    //если родителя нет - его id = -1
+    if(idParentBlock.localeCompare("-1")) {
+
+        const parentBlock = getBlockById(idParentBlock)
+        const newBlock = getBlockById(idNewBlock)
+        const idPastNeighborBlock = parentBlock?.getNeighborId()
+        //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
+        parentBlock?.setNeighborId(idNewBlock)
+        newBlock?.setParentId(idParentBlock)
+
+        //если у блока были соседи до этого
+        if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")) {
+
+            const pastNeihborBlock = getBlockById(idPastNeighborBlock)
+            newBlock?.setNeighborId(idPastNeighborBlock)
+            pastNeihborBlock?.setParentId(idNewBlock)
+            searchBlockBeUpdate(pastNeihborBlock!!)
+        }
+
+        searchBlockBeUpdate(newBlock!!)
+        searchBlockBeUpdate(parentBlock!!)
+    }
+}
+
+/**
+ * поиск блока, который необходимо обновить и его обновление
+ * @param updateBlock - обновляемый блок
+ */
+const searchBlockBeUpdate =(updateBlock: IBlock) =>{
+    blocks.forEach(item => {
+        if (!item.getId().localeCompare(updateBlock.getId())){
+            item = updateBlock
+        }
+    })
+
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            dispatch({type: BlocksActionTypes.UPDATE_BLOCKS})
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
+            })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
+            })
+        }
+    }
 }

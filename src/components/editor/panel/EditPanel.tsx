@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, getBlockById, linkMaker} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById, linkMaker, settingUpNeighborhood} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -45,7 +45,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor, linkMaker} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, settingUpNeighborhood} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -66,10 +66,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             )!!
 
             addBlocks(
-                block
+                block, data[1].idBlock
             )
 
-            console.log("лИНКМЕЙК " + data[1].idBlock)
             // linkMaker(block.getId(), data[1].idBlock)
 
         })
