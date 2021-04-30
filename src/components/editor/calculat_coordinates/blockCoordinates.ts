@@ -5,7 +5,7 @@ import {getStyleParentBlock} from "../blocks/primitives/ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 
-const MIN_BLOCKS_DISTANCE = 15;
+export const MIN_BLOCKS_DISTANCE = 15;
 
 /**
  * функция, в которую передаются все входные параметры для расчета

@@ -28,6 +28,8 @@ interface StyleBlockBuilder {
     blockBackImg(img: string): void;
 }
 
+export const DEFAULT_FOR_LINKS: string = "-1"
+
 //общий стиль для блоков
 const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
@@ -76,9 +78,9 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _typeBlock: string = ""
 
     //предыдущий блок
-    private _parentId: string = "-1"
+    private _parentId: string = DEFAULT_FOR_LINKS
     //последующий блок
-    private _neighborId: string = "-1"
+    private _neighborId: string = DEFAULT_FOR_LINKS
     //уровень вложенности блока
     private _innerLevel: number = -1
     //выражение, которое хранится в скобках

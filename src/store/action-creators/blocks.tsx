@@ -57,6 +57,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
             recalculationCoorByEvent(block.getId())
+
+            paintConnection(idParent, block.getId())
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -69,7 +71,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
 export const linkMaker = (currentBlockId: string,
                           parentBlockId: string,) => {
 
-    // paintConnection(currentBlock!!, parentBlock!!)
+    paintConnection(currentBlockId, parentBlockId)
 
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
