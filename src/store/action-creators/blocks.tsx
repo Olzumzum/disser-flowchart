@@ -10,6 +10,7 @@ import {
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
 
 const blocks = new Array<IBlock>()
 
@@ -54,6 +55,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
 
             //установить соседей
             settingUpNeighborhood(idParent, block.getId())
+            //прерасчитать координаты
+            recalculationCoorByEvent(block.getId())
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -179,7 +182,7 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
  * поиск блока, который необходимо обновить и его обновление
  * @param updateBlock - обновляемый блок
  */
-const searchBlockBeUpdate =(updateBlock: IBlock) =>{
+export const searchBlockBeUpdate =(updateBlock: IBlock) =>{
     blocks.forEach(item => {
         if (!item.getId().localeCompare(updateBlock.getId())){
             item = updateBlock
