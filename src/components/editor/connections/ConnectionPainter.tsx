@@ -26,25 +26,22 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
     //значения координат
     let coor: any[] | null
     if (!idItemOne.localeCompare(DEFAULT_FOR_LINKS)) {
-        // coor = buildConnectOneBlock(idItemTwo, false)
-        //
-        // if (coor !== null) {
-        //     const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, 20)
-        //     const connection0 = new ConnectionBlocks([line0])
-        //
-        //     console.log("conn " + context)
-        //     paintMassLines(context!!, connection0)
-        // }
-        // coor = buildConnectOneBlock(idItemTwo, true)
-        // if(coor !== null) {
-        //     const line1: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
-        //     const connection1 = new ConnectionBlocks([line1])
-        //     paintMassLines(context!!, connection1)
-        // }
+        coor = buildConnectOneBlock(idItemTwo, false)
+
+        if (coor !== null) {
+            const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, 20)
+            const connection0 = new ConnectionBlocks([line0])
+
+        }
+        coor = buildConnectOneBlock(idItemTwo, true)
+        if(coor !== null) {
+            const line1: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+            const connection1 = new ConnectionBlocks([line1])
+
+        }
 
 
     } else {
-        console.log("EnumNumberMember")
         const itemOne = getBlockById(idItemOne)
         const itemTwo = getBlockById(idItemTwo)
 

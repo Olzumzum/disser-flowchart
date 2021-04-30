@@ -1,6 +1,8 @@
 /**
  * Связь между блоками
  */
+import {generateId} from "../blocks/factory/CreatorBlock";
+
 export class LinePartConnect {
     private _x: number = 0;
     private _y: number = 0;
