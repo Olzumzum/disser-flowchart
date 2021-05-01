@@ -36,11 +36,25 @@ export function getLastBlockInfo(){
     let id = lastBlock.id;
     let p_id = lastBlock.parent_id;
     let n_id = lastBlock.neighbour_id;
+    let type = lastBlock.type;
+   // let inner_lvl = lastBlock.inner_lvl;
     return {
         id,
         p_id,
-        n_id
+        n_id,
+        type
+    //    inner_lvl
     };
+}
+
+//функция нахождения id блока соседа
+export function getNeighbourBlockId(p_id, in_lvl){
+    for (let i = obj_array.length-1; i>=0; i--){
+        if (((obj_array[i].inner_lvl == in_lvl) && (obj_array[i].parent_id == p_id)) ||
+            ((obj_array[i].inner_lvl == in_lvl-1) && (obj_array[i].id = p_id)))
+                return i;
+    }
+    return -1;
 }
 
 //массив объектов, который необходимо получать
