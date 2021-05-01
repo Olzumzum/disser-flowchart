@@ -30,13 +30,13 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
 
         if (coor !== null) {
             const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, 20)
-            const connection0 = new ConnectionBlocks([line0])
+            const connection0 = new ConnectionBlocks([line0], idItemOne, idItemTwo)
 
         }
         coor = buildConnectOneBlock(idItemTwo, true)
         if(coor !== null) {
             const line1: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
-            const connection1 = new ConnectionBlocks([line1])
+            const connection1 = new ConnectionBlocks([line1], idItemOne, idItemTwo)
 
         }
 
@@ -53,7 +53,7 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
             if (height !== null) {
                 if (coor[0] === coor[2]) {
                     const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, height)
-                    const connection = new ConnectionBlocks([line])
+                    const connection = new ConnectionBlocks([line], idItemOne, idItemTwo)
                     paintMassLines(context, connection)
 
                 } else {
@@ -66,7 +66,7 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
                     const line2: LinePartConnect =
                         new LinePartConnect(coor[0], (coor[3] - partConnect), (coor[2] - coor[0]), CONNECTION_WIDTH)
 
-                    const connection = new ConnectionBlocks([line0, line1, line2])
+                    const connection = new ConnectionBlocks([line0, line1, line2], idItemOne, idItemTwo)
 
                     paintMassLines(context, connection)
                 }
