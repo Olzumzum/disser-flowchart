@@ -29,7 +29,7 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
         coor = buildConnectOneBlock(idItemTwo, false)
 
         if (coor !== null) {
-            const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, 20)
+            const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
             const connection0 = new ConnectionBlocks([line0], idItemOne, idItemTwo)
 
         }
@@ -52,12 +52,12 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
 
             if (height !== null) {
                 if (coor[0] === coor[2]) {
-                    const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, height)
+                    const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
                     const connection = new ConnectionBlocks([line], idItemOne, idItemTwo)
                     paintMassLines(context, connection)
 
                 } else {
-                    const partConnect = (height / 2) - CONNECTION_WIDTH
+                    const partConnect = (MIN_BLOCKS_DISTANCE / 2) - CONNECTION_WIDTH
 
                     const line0: LinePartConnect =
                         new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, partConnect)

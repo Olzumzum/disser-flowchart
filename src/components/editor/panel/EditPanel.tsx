@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, settingUpNeighborhood} from "../../../store/action-creators/blocks";
+import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -12,11 +12,11 @@ import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
-import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {calcCoordinates} from "../calculat_coordinates/blockCoordinates";
-import {paintConnection} from "../connections/ConnectionPainter";
+import {StartTitleComp} from "./StartTitleComp";
+
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -115,43 +115,18 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
-
-    //отображение надписи старта при отстутсвии элементов
-    // if (blocks.length === 0)
-    //     return (
-    //         <div style={stylesEditPanel} onClick={() => {
-    //             BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-    //         }}>
-    //             <h4>
-    //                 {START_TITLE}
-    //             </h4>
-    //         </div>
-    //     )
-    // else return (
-    //     <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
-    //         {/*<CanvasPainter>*/}
-    //         {/*{Object.keys(renderBlocks).map((id) =>*/}
-    //         {/*renderManager.renders(renderBlocks[Number(id)], id))}*/}
-    //
-    //         {/*</CanvasPainter>*/}
-    //         {c}
-    //     </div>
-    //
-    // )
-
-        return (
-            <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
-                 onClick={() => {
-                                 BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-                             }}>
-                        {/*<CanvasPainter>*/}
-                        {Object.keys(renderBlocks).map((id) =>
-                         renderManager.renders(renderBlocks[Number(id)], id))}
-
-                        {/* </CanvasPainter>*/}
-                        <CanvasPainter/>
-                     </div>
-        )
+    return (
+        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
+             onClick={() => {
+                 BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+                 document.getElementById("start_title")!!.style.display = "none"
+             }}>
+            <StartTitleComp/>
+            {Object.keys(renderBlocks).map((id) =>
+                renderManager.renders(renderBlocks[Number(id)], id))}
+            <CanvasPainter/>
+        </div>
+    )
 }
 
 
