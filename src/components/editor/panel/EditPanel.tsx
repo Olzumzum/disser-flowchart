@@ -117,16 +117,26 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
     return (
         <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
-             onClick={() => {
-                 BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-                 document.getElementById("start_title")!!.style.display = "none"
-             }}>
+             onClick={() => startClickPanel(blocks.length)}>
             <StartTitleComp/>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
         </div>
     )
+}
+
+/**
+ * Реакция на клик по панели редактирования
+ * Запускает процесс создания алгоритма,
+ * скрывает надпись-приветствие
+ * @param col
+ */
+function startClickPanel(col: number) {
+    if (col === 0) {
+        document.getElementById("start_title")!!.style.display = "none"
+        BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+    }
 }
 
 
