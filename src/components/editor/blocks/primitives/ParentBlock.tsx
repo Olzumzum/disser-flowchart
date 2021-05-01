@@ -135,15 +135,14 @@ export class ParentBlock implements IBlock{
     }
 
 
-    clearCanvasObject(): void{
-
-    }
 
     /**
      * Нарисовать блок из лирний
      * @param ctx
      */
     getCanvasObject(ctx: CanvasRenderingContext2D): void {
+        if (this._blockCanvas?.length !== 0) this.clearBlockCanv(ctx)
+
         const l0 = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
         const l1 = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
 

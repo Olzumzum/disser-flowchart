@@ -81,7 +81,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
             const block = getBlockById(id)
-            block?.clearBlockCanv(contextCanvas!!)
 
             //перетаскиваем блок
             changingBlockCoor(id, left, top)
