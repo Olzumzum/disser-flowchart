@@ -8,8 +8,7 @@ import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {contextCanvas} from "../../connections/CanvasPainter";
-import {convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
+import {calcSizeBlockCanvas} from "../../calculat_coordinates/elementSizeCalc";
 
 /**
  * Родитель всех блоков
@@ -146,20 +145,15 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     getCanvasObject(ctx: CanvasRenderingContext2D): void {
         // const ctx = contextCanvas
         const CONNECTION_COLOR = '#000000';
-        console.log("ctx " + ctx)
-        if (ctx !== null && ctx !== undefined) {
+        const size = calcSizeBlockCanvas(stylesParentBlock, this._left!!, this._top!!)
+        if (size === undefined) Error("неопределенный размер блока")
+
+        else if (ctx !== null && ctx !== undefined) {
             ctx.fillStyle = CONNECTION_COLOR
             ctx.beginPath()
-            ctx.fillRect(
-                this._left!! + convertStyleToReadableFormat(stylesParentBlock.padding)!!
-                +  convertStyleToReadableFormat(stylesParentBlock.margin)!!,
-                this._top!! + convertStyleToReadableFormat(stylesParentBlock.padding)!!
-                + convertStyleToReadableFormat(stylesParentBlock.margin)!!,
-                convertStyleToReadableFormat(stylesParentBlock.width)!!,
-                convertStyleToReadableFormat(stylesParentBlock.height)!!)
+            ctx.fillRect(size[0], size[1], size[2], size[3])
             ctx.fill()
-        } else console.log("нулевой контекст")
-
+        } else Error("нулевой контекст")
     }
 
     //вызов контекстного меню блока
