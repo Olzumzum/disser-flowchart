@@ -8,7 +8,9 @@ import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {calcSizeBlockCanvas} from "../../calculat_coordinates/elementSizeCalc";
+import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
+import {LinePartConnect} from "../../connections/LinePartConnect";
+import {drawLine} from "../../connections/LinePainter";
 
 /**
  * Родитель всех блоков
@@ -88,6 +90,8 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _parameterId: string = ""
     //комментарии из кода
     private _commentId: string = ""
+    //массив линий для отрисовки формы блока
+    private _blockCanvas: LinePartConnect[] = []
 
     constructor(id: string,
                 left: number,
@@ -143,17 +147,23 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     }
 
     getCanvasObject(ctx: CanvasRenderingContext2D): void {
-        // const ctx = contextCanvas
-        const CONNECTION_COLOR = '#000000';
-        const size = calcSizeBlockCanvas(stylesParentBlock, this._left!!, this._top!!)
-        if (size === undefined) Error("неопределенный размер блока")
 
-        else if (ctx !== null && ctx !== undefined) {
-            ctx.fillStyle = CONNECTION_COLOR
-            ctx.beginPath()
-            ctx.fillRect(size[0], size[1], size[2], size[3])
-            ctx.fill()
-        } else Error("нулевой контекст")
+        this._blockCanvas[0] = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
+        this._blockCanvas[1] = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
+
+        this._blockCanvas[2] = this.getLineFormBlock(ctx, this._left!!, this._top!! - 1
+            + convertStyleToReadableFormat(stylesParentBlock.height)!!, true)
+
+        this._blockCanvas[3] = this.getLineFormBlock(ctx,
+            this._left!! + convertStyleToReadableFormat(stylesParentBlock.width)!! -1
+            ,this._top!!, false)
+
+    }
+
+    getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
+                     top: number, isHorizontal: boolean): LinePartConnect{
+        let size = calcSizeBlockCanvas(stylesParentBlock, left, top, isHorizontal)!!
+        return drawLine(ctx, size[0], size[1], size[2], size[3])
     }
 
     //вызов контекстного меню блока

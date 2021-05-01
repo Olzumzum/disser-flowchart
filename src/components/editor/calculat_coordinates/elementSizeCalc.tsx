@@ -41,7 +41,14 @@ export function convertStyleToReadableFormat(proper: undefined | string | symbol
     return undefined
 }
 
-export function calcSizeBlockCanvas(style: CSSProperties, _left: number, _top: number): number[] | undefined {
+const LINE_WIDTH_BLOCK_SHAPE = 2
+
+export function calcSizeBlockCanvas(
+    style: CSSProperties,
+    _left: number,
+    _top: number,
+    isHorizontal: boolean
+): number[] | undefined {
 
     const left = _left + convertStyleToReadableFormat(style.padding)!!
         + convertStyleToReadableFormat(style.margin)!!
@@ -49,8 +56,15 @@ export function calcSizeBlockCanvas(style: CSSProperties, _left: number, _top: n
     const top = _top + convertStyleToReadableFormat(style.padding)!!
         + convertStyleToReadableFormat(style.margin)!!
 
-    const width = convertStyleToReadableFormat(style.width)!!
-    const height = convertStyleToReadableFormat(style.height)!!
+    let width: number
+    let height: number
+    if (isHorizontal) {
+        width = convertStyleToReadableFormat(style.width)!!
+        height = LINE_WIDTH_BLOCK_SHAPE
+    } else {
+        width = LINE_WIDTH_BLOCK_SHAPE
+        height = convertStyleToReadableFormat(style.height)!!
+    }
 
     return [left, top, width, height]
 }
