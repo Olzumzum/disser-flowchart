@@ -1,5 +1,5 @@
 import {CSSProperties, FC, useCallback, useEffect} from "react";
-import {CanvasPainter} from "../connections/CanvasPainter";
+import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks, settingUpNeighborhood} from "../../../store/action-creators/blocks";
@@ -51,7 +51,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     useEffect(() => {
         fetchBlocks()
     }, [])
-
+    const c = <CanvasPainter/>
     //добаввить новый блок
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
@@ -70,6 +70,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block, data[1].idBlock
             )
 
+            block.getCanvasObject(contextCanvas!!)
         })
     }, [])
 
@@ -116,24 +117,41 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
     //отображение надписи старта при отстутсвии элементов
-    if (blocks.length === 0)
-        return (
-            <div style={stylesEditPanel} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-            }}>
-                <h4>
-                    {START_TITLE}
-                </h4>
-            </div>
-        )
-    else return (
-        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
-            {Object.keys(renderBlocks).map((id) =>
-                renderManager.renders(renderBlocks[Number(id)], id))}
-            <CanvasPainter/>
-        </div>
+    // if (blocks.length === 0)
+    //     return (
+    //         <div style={stylesEditPanel} onClick={() => {
+    //             BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+    //         }}>
+    //             <h4>
+    //                 {START_TITLE}
+    //             </h4>
+    //         </div>
+    //     )
+    // else return (
+    //     <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
+    //         {/*<CanvasPainter>*/}
+    //         {/*{Object.keys(renderBlocks).map((id) =>*/}
+    //         {/*renderManager.renders(renderBlocks[Number(id)], id))}*/}
+    //
+    //         {/*</CanvasPainter>*/}
+    //         {c}
+    //     </div>
+    //
+    // )
 
-    )
+        return (
+            <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
+                 onClick={() => {
+                                 BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+                             }}>
+                        {/*<CanvasPainter>*/}
+                        {Object.keys(renderBlocks).map((id) =>
+                         renderManager.renders(renderBlocks[Number(id)], id))}
+
+                        {/* </CanvasPainter>*/}
+                        <CanvasPainter/>
+                     </div>
+        )
 }
 
 

@@ -29,4 +29,6 @@ export interface IBlock {
     setCommentId(commentId: string): void
 
     getStyleBlock(): CSSProperties
+
+    getCanvasObject(ctx: CanvasRenderingContext2D): void
 }
