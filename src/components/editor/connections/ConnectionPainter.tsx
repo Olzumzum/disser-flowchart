@@ -1,14 +1,17 @@
 import {IBlock} from "../blocks/primitives/IBlock";
-import {scaleCoorConnection} from "../calculationCoordinats/connectionCalc";
+import {buildConnectOneBlock, scaleCoorConnection} from "../calculat_coordinates/connectionCoor";
 import {contextCanvas} from "./CanvasPainter";
 import {LinePartConnect} from "./LinePartConnect";
-import {getHeightElement} from "../calculationCoordinats/elementSizeCalc";
-import {getHeightEditPanel} from "../calculationCoordinats/panelCalc";
-import {changingBlockCoor} from "../../../store/action-creators/blocks";
+import {getHeightElement} from "../calculat_coordinates/elementSizeCalc";
+import {getHeightEditPanel} from "../calculat_coordinates/panelCalc";
+import {changingBlockCoor, getBlockById} from "../../../store/action-creators/blocks";
 import {ConnectionBlocks} from "./ConnectionBlocks";
+import {DEFAULT_FOR_LINKS} from "../blocks/primitives/ParentBlock";
+import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
+
 
 /** ТОЛЩИНА РИСУЕМОЙ СВЯЗИ ПО УМОЛЧАНИЮ **/
-const CONNECTION_WIDTH = 1;
+export const CONNECTION_WIDTH = 1;
 /** ЦВЕТ РИСУЕМОЙ СВЯЗИ **/
 const CONNECTION_COLOR = '#000000';
 
@@ -17,33 +20,56 @@ const CONNECTION_COLOR = '#000000';
  * @param itemOne
  * @param itemTwo
  */
-export const paintConnection = (itemOne: IBlock, itemTwo: IBlock) => {
+export const paintConnection = (idItemOne: string, idItemTwo: string) => {
+
     const context = contextCanvas
-    const coor: any[] | null = scaleCoorConnection(itemOne, itemTwo)
-    if (context !== null && coor !== null) {
-        console.log("coord " + coor!![0] + " " + coor!![1] +
-            " coord " + coor!![2] + " " + coor!![3])
-        const height = checkCoorBlocksByFollow(itemOne, itemTwo)
+    //значения координат
+    let coor: any[] | null
+    if (!idItemOne.localeCompare(DEFAULT_FOR_LINKS)) {
+        coor = buildConnectOneBlock(idItemTwo, false)
 
-        if (height !== null) {
-            if (coor[0] === coor[2]) {
-                const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, height)
-                const connection = new ConnectionBlocks([line])
-                paintMassLines(context, connection)
+        if (coor !== null) {
+            const line0: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+            const connection0 = new ConnectionBlocks([line0], idItemOne, idItemTwo)
 
-            } else {
-                const partConnect = (height / 2) - CONNECTION_WIDTH
+        }
+        coor = buildConnectOneBlock(idItemTwo, true)
+        if(coor !== null) {
+            const line1: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+            const connection1 = new ConnectionBlocks([line1], idItemOne, idItemTwo)
 
-                const line0: LinePartConnect =
-                    new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, partConnect)
-                const line1: LinePartConnect =
-                    new LinePartConnect(coor[2], (coor[3] - partConnect), CONNECTION_WIDTH, partConnect)
-                const line2: LinePartConnect =
-                    new LinePartConnect(coor[0], (coor[3] - partConnect), (coor[2] - coor[0]), CONNECTION_WIDTH)
+        }
 
-                const connection = new ConnectionBlocks([line0, line1, line2])
 
-                paintMassLines(context, connection)
+    } else {
+        const itemOne = getBlockById(idItemOne)
+        const itemTwo = getBlockById(idItemTwo)
+
+        coor = scaleCoorConnection(itemOne!!, itemTwo!!)
+        if (context !== null && coor !== null) {
+
+            const height = checkCoorBlocksByFollow(itemOne!!, itemTwo!!)
+
+            if (height !== null) {
+                if (coor[0] === coor[2]) {
+                    const line: LinePartConnect = new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+                    const connection = new ConnectionBlocks([line], idItemOne, idItemTwo)
+                    paintMassLines(context, connection)
+
+                } else {
+                    const partConnect = (MIN_BLOCKS_DISTANCE / 2) - CONNECTION_WIDTH
+
+                    const line0: LinePartConnect =
+                        new LinePartConnect(coor[0], coor[1], CONNECTION_WIDTH, partConnect)
+                    const line1: LinePartConnect =
+                        new LinePartConnect(coor[2], (coor[3] - partConnect), CONNECTION_WIDTH, partConnect)
+                    const line2: LinePartConnect =
+                        new LinePartConnect(coor[0], (coor[3] - partConnect), (coor[2] - coor[0]), CONNECTION_WIDTH)
+
+                    const connection = new ConnectionBlocks([line0, line1, line2], idItemOne, idItemTwo)
+
+                    paintMassLines(context, connection)
+                }
             }
         }
     }

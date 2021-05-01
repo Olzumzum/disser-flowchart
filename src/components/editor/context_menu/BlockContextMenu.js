@@ -1,9 +1,9 @@
 import {Component} from "react";
 import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
-import {ContextMenuEventEmitter} from "./ContextMenuEventEmitter"
 import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
@@ -14,14 +14,15 @@ export class ContextMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Pos: "0px",
+            xPos: "0px",
             yPos: "0px",
             showMenu: false,
             idBlock: props.idBlock,
             data: []
         }
+
         this.handleContextMenu = this.handleContextMenu.bind(this)
-        ContextMenuEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+        BlocksEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             (data) => {
                 if (!data.toString().localeCompare(this.state.idBlock))
                     this.handleContextMenu(data)
@@ -46,7 +47,7 @@ export class ContextMenu extends Component {
         if (this.state.showMenu) this.setState({showMenu: false});
     }
 
-    handleContextMenu = (e, data) => {
+    handleContextMenu = (e) => {
         this.setState({
             xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,
@@ -80,7 +81,7 @@ export class ContextMenu extends Component {
                                     {menu.map((i) =>
                                         <li id={i.id} onClick={(e) => {
                                             if (showMenu)
-                                                clickItemMenu(e)
+                                                this.clickItemMenu(e)
                                         }
                                         }>{i.message}</li>
                                     )}
@@ -95,8 +96,9 @@ export class ContextMenu extends Component {
             </Motion>
         )
     }
+
+    clickItemMenu(e) {
+        BlockConversionManager({id: e.target.id, idBlock: this.state.idBlock})
+    }
 }
 
-function clickItemMenu(e) {
-    BlockConversionManager({id: e.target.id})
-}

@@ -1,3 +1,5 @@
+import {CSSProperties} from "react";
+
 export interface IBlock {
     getId(): string,
 
@@ -20,9 +22,16 @@ export interface IBlock {
     getInnerLevel(): number
     setInnerLevel(innerLevel: number): void
 
-    getParameter(): string
-    setParameter(): string
+    getParameterId(): string
+    setParameterId(parameterId: string): void
 
-    getComment(): string
-    setComment(comment: string): void
+    getCommentId(): string
+    setCommentId(commentId: string): void
+
+    getStyleBlock(): CSSProperties
+
+    getCanvasObject(ctx: CanvasRenderingContext2D): void
+
+
+    clearBlockCanv(ctx: CanvasRenderingContext2D): void
 }

@@ -1,8 +1,4 @@
-/**
- *Излучатель сообщает о событиях в источнике (блоке)
- * подписчику (контекстному меню)
- */
-export const ContextMenuEventEmitter = {
+export const BlocksEventEmitter = {
     events: {},
     dispatch: function (event, data){
         if(!this.events[event]) return
@@ -13,4 +9,3 @@ export const ContextMenuEventEmitter = {
         this.events[event].push(callback)
     }
 }
-

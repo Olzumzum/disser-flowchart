@@ -9,6 +9,8 @@ import {
     ERROR_ADDING_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
+import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
 
 const blocks = new Array<IBlock>()
 
@@ -18,7 +20,6 @@ const blocks = new Array<IBlock>()
  *
  */
 export const fetchBlocks = () => {
-    console.log("Количество элементов " + blocks.length)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
@@ -41,16 +42,23 @@ export const fetchBlocks = () => {
  * добавление нового блока из панели компонентов
  * @param block
  */
-export const addBlocks = (block: IBlock) => {
-    console.log("Добавила " + blocks.length)
+export const addBlocks = (block: IBlock, idParent: string) => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             blocks.push(block)
+
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+
+            //установить соседей
+            settingUpNeighborhood(idParent, block.getId())
+            //прерасчитать координаты
+            recalculationCoorByEvent(block.getId())
+
+            paintConnection(idParent, block.getId())
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -58,6 +66,31 @@ export const addBlocks = (block: IBlock) => {
         }
     }
 }
+
+
+export const linkMaker = (currentBlockId: string,
+                          parentBlockId: string,) => {
+
+    paintConnection(currentBlockId, parentBlockId)
+
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
+            // const response = originalBlocks
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
+            })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
+            })
+        }
+    }
+}
+
 
 /**
  * изменение координат блока с указанным id
@@ -106,10 +139,71 @@ let idItemTwo: string | undefined = undefined
  */
 export function getBlockById(id: string): IBlock | undefined {
     let block: IBlock | undefined = undefined
+
     blocks.forEach(item => {
         if (!item.getId().localeCompare(id))
             block = item
 
     })
     return block
+}
+
+/**
+ * Задать соседство блоков
+ * @param idParentBlock
+ * @param idNewBlock
+ */
+export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string) => {
+
+    //если родитель присутствует, мы задаем соседство
+    //если родителя нет - его id = -1
+    if(idParentBlock.localeCompare("-1")) {
+
+        const parentBlock = getBlockById(idParentBlock)
+        const newBlock = getBlockById(idNewBlock)
+        const idPastNeighborBlock = parentBlock?.getNeighborId()
+        //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
+        parentBlock?.setNeighborId(idNewBlock)
+        newBlock?.setParentId(idParentBlock)
+
+        //если у блока были соседи до этого
+        if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")) {
+
+            const pastNeihborBlock = getBlockById(idPastNeighborBlock)
+            newBlock?.setNeighborId(idPastNeighborBlock)
+            pastNeihborBlock?.setParentId(idNewBlock)
+            searchBlockBeUpdate(pastNeihborBlock!!)
+        }
+
+        searchBlockBeUpdate(newBlock!!)
+        searchBlockBeUpdate(parentBlock!!)
+    }
+}
+
+/**
+ * поиск блока, который необходимо обновить и его обновление
+ * @param updateBlock - обновляемый блок
+ */
+export const searchBlockBeUpdate =(updateBlock: IBlock) =>{
+    blocks.forEach(item => {
+        if (!item.getId().localeCompare(updateBlock.getId())){
+            item = updateBlock
+        }
+    })
+
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            dispatch({type: BlocksActionTypes.UPDATE_BLOCKS})
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            })
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
+            })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
+            })
+        }
+    }
 }

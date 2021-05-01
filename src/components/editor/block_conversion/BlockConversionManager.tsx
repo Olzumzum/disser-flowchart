@@ -1,25 +1,23 @@
 
-import {ContextMenuEventEmitter} from "../context_menu/ContextMenuEventEmitter";
 import {BlockTransformationTypes} from "./BlockTransformationTypes";
-import {BlocksEventEmitter} from "./BlocksEmitter";
+import {BlocksEventEmitter} from "../BlocksEmitter";
 
 
 interface BlockConversionManagerProps {
     id: string,
+    idBlock: string
 }
 
 export const BlockConversionManager  = (props: BlockConversionManagerProps) => {
-    const {id} = props
-    // ContextMenuEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
-    // console.log("Менеджер ")
+    const {id, idBlock} = props
+
     switch (id) {
         case BlockTransformationTypes.ADD_TWO_BLOCKS:
-            console.log("Менеджер добавляет ")
-            BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, false)
+            BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: false}, {idBlock: idBlock}])
             break;
 
         case BlockTransformationTypes.LOOP_FOR:
-            return ContextMenuEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
+            return BlocksEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
     }
 
 

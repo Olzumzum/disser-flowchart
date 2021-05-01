@@ -6,4 +6,5 @@ export enum BlocksActionTypes {
     ADD_BLOCK = 'ADD_BLOCK',
     PUT_DATA = 'PUT_DATA',
     CREATE_CONNECTION = 'CREATE_CONNECTION',
+    UPDATE_BLOCKS = 'UPDATE_BLOCKS'
 }

@@ -6,8 +6,12 @@ import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../prompt/block_prompt";
 import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
-import {ContextMenuEventEmitter} from "../../context_menu/ContextMenuEventEmitter"
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
+import {BlocksEventEmitter} from "../../BlocksEmitter";
+import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
+import {LinePartConnect} from "../../connections/LinePartConnect";
+import {drawLine} from "../../connections/LinePainter";
+import {contextCanvas} from "../../connections/CanvasPainter";
 
 /**
  * Родитель всех блоков
@@ -25,16 +29,18 @@ export interface BlockProps {
 
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
-    blockBackImg(img: string): void;
+
 }
 
+export const DEFAULT_FOR_LINKS: string = "-1"
+
 //общий стиль для блоков
-const stylesBlokc: CSSProperties = {
+const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
     padding: '0.5rem 1rem',
     cursor: 'move',
-    width: "40px",
-    height: "40px",
+    width: "70px",
+    height: "50px",
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'contain',
@@ -43,26 +49,12 @@ const stylesBlokc: CSSProperties = {
     margin: "10px"
 }
 
-export function getStyleBlock(){
-    return stylesBlokc
+export function getStyleParentBlock(): CSSProperties {
+    return stylesParentBlock
 }
 
-export class ParentBlock implements IBlock, StyleBlockBuilder {
+export class ParentBlock implements IBlock{
 
-    //общий стиль для блоков
-    protected stylesBlokc: CSSProperties = {
-        border: '1px dashed gray',
-        padding: '0.5rem 1rem',
-        cursor: 'move',
-        width: "40px",
-        height: "40px",
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'contain',
-        display: "flex",
-        justifyContent: "center",
-        margin: "10px"
-    }
     //уникальный ключ
     private _id: string = ""
 
@@ -76,15 +68,17 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
     private _typeBlock: string = ""
 
     //предыдущий блок
-    private _parentId: string = "-1"
+    private _parentId: string = DEFAULT_FOR_LINKS
     //последующий блок
-    private _neighborId: string = "-1"
+    private _neighborId: string = DEFAULT_FOR_LINKS
     //уровень вложенности блока
     private _innerLevel: number = -1
     //выражение, которое хранится в скобках
-    private _parameter: string = ""
+    private _parameterId: string = ""
     //комментарии из кода
-    private _comment: string = ""
+    private _commentId: string = ""
+    //массив линий для отрисовки формы блока
+    private _blockCanvas: LinePartConnect[] | undefined
 
     constructor(id: string,
                 left: number,
@@ -93,10 +87,16 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._id = id
         this._left = left
         this._top = top
+        this.getCanvasObject(contextCanvas!!)
+    }
+
+    getStyleBlock() {
+        return stylesParentBlock
     }
 
     //создать экземпляр
     createBlock() {
+
         this._blockInstance = ({
                                    title,
                                    yellow,
@@ -114,8 +114,9 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         overlay={renderConvertPrompt}>
                         <div
                             id={this._id}
-                            style={{...this.style, background}}
+                            style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
+                            onClick={this.click}
                         >
                             {title}
                         </div>
@@ -128,22 +129,66 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
 
     //Отобразить
     render(): JSX.Element {
-        this.blockBackImg(blockImage)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
 
+    }
 
+
+
+    /**
+     * Нарисовать блок из лирний
+     * @param ctx
+     */
+    getCanvasObject(ctx: CanvasRenderingContext2D): void {
+        if (this._blockCanvas?.length !== 0) this.clearBlockCanv(ctx)
+
+        const l0 = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
+        const l1 = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
+
+        const l2 = this.getLineFormBlock(ctx, this._left!!, this._top!! - 1
+            + convertStyleToReadableFormat(stylesParentBlock.height)!!, true)
+
+        const l3 = this.getLineFormBlock(ctx,
+            this._left!! + convertStyleToReadableFormat(stylesParentBlock.width)!! -1
+            ,this._top!!, false)
+
+        this._blockCanvas = [l0, l1, l2, l3]
+        this.blockCanvas.forEach(item => {
+            drawLine(ctx, item)
+        })
+    }
+
+    clearBlockCanv(ctx: CanvasRenderingContext2D) {
+        this._blockCanvas?.forEach(item => {
+            ctx.clearRect(item.x, item.y,
+                item.width, item.height)
+        })
+
+    }
+    /**
+     * Создает линию для отображения блока с учетом всех стилистических особенностей
+     * @param ctx
+     * @param left
+     * @param top
+     * @param isHorizontal
+     */
+    getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
+                     top: number, isHorizontal: boolean): LinePartConnect{
+        let size = calcSizeBlockCanvas(stylesParentBlock, left, top, isHorizontal)!!
+        return new LinePartConnect(size[0], size[1], size[2], size[3])
     }
 
     //вызов контекстного меню блока
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
-            ContextMenuEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 this.getId())
     }
 
     //одинарное нажатие
-    click(e: React.MouseEvent<HTMLElement>) {
+    click() {
+
     }
 
     //вернуть экземпляр блока
@@ -154,13 +199,21 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._blockInstance!!;
     }
 
-    //задать фоновое изображение блока
-    blockBackImg(img: string): void {
-        this.stylesBlokc.backgroundImage = `url(${img})`
-    }
+    // //задать фоновое изображение блока
+    // blockBackImg(img: string): void {
+    //     this.stylesBlokc.backgroundImage = `url(${img})`
+    // }
 
     get style(): CSSProperties {
-        return this.stylesBlokc
+        return stylesParentBlock
+    }
+
+    get blockCanvas(): LinePartConnect[] {
+        return this._blockCanvas!!
+    }
+
+    set blockCanvas(lines:LinePartConnect[]){
+        this._blockCanvas = lines
     }
 
     getId(): string {
@@ -187,8 +240,8 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._top = top
     }
 
-    getComment(): string {
-        return this._comment;
+    getCommentId(): string {
+        return this._commentId;
     }
 
     getInnerLevel(): number {
@@ -199,16 +252,16 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._neighborId;
     }
 
-    getParameter(): string {
-        return this._parameter;
+    getParameterId(): string {
+        return this._parameterId;
     }
 
     getParentId(): string {
         return this._parentId;
     }
 
-    setComment(comment: string): void {
-        this._comment = comment
+    setCommentId(comment: string): void {
+        this._commentId = comment
     }
 
     setInnerLevel(innerLevel: number): void {
@@ -219,13 +272,15 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         this._neighborId = neighbor
     }
 
-    setParameter(): string {
-        return this._parentId;
+    setParameterId(parameterId: string): void {
+        this._parameterId = parameterId
     }
 
     setParentId(parentId: string): void {
         this._parentId = parentId
     }
+
+
 
 }
 

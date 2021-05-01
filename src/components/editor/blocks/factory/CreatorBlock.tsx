@@ -7,6 +7,7 @@ import {ParentBlock} from "../primitives/ParentBlock";
  * Создать блок, который будет существовать на панели редактирования
  */
 export class CreatorBlock implements IBlockFactory {
+
     createBlock(
         id: string,
         typeBlock: string,
@@ -15,11 +16,21 @@ export class CreatorBlock implements IBlockFactory {
     ): IBlock | undefined {
         switch (typeBlock) {
             case BlockTypes.BLOCK:
-                return new ParentBlock(id,left,top)
-
+                return new ParentBlock(id, left, top)
         }
         return undefined;
+    }
 
+    createBlockByType(
+        typeBlock: string
+    ): IBlock | undefined {
+        const id = generateId()
+
+        switch (typeBlock) {
+            case BlockTypes.BLOCK:
+                return new ParentBlock(id, 150, 50)
+        }
+        return undefined;
     }
 }
 
@@ -33,11 +44,10 @@ export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | und
     // }x
     // switch (typeBlock){
     //     case BlockTypes.CONDITION:
-            return new ParentBlock("preview", 0, 0)
+    return new ParentBlock("preview", 0, 0)
 
     // }
 }
-
 
 //генерация уникального id
 export function generateId(): string {

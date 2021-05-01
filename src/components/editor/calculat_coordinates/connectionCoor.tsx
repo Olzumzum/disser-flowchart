@@ -1,4 +1,8 @@
 import {IBlock} from "../blocks/primitives/IBlock";
+import {convertStyleToReadableFormat} from "./elementSizeCalc";
+import {getBlockById} from "../../../store/action-creators/blocks";
+import {MIN_BLOCKS_DISTANCE} from "./blockCoordinates";
+import {CONNECTION_WIDTH} from "../connections/ConnectionPainter";
 
 /**
  * Вычисляет координаты для создаваемой связи,
@@ -22,7 +26,7 @@ export function scaleCoorConnection(itemOne: IBlock, itemTwo: IBlock): number[] 
     if (coorItemTwo !== null && coorItemOne !== null)
         return [
             coorItemOne[0], coorItemOne[1],
-            coorItemTwo[0],coorItemTwo[1],
+            coorItemTwo[0], coorItemTwo[1],
             height, width
         ]
     else return null
@@ -37,21 +41,41 @@ export function scaleCoorConnection(itemOne: IBlock, itemTwo: IBlock): number[] 
  * @param isLower - true - строить связь от нижней грани, false - от верхней грани
  */
 function getCoorFromMiddleBlock(block: IBlock, isLower: boolean): number[] | null {
-    const element = document.getElementById(block.getId()!!)
-    if (element != null) {
+    const styleBlock = block.getStyleBlock()
+    if (styleBlock != null) {
         //получить мэрджин блока
-        const marg = parseInt(window.getComputedStyle(element, null).margin)
+        const marg = convertStyleToReadableFormat(styleBlock.margin)
+        if (marg === undefined) console.log("Ошибка вычисления отсутпа")
         //координаты верха блока
-        let left = block.getLeft() + marg
-        let top = block.getTop() + marg
+        let left = block.getLeft() + marg!!
+        let top = block.getTop() + marg!!
 
-        const heightBlock = parseInt(window.getComputedStyle(element, null).height)
-        const widthBlock = parseInt(window.getComputedStyle(element, null).width)
+        const heightBlock = convertStyleToReadableFormat(styleBlock.height)
+        const widthBlock = convertStyleToReadableFormat(styleBlock.width)
 
-        left = left + (widthBlock / 2)
+        left = left + (widthBlock!! / 2)
         if (isLower) {
-            top = top + heightBlock
+            top = top + heightBlock!!
         }
         return [left, top]
     } else return null
+}
+
+export function buildConnectOneBlock(idBlock: string, isLower: boolean): number[] | null {
+    const block = getBlockById(idBlock)
+    if (block !== undefined) {
+        let coorConnect = getCoorFromMiddleBlock(block, isLower)
+
+        if (coorConnect !== null)
+            if (isLower)
+                return [
+                    coorConnect[0], coorConnect[1] - MIN_BLOCKS_DISTANCE,
+                ]
+            else return [
+                coorConnect[0], coorConnect[1] + MIN_BLOCKS_DISTANCE,
+            ]
+
+        else return null;
+    }
+    return null;
 }

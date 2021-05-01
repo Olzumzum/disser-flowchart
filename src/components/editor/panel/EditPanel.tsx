@@ -1,8 +1,8 @@
 import {CSSProperties, FC, useCallback, useEffect} from "react";
-import {CanvasPainter} from "../connections/CanvasPainter";
+import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -12,10 +12,11 @@ import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
 import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
-import {START_TITLE} from "../../../assets/strings/editor_strings";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
-import {BlocksEventEmitter} from "../block_conversion/BlocksEmitter";
-import {CoordinateCalculator} from "../calculationCoordinats/blockCoordinates";
+import {BlocksEventEmitter} from "../BlocksEmitter";
+import {calcCoordinates} from "../calculat_coordinates/blockCoordinates";
+import {StartTitleComp} from "./StartTitleComp";
+
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -40,29 +41,36 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
     //
-    const coorCalc = new CoordinateCalculator()
+    // const canvas = new CanvasPainter()
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, linkMaker} = useActions()
 
     useEffect(() => {
         fetchBlocks()
     }, [])
-
+    const c = <CanvasPainter/>
     //добаввить новый блок
     useEffect(() => {
-        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (isInit: boolean) => {
-            const coor = coorCalc.calcCoordinates(BlockTypes.BLOCK, isInit)
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
+            //координаты добавляемого блока
+
+            const coor = calcCoordinates(null, BlockTypes.BLOCK, data[1].idBlock)
+
+            const block = creator.createBlock(
+                generateId(),
+                BlockTypes.BLOCK,
+                coor[0],
+                coor[1],
+            )!!
+
             addBlocks(
-                creator.createBlock(
-                    generateId(),
-                    BlockTypes.BLOCK,
-                    coor[0],
-                    coor[1],
-                )!!
+                block, data[1].idBlock
             )
+
+            // block.getCanvasObject(contextCanvas!!)
         })
     }, [])
 
@@ -72,8 +80,13 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
      */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
+            const block = getBlockById(id)
+
             //перетаскиваем блок
             changingBlockCoor(id, left, top)
+
+            block?.getCanvasObject(contextCanvas!!)
+
         },
         [],
     )
@@ -107,25 +120,28 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
-    //отображение надписи старта при отстутсвии элементов
-    if (blocks.length === 0)
-        return (
-            <div style={stylesEditPanel} onClick={() => {
-                BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, true)
-            }}>
-                <h4>
-                    {START_TITLE}
-                </h4>
-            </div>
-        )
-    else return (
-        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}>
+    return (
+        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
+             onClick={() => startClickPanel(blocks.length)}>
+            <StartTitleComp/>
             {Object.keys(renderBlocks).map((id) =>
                 renderManager.renders(renderBlocks[Number(id)], id))}
             <CanvasPainter/>
         </div>
-
     )
+}
+
+/**
+ * Реакция на клик по панели редактирования
+ * Запускает процесс создания алгоритма,
+ * скрывает надпись-приветствие
+ * @param col
+ */
+function startClickPanel(col: number) {
+    if (col === 0) {
+        document.getElementById("start_title")!!.style.display = "none"
+        BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+    }
 }
 
 

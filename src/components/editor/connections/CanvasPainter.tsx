@@ -1,13 +1,17 @@
-import React, {FC, useEffect, useRef} from "react";
+import React, {CSSProperties, FC, useEffect, useRef} from "react";
 import {
     getHeightEditPanel,
     getWidthEditPanel
-} from "../calculationCoordinats/panelCalc";
+} from "../calculat_coordinates/panelCalc";
 
 /**
  * Возврщает конекст канвас, где будут рисоваться связи
  */
 export let contextCanvas: CanvasRenderingContext2D | null
+
+const canvasStyle: CSSProperties = {
+    backgroundColor: "yellow",
+}
 
 /**
  * Рисует канву, на которой отображаются линии-связи между блоками
@@ -28,7 +32,7 @@ export const CanvasPainter: FC =
         }, [])
 
         return (
-            <canvas ref={canvasRef}{...props} style={{backgroundColor: "yellow"}}/>
+            <canvas ref={canvasRef}{...props} style={canvasStyle}/>
         )
     }
 
@@ -47,3 +51,4 @@ function clearCanvas(context: CanvasRenderingContext2D) {
             context.clearRect(0, 0, width, height)
     }
 }
+
