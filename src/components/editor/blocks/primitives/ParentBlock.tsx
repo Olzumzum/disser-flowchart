@@ -28,7 +28,7 @@ export interface BlockProps {
 
 //построитель стилевых отличий каждого блока
 interface StyleBlockBuilder {
-    blockBackImg(img: string): void;
+
 }
 
 export const DEFAULT_FOR_LINKS: string = "-1"
@@ -38,8 +38,8 @@ const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
     padding: '0.5rem 1rem',
     cursor: 'move',
-    width: "40px",
-    height: "40px",
+    width: "70px",
+    height: "50px",
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'contain',
@@ -52,22 +52,8 @@ export function getStyleParentBlock(): CSSProperties {
     return stylesParentBlock
 }
 
-export class ParentBlock implements IBlock, StyleBlockBuilder {
+export class ParentBlock implements IBlock{
 
-    //общий стиль для блоков
-    protected stylesBlokc: CSSProperties = {
-        border: '1px dashed gray',
-        padding: '0.5rem 1rem',
-        cursor: 'move',
-        width: "40px",
-        height: "40px",
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'contain',
-        display: "flex",
-        justifyContent: "center",
-        margin: "10px"
-    }
     //уникальный ключ
     private _id: string = ""
 
@@ -125,7 +111,7 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
                         overlay={renderConvertPrompt}>
                         <div
                             id={this._id}
-                            style={{...this.style, background}}
+                            style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
                         >
                             {title}
@@ -185,13 +171,13 @@ export class ParentBlock implements IBlock, StyleBlockBuilder {
         return this._blockInstance!!;
     }
 
-    //задать фоновое изображение блока
-    blockBackImg(img: string): void {
-        this.stylesBlokc.backgroundImage = `url(${img})`
-    }
+    // //задать фоновое изображение блока
+    // blockBackImg(img: string): void {
+    //     this.stylesBlokc.backgroundImage = `url(${img})`
+    // }
 
     get style(): CSSProperties {
-        return this.stylesBlokc
+        return stylesParentBlock
     }
 
     getId(): string {
