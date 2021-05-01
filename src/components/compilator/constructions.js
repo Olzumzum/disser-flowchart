@@ -7,6 +7,7 @@ export const constructions_list = [
     'switch',
     'case',
     'break',
+    'default',
     'return'
 ]
 
@@ -52,6 +53,11 @@ export function get_language_params(type, lang) {
         case 'case':
             block_params = ':';
            // block_construction = [' ', ':'];
+            block_construction = ['{', '}']; //заменить
+            break;
+        case 'default':
+            block_params = ':';
+            // block_construction = [' ', ':'];
             block_construction = ['{', '}']; //заменить
             break;
         default:
