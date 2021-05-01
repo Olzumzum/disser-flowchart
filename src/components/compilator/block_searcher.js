@@ -19,7 +19,7 @@ import {
     createBlock,
     getLastBlockInfo,
     updateBlockContent,
-    updateBlockInnerStructureNumb, updateBlockParameter
+    updateBlockInnerStructureNumb, updateBlockParameter, getNeighbourBlockId
 } from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_action_block} from "./action";
@@ -35,7 +35,9 @@ export function block_processing(lines, lang) {
     //let block;
     newText(lang, lines);
     let l = getCurrentPosition().line;
+    let p = 0;
     let t = getTextInfo().text.length - 1;
+    let t_p = getTextInfo().text[t].length;
     while (l != t) {
         //let block =
 
@@ -128,7 +130,13 @@ function search_block(p_id, n_id, in_lvl) {
             if (block != false)
                 block_id = getLastBlockInfo().id;
             else {
-                updateCurrentPosition(0, getCurrentPosition().line + 1);
+                let t11 = getCurrentPosition().line;
+                let t22 = getTextInfo().text.length;
+                if (getCurrentPosition().line != getTextInfo().text.length - 1) {
+                    updateCurrentPosition(0, getCurrentPosition().line + 1);
+                    return false;
+                } else
+                    return false;
             }
         }
     }
@@ -140,22 +148,6 @@ function search_block(p_id, n_id, in_lvl) {
     return block_id;
 }
 
-//возможно, ненужная функция по определению типа блока (с {} / без {})
-function construction_type_find(construction, params) {
-    let t_i = getTextInfo();
-    let c_p = getCurrentPosition();
-    let sc = params.block_construction[0];
-    let constr_type;
-    let start_pos = c_p.pos;
-    if (search_result(t_i.text[c_p.line], sc, c_p.pos)) { //после ключевого слова ЯК указывается '{'
-        if (search(t_i.text[c_p.line], sc, c_p.pos) - start_pos < 3)
-            constr_type = 1;
-        else
-            constr_type = 2;
-    } else
-        constr_type = 2; //блок без {}
-    return constr_type;
-}
 
 function switch_block_construction(p_id, n_id, in_lvl) {
     let block_start;
@@ -163,8 +155,9 @@ function switch_block_construction(p_id, n_id, in_lvl) {
     let block_id;
     let construction = search_construction();
     let params = get_language_params(construction);
+    let constr_type;
     let in_str_numb = 0;
-
+    let comment = ""; //написать функцию по поиску комментария
     block_start = {
         line: getCurrentPosition().line,
         pos: getCurrentPosition().pos
@@ -173,36 +166,54 @@ function switch_block_construction(p_id, n_id, in_lvl) {
     switch (construction) {
         case 'else':
             parameter = "";
+            constr_type = construction_type_find(construction, params);
+            block_start_finder(constr_type, params);
             break;
         case 'do':
             parameter_flag = true;
+            constr_type = construction_type_find(construction, params);
+            block_start_finder(constr_type, params);
+            break;
+        case 'case':
+            constr_type = 1;
+            if (search_result(getTextInfo().text[getCurrentPosition().line], params.block_params, getCurrentPosition().pos)) {
+                updateCurrentPosition(search(getTextInfo().text[getCurrentPosition().line], params.block_params, getCurrentPosition().pos));
+                parameter = content_maker(block_start); //написать функцию поиска параметра
+                updateCurrentPosition(getCurrentPosition().pos + 1);
+            }
+            break;
+        case 'break':
+            createBlock(p_id, n_id, construction, in_lvl, "",
+                0, "", comment);
+            return block_id;
             break;
         default:
             if (search_content(params.block_params))
                 parameter = content_maker(block_start); //написать функцию поиска параметра
-
+            constr_type = construction_type_find(construction, params);
+            block_start_finder(constr_type, params);
             break;
     }
-    let t1 = getCurrentPosition();
-    let comment = ""; //написать функцию по поиску комментария
 
     createBlock(p_id, n_id, construction, in_lvl, "",
         0, parameter, comment);
-    let t2 = getCurrentPosition();
     block_id = getLastBlockInfo().id;
-    let t3 = getCurrentPosition();
-    let constr_type = construction_type_find(construction, params);
-    block_start_finder(constr_type, params);
-    //записал начало блока
+    let neighbour_id = block_id;
+
     block_start = {
         line: getCurrentPosition().line,
         pos: getCurrentPosition().pos
     };
+
     do {
-        let neighbour_id = getLastBlockInfo().id;
-        search_block(block_id, neighbour_id, in_lvl);
-        in_str_numb++;
-    } while (!block_end_finder(constr_type, params))
+
+        let block = search_block(block_id, neighbour_id, in_lvl);
+        if (block != false) {
+            in_str_numb++;
+            neighbour_id = getNeighbourBlockId(block_id, in_lvl+1);
+        }
+    } while (!block_end_finder(constr_type, params, block_id))
+
     let content = content_maker(block_start);
 
     if (parameter_flag) {
@@ -232,6 +243,28 @@ function switch_block_construction(p_id, n_id, in_lvl) {
 
 }
 
+//возможно, ненужная функция по определению типа блока (с {} / без {})
+function construction_type_find(construction, params) {
+    let t_i = getTextInfo();
+    let c_p = getCurrentPosition();
+    let sc = params.block_construction[0];
+    let constr_type;
+    let start_pos = c_p.pos;
+    if (search_result(t_i.text[c_p.line], sc, c_p.pos)) { //после ключевого слова ЯК указывается '{'
+        let line1 = t_i.text[c_p.line].substring(0, start_pos);
+        let line2 = t_i.text[c_p.line].substring(start_pos, t_i.text[c_p.line].length);
+        line2 = line2.replaceAll(" ", "");
+        line1 += line2;
+        if (search(line1, sc, c_p.pos) - start_pos == 0)
+            constr_type = 1;
+        else
+            constr_type = 2;
+    } else
+        constr_type = 2; //блок без {}
+    return constr_type;
+}
+
+
 //перемещает положение курсора в тексте на начало кода блока
 function block_start_finder(c_t, params) {
     let t_i = getTextInfo();
@@ -258,24 +291,41 @@ function block_start_finder(c_t, params) {
 }
 
 
-function block_end_finder(c_t, params) {
-    //это все костыли, пока не научу прогармму находить все блоки
+function block_end_finder(c_t, params, id) {
     let t_i = getTextInfo();
     let c_p = getCurrentPosition();
     let lines = t_i.text;
     let line = c_p.line;
     let pos = c_p.pos;
     let l, p, s = params.block_construction[1];
+
+    let test = getLastBlockInfo();
+    let type = test.type;
+    let p_id = test.p_id;
+    let t_id = test.id;
+    if (type == 'break' || type == 'return')
+        if (p_id == id) { //проверка относится ли брейк или ретерн к данному блоку
+            if (c_t == 1 && search_result(lines[line], s, pos)) {
+                l = line;
+                p = search(lines[line], s, pos) + s.length
+                updateCurrentPosition(p, l);
+            }
+            return true;
+        }
+
     switch (c_t) {
         case 1:
             if (search_result(lines[line], s, pos)) {
                 l = line;
-                p = search(lines[line], s, pos);
+                p = search(lines[line], s, pos) + s.length
             } else
                 return false;
             break;
         case 2:
-            return true;
+            if (t_id == id)
+                return false;
+            else
+                return true;
             break;
     }
     updateCurrentPosition(p, l);

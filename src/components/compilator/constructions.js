@@ -1,10 +1,13 @@
 export const constructions_list = [
     'while',
     'for',
+    'do',
     'if',
     'else',
     'switch',
-    'do'
+    'case',
+    'break',
+    'return'
 ]
 
 export const c_inic_construction = [
@@ -47,8 +50,9 @@ export function get_language_params(type, lang) {
 
     switch (type) {
         case 'case':
-            block_params = [':', 'break'];
-            block_construction = [' ', ':'];
+            block_params = ':';
+           // block_construction = [' ', ':'];
+            block_construction = ['{', '}']; //заменить
             break;
         default:
             block_params = ['(', ')'];
