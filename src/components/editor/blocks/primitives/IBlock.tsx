@@ -31,4 +31,7 @@ export interface IBlock {
     getStyleBlock(): CSSProperties
 
     getCanvasObject(ctx: CanvasRenderingContext2D): void
+    clearCanvasObject(): void
+
+    clearBlockCanv(ctx: CanvasRenderingContext2D): void
 }

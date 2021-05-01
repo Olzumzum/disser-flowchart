@@ -11,6 +11,7 @@ import {BlocksEventEmitter} from "../../BlocksEmitter";
 import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
 import {LinePartConnect} from "../../connections/LinePartConnect";
 import {drawLine} from "../../connections/LinePainter";
+import {contextCanvas} from "../../connections/CanvasPainter";
 
 /**
  * Родитель всех блоков
@@ -77,7 +78,7 @@ export class ParentBlock implements IBlock{
     //комментарии из кода
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
-    private _blockCanvas: LinePartConnect[] = []
+    private _blockCanvas: LinePartConnect[] | undefined
 
     constructor(id: string,
                 left: number,
@@ -86,6 +87,7 @@ export class ParentBlock implements IBlock{
         this._id = id
         this._left = left
         this._top = top
+        this.getCanvasObject(contextCanvas!!)
     }
 
     getStyleBlock() {
@@ -94,6 +96,7 @@ export class ParentBlock implements IBlock{
 
     //создать экземпляр
     createBlock() {
+
         this._blockInstance = ({
                                    title,
                                    yellow,
@@ -113,6 +116,7 @@ export class ParentBlock implements IBlock{
                             id={this._id}
                             style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
+                            onClick={this.click}
                         >
                             {title}
                         </div>
@@ -125,31 +129,55 @@ export class ParentBlock implements IBlock{
 
     //Отобразить
     render(): JSX.Element {
-        // this.blockBackImg(blockImage)
-
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
 
     }
 
-    getCanvasObject(ctx: CanvasRenderingContext2D): void {
 
-        this._blockCanvas[0] = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
-        this._blockCanvas[1] = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
-
-        this._blockCanvas[2] = this.getLineFormBlock(ctx, this._left!!, this._top!! - 1
-            + convertStyleToReadableFormat(stylesParentBlock.height)!!, true)
-
-        this._blockCanvas[3] = this.getLineFormBlock(ctx,
-            this._left!! + convertStyleToReadableFormat(stylesParentBlock.width)!! -1
-            ,this._top!!, false)
+    clearCanvasObject(): void{
 
     }
 
+    /**
+     * Нарисовать блок из лирний
+     * @param ctx
+     */
+    getCanvasObject(ctx: CanvasRenderingContext2D): void {
+        const l0 = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
+        const l1 = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
+
+        const l2 = this.getLineFormBlock(ctx, this._left!!, this._top!! - 1
+            + convertStyleToReadableFormat(stylesParentBlock.height)!!, true)
+
+        const l3 = this.getLineFormBlock(ctx,
+            this._left!! + convertStyleToReadableFormat(stylesParentBlock.width)!! -1
+            ,this._top!!, false)
+
+        this._blockCanvas = [l0, l1, l2, l3]
+        this.blockCanvas.forEach(item => {
+            drawLine(ctx, item)
+        })
+    }
+
+    clearBlockCanv(ctx: CanvasRenderingContext2D) {
+        this._blockCanvas?.forEach(item => {
+            ctx.clearRect(item.x, item.y,
+                item.width, item.height)
+        })
+
+    }
+    /**
+     * Создает линию для отображения блока с учетом всех стилистических особенностей
+     * @param ctx
+     * @param left
+     * @param top
+     * @param isHorizontal
+     */
     getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
                      top: number, isHorizontal: boolean): LinePartConnect{
         let size = calcSizeBlockCanvas(stylesParentBlock, left, top, isHorizontal)!!
-        return drawLine(ctx, size[0], size[1], size[2], size[3])
+        return new LinePartConnect(size[0], size[1], size[2], size[3])
     }
 
     //вызов контекстного меню блока
@@ -160,7 +188,8 @@ export class ParentBlock implements IBlock{
     }
 
     //одинарное нажатие
-    click(e: React.MouseEvent<HTMLElement>) {
+    click() {
+
     }
 
     //вернуть экземпляр блока
@@ -178,6 +207,14 @@ export class ParentBlock implements IBlock{
 
     get style(): CSSProperties {
         return stylesParentBlock
+    }
+
+    get blockCanvas(): LinePartConnect[] {
+        return this._blockCanvas!!
+    }
+
+    set blockCanvas(lines:LinePartConnect[]){
+        this._blockCanvas = lines
     }
 
     getId(): string {
@@ -243,6 +280,8 @@ export class ParentBlock implements IBlock{
     setParentId(parentId: string): void {
         this._parentId = parentId
     }
+
+
 
 }
 

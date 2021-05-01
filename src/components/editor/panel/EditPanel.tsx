@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -70,7 +70,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block, data[1].idBlock
             )
 
-            block.getCanvasObject(contextCanvas!!)
+            // block.getCanvasObject(contextCanvas!!)
         })
     }, [])
 
@@ -80,8 +80,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
      */
     const moveBlock = useCallback(
         (id: string, left: number, top: number) => {
+            const block = getBlockById(id)
+            block?.clearBlockCanv(contextCanvas!!)
+
             //перетаскиваем блок
             changingBlockCoor(id, left, top)
+
+            block?.getCanvasObject(contextCanvas!!)
+
         },
         [],
     )
