@@ -14,6 +14,10 @@ import {drawLines} from "../canvas/LinePainter";
 /** ТОЛЩИНА РИСУЕМОЙ СВЯЗИ ПО УМОЛЧАНИЮ **/
 export const CONNECTION_WIDTH = 1;
 
+/** ВЕЛИЧИНА ДЛЯ ПОЛОВИНКИ СТРЕЛОЧКИ **/
+const ARROW_HALF_WIDTH = 7;
+const ARROW_HALF_HEIGHT = 5;
+
 /**
  * Нарисовать связь между блокамии
  * @param itemOne
@@ -33,6 +37,7 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
 
         if (coor !== null) {
             createOneConnect(contextCanvas!!, coor, idItemOne, idItemTwo)
+            const arr = arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
         }
         coor = buildConnectOneBlock(idItemTwo, false)
         if (coor !== null) {
@@ -92,6 +97,7 @@ function createComplexConnection(ctx: CanvasRenderingContext2D,coor: number[],
 function createOneConnect(ctx: CanvasRenderingContext2D, coor: number[],
                           idItemOne: string, idItemTwo: string){
     const line0: LineCanvas = new LineCanvas(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+
     const connect = new ConnectionBlocks([line0], idItemOne, idItemTwo)
     drawLines(ctx, connect.connection)
 }
@@ -139,4 +145,22 @@ export const blockMovement = (block: IBlock, newCoorValue: number) => {
     if (newCoorValue >= getHeightEditPanel()!!
         || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
     return changingBlockCoor(block.getId()!!, -1, newCoorValue)
+}
+
+
+/**
+ * Рисует стрелочку :)
+ * @param ctx
+ * @param coor
+ */
+function arrow(ctx: CanvasRenderingContext2D, coor: number[]){
+    const arrowCentre = CONNECTION_WIDTH / 2
+
+    ctx.beginPath();
+    ctx.moveTo(coor[0] + arrowCentre,coor[1]);
+    ctx.lineTo(coor[0] - 6, coor[1] - 7);
+    ctx.moveTo(coor[0] + arrowCentre,coor[1]);
+    ctx.lineTo(coor[0] + 6, coor[1] - 7);
+
+    ctx.stroke();
 }
