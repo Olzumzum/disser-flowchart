@@ -21,7 +21,6 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = ({id}) => {
     const {block} = blocksTypedSelector(state => state.blocks)
     const {loadBlockById} = useActions()
 
-    console.log("id " + id)
     useEffect(() => {
         loadBlockById(id)
     }, [])

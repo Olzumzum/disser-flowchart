@@ -6,6 +6,8 @@ import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlock} from "../blocks/primitives/IBlock";
 import {getBlockById} from "../../../store/action-creators/blocks";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
 
 function getStyles(
     left: number,
@@ -32,6 +34,12 @@ export interface DraggableBlockProps {
 
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     const {left, top, title, typeBlock, id} = props
+    const {block} = blocksTypedSelector(state => state.blocks)
+    const {loadBlockById} = useActions()
+
+    useEffect(() => {
+        loadBlockById(id)
+    }, [])
 
     const [{isDragging}, drag, preview] = useDrag({
         item: {type: ItemTypes.BLOCK, left, top, title, typeBlock, id},
@@ -43,8 +51,6 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     useEffect(() => {
         preview(getEmptyImage(), {captureDraggingState: true})
     }, [])
-
-    const block = getBlockById(id)
 
     return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
