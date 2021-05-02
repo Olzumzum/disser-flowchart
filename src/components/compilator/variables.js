@@ -1,6 +1,13 @@
 //функция нахождения объявления, определения переменных
 import {get_language_params} from "./constructions";
-import {getCurrentPosition, getTextInfo, search, search_result, updateCurrentPosition} from "./text_searcher";
+import {
+    getCurrentComment,
+    getCurrentPosition,
+    getTextInfo,
+    search,
+    search_result,
+    updateCurrentPosition
+} from "./text_searcher";
 import {content_maker} from "./block_creator";
 import {arr_list, newArr, newVar, var_list} from "./var_list"
 import {object_block, obj_array, createBlock, getLastBlockInfo} from "./object_block";
@@ -73,7 +80,7 @@ function variables_searcher(text, type, p_id, n_id, in_lvl) {
     let variable;
     let pos = 0, pos_equal = -1, pos_dat = -1, pos_s = 0;
     let block;
-
+    let comm = getCurrentComment();
 
     while (pos != text.length) {
         if (search_result(text, '=', pos))
@@ -112,22 +119,18 @@ function variables_searcher(text, type, p_id, n_id, in_lvl) {
             let content =  text.substring(block[0].start, block[1].end);
             let comment = "";
             //создание объекта блока инициализации переменной
-            createBlock(p_id, n_id, "initializing", in_lvl, content, 0, type, comment);
-            let t = obj_array;
-            let t2 = "";
+            createBlock(p_id, n_id, "initializing", in_lvl, content, 0, type, getCurrentComment());
         } else {
             variable = text.substring(pos_s, pos_dat);
             var_list.push(newVar(variable, type));
             let arr = obj_array; //после отладки удалить
 
-            let comment = "";
             //создание объекта блока инициализации переменной
-            createBlock(p_id, n_id, "declaring", in_lvl, variable, 0, type, comment);
+            createBlock(p_id, n_id, "declaring", in_lvl, variable, 0, type, getCurrentComment());
             let t = obj_array;
             let t2 = "";
         }
         pos_s = pos_dat + 1;
-        let t = getLastBlockInfo();
         n_id = getLastBlockInfo().id;
     }
 }

@@ -2,13 +2,14 @@
 
 import {get_language_params, c_inic_construction, constructions_list} from "./constructions";
 import {
+    getCurrentComment,
     getCurrentPosition,
     getTextInfo,
     newText,
-    search,
+    search, search_comment,
     search_construction,
     search_construction_result, search_content,
-    search_result, updateCurrentPosition
+    search_result, updateCurrentComment, updateCurrentPosition
 } from "./text_searcher";
 import {content_maker, CreateBlockContent} from "./block_creator";
 import {search_init_block, search_init_construction} from "./variables";
@@ -37,10 +38,12 @@ export function block_processing(lines, lang) {
     let p = 0;
     let t = getTextInfo().text.length - 1;
     let t_p = getTextInfo().text[t].length;
-    while (l != t) {
+    while (l < t) {
         //let block =
 
-        neighbour_id = search_block(parent_id, neighbour_id, inner_lvl);
+        do
+            neighbour_id = search_block(parent_id, neighbour_id, inner_lvl);
+        while (neighbour_id == false)
         l = getCurrentPosition().line;
         let info = getLastBlockInfo();
 
@@ -71,9 +74,13 @@ export function block_processing(lines, lang) {
 //основная функция по нахождению ЯК, определению блока и созданию объекта
 function search_block(p_id, n_id, in_lvl) {
 
-    let otladka = getCurrentPosition();
 
+    let otladka = getCurrentPosition();
     let block_id = false;
+
+    let params = get_language_params('', 'c');
+    updateCurrentComment(search_comment(params));
+    let comcheck = getCurrentComment();
 
     let in_str_numb = 0;
     in_lvl++;
@@ -157,15 +164,15 @@ function switch_block_construction(p_id, n_id, in_lvl) {
                 content = content_maker(block_start); //написать функцию поиска параметра
             }
             createBlock(p_id, n_id, construction, in_lvl, content,
-                0, "", comment);
-                updateCurrentPosition(getCurrentPosition().pos + 1);
+                0, "", getCurrentComment());
+            updateCurrentPosition(getCurrentPosition().pos + 1);
             return block_id;
         case 'break':
 
             if (search_result(getTextInfo().text[getCurrentPosition().line], params.block_end, getCurrentPosition().pos))
                 updateCurrentPosition(search(getTextInfo().text[getCurrentPosition().line], params.block_end, getCurrentPosition().pos) + params.block_end.length);
             createBlock(p_id, n_id, construction, in_lvl, "",
-                0, "", comment);
+                0, "", getCurrentPosition());
             return block_id;
         default:
             if (search_content(params.block_params))
@@ -176,7 +183,7 @@ function switch_block_construction(p_id, n_id, in_lvl) {
     }
 
     createBlock(p_id, n_id, construction, in_lvl, "",
-        0, parameter, comment);
+        0, parameter, getCurrentComment());
     block_id = getLastBlockInfo().id;
     let neighbour_id = block_id;
 
@@ -190,7 +197,7 @@ function switch_block_construction(p_id, n_id, in_lvl) {
         let block = search_block(block_id, neighbour_id, in_lvl);
         if (block != false) {
             in_str_numb++;
-            neighbour_id = getNeighbourBlockId(block_id, in_lvl+1);
+            neighbour_id = getNeighbourBlockId(block_id, in_lvl + 1);
         }
     } while (!block_end_finder(constr_type, params, block_id))
 
@@ -269,6 +276,7 @@ function block_start_finder(c_t, params) {
     updateCurrentPosition(p, l);
 }
 
+//перемещает положение курсора в тексте на окончание кода блока
 function block_end_finder(c_t, params, id) {
     let t_i = getTextInfo();
     let c_p = getCurrentPosition();

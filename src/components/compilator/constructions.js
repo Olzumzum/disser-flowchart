@@ -30,6 +30,9 @@ export const c_action_operators = [
     '<<='
 ]
 
+export const c_single_line_comment = '//';
+export const c_multi_line_comment = ['/*', '*/'];
+
 //выбор набора конструкций для ранзых ЯП и ЯК
 export function get_language_params(type, lang) {
     //будущий код
@@ -39,11 +42,15 @@ export function get_language_params(type, lang) {
     let block_end = ';';
     let iniz_construction; //типы переменных для конкретного языка
     let action_operators;
+    let single_line_comment;
+    let multi_line_comment;
 
     switch (lang) {
         case 'c':
             iniz_construction = c_inic_construction;
             action_operators = c_action_operators;
+            single_line_comment = c_single_line_comment;
+            multi_line_comment = c_multi_line_comment;
             break;
         default:
             break;
@@ -72,6 +79,8 @@ export function get_language_params(type, lang) {
         block_end: block_end,
         inic_construction: iniz_construction,
         action_operators: action_operators,
+        single_line_comment: single_line_comment,
+        multi_line_comment: multi_line_comment,
     }
     return params;
 

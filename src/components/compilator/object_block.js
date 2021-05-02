@@ -37,13 +37,13 @@ export function getLastBlockInfo(){
     let p_id = lastBlock.parent_id;
     let n_id = lastBlock.neighbour_id;
     let type = lastBlock.type;
-   // let inner_lvl = lastBlock.inner_lvl;
+    let comment = lastBlock.comment;
     return {
         id,
         p_id,
         n_id,
-        type
-    //    inner_lvl
+        type,
+        comment
     };
 }
 
