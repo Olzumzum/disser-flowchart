@@ -35,6 +35,6 @@ export function drawLine(ctx: CanvasRenderingContext2D,
 export function clearLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]) {
     lines.forEach(item => {
         ctx.clearRect(item.x, item.y,
-            item.width, item.height)
+            item.width + 1, item.height)
     })
 }

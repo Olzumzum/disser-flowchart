@@ -35,16 +35,16 @@ export const DEFAULT_FOR_LINKS: string = "-1"
 
 //общий стиль для блоков
 const stylesParentBlock: CSSProperties = {
-    border: '1px dashed gray',
-    padding: '0.5rem 1rem',
+    // border: '1px dashed gray',
+    padding: '1',
     cursor: 'move',
     width: "70px",
     height: "50px",
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'contain',
-    display: "flex",
-    justifyContent: "center",
+    // backgroundSize: 'cover',
+    // backgroundRepeat: 'no-repeat',
+    // backgroundPosition: 'contain',
+    // display: "flex",
+    // justifyContent: "center",
     margin: "10px"
 }
 
@@ -95,7 +95,6 @@ export class ParentBlock implements IBlock {
 
     //создать экземпляр
     createBlock() {
-        console.log("криэйт")
         this._blockInstance = ({
                                    title,
                                    yellow,

@@ -16,7 +16,7 @@ export function drawBlockShape(ctx: CanvasRenderingContext2D,
                                left: number,
                                top: number
 ): LineCanvas[] {
-    // console.log("state blocks " + blockShape.length)
+
     clearLines(ctx, blockShape)
 
     blockShape = getBlockShape(contextCanvas!!, styleBlock, left, top)
@@ -39,13 +39,14 @@ export function getBlockShape(ctx: CanvasRenderingContext2D,
                               top: number){
 
     const l0 = getLineFormBlock(ctx, left!!, top!!, true, styleBlock)
-    const l1 = getLineFormBlock(ctx, left!!, top!!, false, styleBlock)
 
-    const l2 = getLineFormBlock(ctx, left!!, top!! - 1
+    const l1 = getLineFormBlock(ctx, left!!, top!!
         + convertStyleToReadableFormat(styleBlock.height)!!, true, styleBlock)
 
+    const l2 = getLineFormBlock(ctx, left!!, top!!, false, styleBlock)
+
     const l3 = getLineFormBlock(ctx,
-        left!! + convertStyleToReadableFormat(styleBlock.width)!! -1, top!!, false, styleBlock)
+        left!! + convertStyleToReadableFormat(styleBlock.width)!! , top!!, false, styleBlock)
 
     return [l0, l1, l2, l3]
 }
@@ -58,8 +59,14 @@ export function getBlockShape(ctx: CanvasRenderingContext2D,
  * @param top
  * @param isHorizontal
  */
-export function getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
-    top: number, isHorizontal: boolean, styleBlock: CSSProperties): LineCanvas{
+export function getLineFormBlock(ctx: CanvasRenderingContext2D,
+                                 left: number,
+                                 top: number,
+                                 isHorizontal: boolean,
+                                 styleBlock: CSSProperties
+): LineCanvas{
+
     let size = calcSizeBlockCanvas(styleBlock, left, top, isHorizontal)!!
+
     return new LineCanvas(size[0], size[1], size[2], size[3])
 }

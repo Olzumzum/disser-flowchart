@@ -13,8 +13,6 @@ import {drawLines} from "../canvas/LinePainter";
 
 /** ТОЛЩИНА РИСУЕМОЙ СВЯЗИ ПО УМОЛЧАНИЮ **/
 export const CONNECTION_WIDTH = 1;
-/** ЦВЕТ РИСУЕМОЙ СВЯЗИ **/
-const CONNECTION_COLOR = '#000000';
 
 /**
  * Нарисовать связь между блокамии
@@ -141,28 +139,4 @@ export const blockMovement = (block: IBlock, newCoorValue: number) => {
     if (newCoorValue >= getHeightEditPanel()!!
         || (newCoorValue + heightOneBlock) >= getHeightEditPanel()!) console.log("Не перемещать")
     return changingBlockCoor(block.getId()!!, -1, newCoorValue)
-}
-
-
-/**
- * Нарисовать прямую
- * @param ctx - конекст канвы, где происходит рисование
- * @param x - координата начала линии
- * @param y - координата начала линии
- * @param width - ширина линии
- * @param height - длинна линии
- */
-const drawLine = (ctx: CanvasRenderingContext2D,
-                  x: number,
-                  y: number,
-                  width: number,
-                  height: number): LineCanvas => {
-    const line = new LineCanvas(x, y, width, height)
-
-    ctx.fillStyle = CONNECTION_COLOR
-    ctx.beginPath()
-    ctx.fillRect(line.x, line.y, line.width, line.height)
-    ctx.fill()
-
-    return line
 }
