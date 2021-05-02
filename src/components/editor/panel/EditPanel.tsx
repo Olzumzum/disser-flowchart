@@ -2,7 +2,7 @@ import {CSSProperties, FC, useCallback, useEffect} from "react";
 import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
+import {addBlocks, dragBlock, getBlockById} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -45,7 +45,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor, dragBlock} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -73,21 +73,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     }, [])
 
 
-    /**
-     * переместить блок или создать блок
-     */
-    const moveBlock = useCallback(
-        (id: string, left: number, top: number) => {
-            const block = getBlockById(id)
-
-            //перетаскиваем блок
-            changingBlockCoor(id, left, top)
-
-            block?.getCanvasObject(contextCanvas!!)
-
-        },
-        [],
-    )
 
     /**
      * реакция на dnd
@@ -95,21 +80,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const [, drop] = useDrop({
         accept: ItemTypes.BLOCK,
         drop(item: DragItem, monitor) {
-            const delta = monitor.getDifferenceFromInitialOffset() as {
-                x: number
-                y: number
-            }
-
-            let left = Math.round(item.left + delta.x)
-            let top = Math.round(item.top + delta.y)
-
-            if (snapToGrid) {
-                ;[left, top] = doSnapToGrid(left, top)
-            }
-
-            moveBlock(item.id, left, top)
-
-            return undefined
+            dragBlock(item, monitor, snapToGrid)
         },
     })
 
