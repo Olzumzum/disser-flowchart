@@ -57,7 +57,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
             recalculationCoorByEvent(block.getId())
-
+            //нарисовать связь
             paintConnection(idParent, block.getId())
         } catch (e) {
             dispatch({

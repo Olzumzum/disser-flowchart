@@ -50,9 +50,9 @@ export const EditorApp: FC = () => {
                         <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                         <ErrorMessage/>
                     </Row>
-                    <Row>
-                        <CompilerOutputConsole/>
-                    </Row>
+                    {/*<Row>*/}
+                    {/*    <CompilerOutputConsole/>*/}
+                    {/*</Row>*/}
                 </Container>
             </DndProvider>
         </Provider>

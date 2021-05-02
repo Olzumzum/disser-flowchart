@@ -11,6 +11,7 @@ export let contextCanvas: CanvasRenderingContext2D | null
 
 const canvasStyle: CSSProperties = {
     backgroundColor: "yellow",
+
 }
 
 /**

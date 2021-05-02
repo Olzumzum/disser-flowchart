@@ -21,7 +21,7 @@ import {StartTitleComp} from "./StartTitleComp";
 const stylesEditPanel: CSSProperties = {
     float: "right",
     width: "100%",
-    height: 400,
+    height: 600,
     border: '1px solid black',
     backgroundColor: 'aqua',
     marginRight: 6,
@@ -40,18 +40,17 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const renderManager = new RendrerManager()
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
-    //
-    // const canvas = new CanvasPainter()
+
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor, linkMaker} = useActions()
+    const {fetchBlocks, addBlocks, changingBlockCoor} = useActions()
 
     useEffect(() => {
         fetchBlocks()
     }, [])
-    const c = <CanvasPainter/>
+
     //добаввить новый блок
     useEffect(() => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
@@ -70,7 +69,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block, data[1].idBlock
             )
 
-            // block.getCanvasObject(contextCanvas!!)
         })
     }, [])
 
@@ -114,7 +112,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             return undefined
         },
     })
-
 
     if (loading) {
         return <h1>Идет загрузка...</h1>
