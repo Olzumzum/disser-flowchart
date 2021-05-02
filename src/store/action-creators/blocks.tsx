@@ -113,9 +113,6 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
     }
 }
 
-//id блока с которым будет создаваться связь
-let idItemTwo: string | undefined = undefined
-
 
 /**
  * Поиска блока по идентификатору

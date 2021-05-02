@@ -30,7 +30,6 @@ export interface IBlock {
 
     getStyleBlock(): CSSProperties
 
-    getCanvasObject(ctx: CanvasRenderingContext2D): void
 
 
 

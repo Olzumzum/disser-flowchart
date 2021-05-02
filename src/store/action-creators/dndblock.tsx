@@ -44,6 +44,5 @@ const moveBlock = (id: string, left: number, top: number) => {
     //перетаскиваем блок
     changingBlockCoor(id, left, top)
 
-    block?.getCanvasObject(contextCanvas!!)
-
+        block?.render()
 }
