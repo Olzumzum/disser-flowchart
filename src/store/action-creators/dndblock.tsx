@@ -23,7 +23,9 @@ export const dragBlock = (item: DragItem, monitor: DropTargetMonitor, snapToGrid
                 ;[left, top] = doSnapToGrid(left, top)
             }
 
-            moveBlock(item.id, left, top)
+            console.log("Мы перетаскиваем " + item.id)
+            //перетаскиваем блок
+            changingBlockCoor(item.id, left, top)
 
             dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: getBlock()})
         } catch (e) {
@@ -32,17 +34,4 @@ export const dragBlock = (item: DragItem, monitor: DropTargetMonitor, snapToGrid
             })
         }
     }
-}
-
-
-/**
- * переместить блок или создать блок
- */
-const moveBlock = (id: string, left: number, top: number) => {
-    const block = getBlockById(id)
-
-    //перетаскиваем блок
-    changingBlockCoor(id, left, top)
-
-        block?.render()
 }

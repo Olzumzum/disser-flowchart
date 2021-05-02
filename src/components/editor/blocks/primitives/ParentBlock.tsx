@@ -10,7 +10,7 @@ import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
 import {LinePartConnect} from "../../connections/LinePartConnect";
 import {contextCanvas} from "../../connections/CanvasPainter";
-import {drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
+import {clearBlockCanv, drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
 
 /**
  * Родитель всех блоков
@@ -82,12 +82,11 @@ export class ParentBlock implements IBlock {
     constructor(id: string,
                 left: number,
                 top: number) {
-
+        console.log("Создать новый блок")
         this._id = id
         this._left = left
         this._top = top
-        this._blockShape =
-            getBlockShape(contextCanvas!!, stylesParentBlock, this._left!!, this._top!!)
+        this._blockShape = getBlockShape(contextCanvas!!, stylesParentBlock, this._left!!, this._top!!)
     }
 
     getStyleBlock() {
@@ -96,7 +95,7 @@ export class ParentBlock implements IBlock {
 
     //создать экземпляр
     createBlock() {
-
+        console.log("криэйт")
         this._blockInstance = ({
                                    title,
                                    yellow,
@@ -129,7 +128,8 @@ export class ParentBlock implements IBlock {
 
     //Отобразить
     render(): JSX.Element {
-        drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
+        this._blockShape =
+            drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
