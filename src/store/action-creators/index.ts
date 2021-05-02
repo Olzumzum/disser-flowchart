@@ -1,5 +1,5 @@
 import * as BlockActionCreator from './blocks'
-import * as DndActionCreator from './newb'
+import * as DndActionCreator from './dndblock'
 
 export default {
     ...BlockActionCreator,
