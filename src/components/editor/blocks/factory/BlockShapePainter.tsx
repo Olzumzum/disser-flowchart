@@ -1,8 +1,8 @@
 import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
-import {drawLine} from "../../connections/LinePainter";
-import {LinePartConnect} from "../../connections/LinePartConnect";
+import {clearLines, drawLine, drawLines} from "../../canvas/LinePainter";
+import {LineCanvas} from "../../canvas/LineCanvas";
 import {CSSProperties} from "react";
-import {contextCanvas} from "../../connections/CanvasPainter";
+import {contextCanvas} from "../../canvas/CanvasPainter";
 
 /**
  * Отрисовывает форму блока в нужном месте,
@@ -11,18 +11,16 @@ import {contextCanvas} from "../../connections/CanvasPainter";
  * @param blockShape - массив линий формы блока
  */
 export function drawBlockShape(ctx: CanvasRenderingContext2D,
-                               blockShape: LinePartConnect[],
+                               blockShape: LineCanvas[],
                                styleBlock: CSSProperties,
                                left: number,
                                top: number
-): LinePartConnect[] {
+): LineCanvas[] {
     // console.log("state blocks " + blockShape.length)
-    clearBlockCanv(ctx, blockShape)
+    clearLines(ctx, blockShape)
 
     blockShape = getBlockShape(contextCanvas!!, styleBlock, left, top)
-    blockShape.forEach(item => {
-    drawLine(ctx, item)
-})
+    drawLines(ctx, blockShape)
     return blockShape
 }
 
@@ -52,18 +50,7 @@ export function getBlockShape(ctx: CanvasRenderingContext2D,
     return [l0, l1, l2, l3]
 }
 
-/**
- * Функция стирает массив линий на канве
- * @param ctx - контекст канвы, где отрисовывается блок
- * @param blockShape - массив стираемых линий
- */
-export function clearBlockCanv(ctx: CanvasRenderingContext2D, blockShape: LinePartConnect[]) {
-    blockShape.forEach(item => {
-        ctx.clearRect(item.x, item.y,
-            item.width, item.height)
-    })
 
-}
 /**
  * Создает линию для отображения блока с учетом всех стилистических особенностей
  * @param ctx
@@ -72,7 +59,7 @@ export function clearBlockCanv(ctx: CanvasRenderingContext2D, blockShape: LinePa
  * @param isHorizontal
  */
 export function getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
-    top: number, isHorizontal: boolean, styleBlock: CSSProperties): LinePartConnect{
+    top: number, isHorizontal: boolean, styleBlock: CSSProperties): LineCanvas{
     let size = calcSizeBlockCanvas(styleBlock, left, top, isHorizontal)!!
-    return new LinePartConnect(size[0], size[1], size[2], size[3])
+    return new LineCanvas(size[0], size[1], size[2], size[3])
 }

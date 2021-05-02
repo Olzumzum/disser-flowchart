@@ -8,9 +8,9 @@ import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {LinePartConnect} from "../../connections/LinePartConnect";
-import {contextCanvas} from "../../connections/CanvasPainter";
-import {clearBlockCanv, drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
+import {LineCanvas} from "../../canvas/LineCanvas";
+import {contextCanvas} from "../../canvas/CanvasPainter";
+import { drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
 
 /**
  * Родитель всех блоков
@@ -77,7 +77,7 @@ export class ParentBlock implements IBlock {
     //комментарии из кода
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
-    private _blockShape: LinePartConnect[]
+    private _blockShape: LineCanvas[]
 
     constructor(id: string,
                 left: number,
@@ -167,11 +167,11 @@ export class ParentBlock implements IBlock {
         return stylesParentBlock
     }
 
-    get blockShape(): LinePartConnect[] {
+    get blockShape(): LineCanvas[] {
         return this._blockShape!!
     }
 
-    set blockShape(lines: LinePartConnect[]) {
+    set blockShape(lines: LineCanvas[]) {
         this._blockShape = lines
     }
 

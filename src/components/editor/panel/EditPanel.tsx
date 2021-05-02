@@ -1,5 +1,5 @@
 import {CSSProperties, FC, useEffect} from "react";
-import {CanvasPainter} from "../connections/CanvasPainter";
+import {CanvasPainter} from "../canvas/CanvasPainter";
 import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";

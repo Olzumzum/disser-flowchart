@@ -5,7 +5,7 @@ import {BlocksAction} from "../types/blocks";
 import {snapToGrid as doSnapToGrid} from "../../components/editor/dnd/snapToGrid";
 import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 import {ERROR_ADDING_BLOCK} from "../../assets/strings/errorMessadges";
-import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
+import {contextCanvas} from "../../components/editor/canvas/CanvasPainter";
 import {changingBlockCoor, getBlock, getBlockById} from "./blocks";
 
 export const dragBlock = (item: DragItem, monitor: DropTargetMonitor, snapToGrid: boolean) => {
