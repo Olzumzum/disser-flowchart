@@ -35,11 +35,6 @@ export class RendrerManager {
         return convertBlocks
     }
 
-//отображает перетаскиваемые блоки
-    render(item: any) {
-        return <DraggableBlock key={item.id} {...item} style={{backdrop: "blue"}} />
-    }
-
     renders(item: any, key: any) {
         return <DraggableBlock key={key} id={item.id} {...item}/>
     }

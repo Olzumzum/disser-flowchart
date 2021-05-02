@@ -2,32 +2,45 @@ import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_
 import {drawLine} from "../../connections/LinePainter";
 import {LinePartConnect} from "../../connections/LinePartConnect";
 import {CSSProperties} from "react";
+import {contextCanvas} from "../../connections/CanvasPainter";
 
 /**
  * Нарисовать блок из лирний
  * @param ctx
+ * @param blockShape
  */
-export function getCanvasObject(ctx: CanvasRenderingContext2D,
-                                blockShape: LinePartConnect[],
-                                styleBlock: CSSProperties,
-                                left: number,
-                                top: number
-): void {
-    if (blockShape?.length !== 0 && blockShape !== undefined) clearBlockCanv(ctx, blockShape)
+export function drawBlockShape(ctx: CanvasRenderingContext2D,
+                               blockShape: LinePartConnect[],
+                               styleBlock: CSSProperties,
+                               left: number,
+                               top: number
+): LinePartConnect[] {
+    console.log("state blocks " + blockShape.length)
+    if (blockShape?.length !== 0) clearBlockCanv(ctx, blockShape)
 
-const l0 = getLineFormBlock(ctx, left!!, top!!, true, styleBlock)
-const l1 = getLineFormBlock(ctx, left!!, top!!, false, styleBlock)
-
-const l2 = getLineFormBlock(ctx, left!!, top!! - 1
-    + convertStyleToReadableFormat(styleBlock.height)!!, true, styleBlock)
-
-const l3 = getLineFormBlock(ctx,
-    left!! + convertStyleToReadableFormat(styleBlock.width)!! -1, top!!, false, styleBlock)
-
-    blockShape = [l0, l1, l2, l3]
+    blockShape = getBlockShape(contextCanvas!!, styleBlock, left, top)
     blockShape.forEach(item => {
     drawLine(ctx, item)
 })
+    return blockShape
+}
+
+export function getBlockShape(ctx: CanvasRenderingContext2D,
+
+                              styleBlock: CSSProperties,
+                              left: number,
+                              top: number){
+
+    const l0 = getLineFormBlock(ctx, left!!, top!!, true, styleBlock)
+    const l1 = getLineFormBlock(ctx, left!!, top!!, false, styleBlock)
+
+    const l2 = getLineFormBlock(ctx, left!!, top!! - 1
+        + convertStyleToReadableFormat(styleBlock.height)!!, true, styleBlock)
+
+    const l3 = getLineFormBlock(ctx,
+        left!! + convertStyleToReadableFormat(styleBlock.width)!! -1, top!!, false, styleBlock)
+
+    return [l0, l1, l2, l3]
 }
 
 export function clearBlockCanv(ctx: CanvasRenderingContext2D, blockShape: LinePartConnect[]) {

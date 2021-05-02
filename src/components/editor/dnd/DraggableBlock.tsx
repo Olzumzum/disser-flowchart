@@ -5,6 +5,7 @@ import {getEmptyImage} from "react-dnd-html5-backend";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock} from "../blocks/factory/CreatorBlock";
 import {IBlock} from "../blocks/primitives/IBlock";
+import {getBlockById} from "../../../store/action-creators/blocks";
 
 function getStyles(
     left: number,
@@ -16,8 +17,6 @@ function getStyles(
         position: 'absolute',
         transform,
         WebkitTransform: transform,
-        // IE fallback: hide the real node using CSS when dragging
-        // because IE will ignore our custom "empty image" drag preview.
         opacity: isDragging ? 0 : 1,
         height: isDragging ? 0 : '',
     }
@@ -29,13 +28,6 @@ export interface DraggableBlockProps {
     left: number
     top: number
     typeBlock: string
-}
-
-function selectTypeBlock(
-    typeBlock: string, title: string, left: number, top: number, id: string
-): IBlock | undefined {
-    const blockFactory: IBlockFactory = new CreatorBlock()
-    return blockFactory.createBlock(id, typeBlock, left, top)
 }
 
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
@@ -52,10 +44,11 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
         preview(getEmptyImage(), {captureDraggingState: true})
     }, [])
 
+    const block = getBlockById(id)
 
     return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-            {selectTypeBlock(typeBlock, title, left, top, id)?.render()}
+            {block?.render()}
         </div>
     )
 }

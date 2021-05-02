@@ -8,11 +8,9 @@ import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
 import {LinePartConnect} from "../../connections/LinePartConnect";
-import {drawLine} from "../../connections/LinePainter";
 import {contextCanvas} from "../../connections/CanvasPainter";
-import {getCanvasObject} from "../factory/BlockShapePainter";
+import {drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
 
 /**
  * Родитель всех блоков
@@ -54,7 +52,7 @@ export function getStyleParentBlock(): CSSProperties {
     return stylesParentBlock
 }
 
-export class ParentBlock implements IBlock{
+export class ParentBlock implements IBlock {
 
     //уникальный ключ
     private _id: string = ""
@@ -79,7 +77,7 @@ export class ParentBlock implements IBlock{
     //комментарии из кода
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
-    private _blockShape: LinePartConnect[] | undefined
+    private _blockShape: LinePartConnect[]
 
     constructor(id: string,
                 left: number,
@@ -88,7 +86,8 @@ export class ParentBlock implements IBlock{
         this._id = id
         this._left = left
         this._top = top
-        getCanvasObject(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left, this._top)
+        this._blockShape =
+            getBlockShape(contextCanvas!!, stylesParentBlock, this._left!!, this._top!!)
     }
 
     getStyleBlock() {
@@ -130,11 +129,10 @@ export class ParentBlock implements IBlock{
 
     //Отобразить
     render(): JSX.Element {
-
+        drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
-
 
 
     /**
@@ -173,7 +171,7 @@ export class ParentBlock implements IBlock{
         return this._blockShape!!
     }
 
-    set blockShape(lines:LinePartConnect[]){
+    set blockShape(lines: LinePartConnect[]) {
         this._blockShape = lines
     }
 
@@ -239,6 +237,12 @@ export class ParentBlock implements IBlock{
 
     setParentId(parentId: string): void {
         this._parentId = parentId
+    }
+
+    getColLine(): number {
+        if (this._blockShape !== undefined)
+            return this._blockShape?.length;
+        else return -1
     }
 
 }

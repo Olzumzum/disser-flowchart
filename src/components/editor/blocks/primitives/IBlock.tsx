@@ -30,6 +30,7 @@ export interface IBlock {
 
     getStyleBlock(): CSSProperties
 
+    getColLine(): number
 
 
 
