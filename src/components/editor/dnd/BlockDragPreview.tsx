@@ -1,5 +1,7 @@
 import {CSSProperties, FC, useEffect, useState} from "react";
 import {getPreviewBlock} from "../blocks/factory/CreatorBlock";
+import {useActions} from "../hooks/blockActions";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 
 /**
  * Рисует блок при dnd
@@ -11,13 +13,18 @@ const styles: CSSProperties = {
 }
 
 export interface BlockDragPreviewProps {
-    title: string
-    typeBlock: string | symbol | null
+    id: string
 }
 
-export const BlockDragPreview: FC<BlockDragPreviewProps> = (props) => {
+export const BlockDragPreview: FC<BlockDragPreviewProps> = ({id}) => {
     const [tickTock, setTickTock] = useState(false)
-    const {typeBlock} = props
+    const {block} = blocksTypedSelector(state => state.blocks)
+    const {loadBlockById} = useActions()
+
+    console.log("id " + id)
+    useEffect(() => {
+        loadBlockById(id)
+    }, [])
 
     useEffect(
         function subscribeToIntervalTick() {
@@ -30,7 +37,7 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = (props) => {
 
     return (
         <div style={styles}>
-            {getPreviewBlock(typeBlock)?.render()}
+            {block?.render()}
 
         </div>
     )

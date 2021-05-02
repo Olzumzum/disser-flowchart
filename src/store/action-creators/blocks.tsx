@@ -6,7 +6,8 @@ import {
     COORDINATE_CHANGE_ERROR,
     DATA_INSERTION_ERROR,
     DATA_LOADING_ERROR,
-    ERROR_ADDING_BLOCK
+    ERROR_ADDING_BLOCK,
+    NOT_EXIST_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
@@ -14,7 +15,7 @@ import {recalculationCoorByEvent} from "../../components/editor/calculat_coordin
 
 const blocks = new Array<IBlock>()
 
-export function getBlock(){
+export function getBlock() {
     return blocks
 }
 
@@ -72,8 +73,6 @@ export const addBlocks = (block: IBlock, idParent: string) => {
 }
 
 
-
-
 /**
  * изменение координат блока с указанным id
  * @param id изменяемого блока
@@ -108,6 +107,30 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
                 payload: DATA_INSERTION_ERROR + " " + COORDINATE_CHANGE_ERROR
+            })
+        }
+    }
+}
+
+
+export function loadBlockById(id: string) {
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            const block = getBlockById(id)
+            if (block === undefined)
+                dispatch({
+                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                    payload: DATA_LOADING_ERROR + NOT_EXIST_BLOCK + id
+                })
+            else
+                dispatch({
+                    type: BlocksActionTypes.GET_BLOCK,
+                    payload: block
+                })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                payload: DATA_LOADING_ERROR
             })
         }
     }

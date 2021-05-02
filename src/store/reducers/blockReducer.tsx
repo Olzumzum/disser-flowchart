@@ -1,10 +1,10 @@
 import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 import {BlocksAction, BlockState} from "../types/blocks";
 
-
 const initialState: BlockState = {
     originBlocks: [],
     blocks: [],
+    block: null,
     loading: false,
     error: null,
 }
@@ -27,6 +27,8 @@ export const blockReducer = (state: BlockState = initialState, action: BlocksAct
             return {...state}
         case BlocksActionTypes.CREATE_CONNECTION:
             return {...state, blocks: action.payload}
+        case BlocksActionTypes.GET_BLOCK:
+            return {...state, block: action.payload}
         default:
             return state
     }
