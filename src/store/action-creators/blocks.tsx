@@ -11,6 +11,10 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
+import {snapToGrid as doSnapToGrid} from "../../components/editor/dnd/snapToGrid";
+import {DragItem} from "../../components/editor/dnd/DragItem";
+import {DropTargetMonitor} from "react-dnd";
+import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
 
 const blocks = new Array<IBlock>()
 
@@ -57,7 +61,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
             recalculationCoorByEvent(block.getId())
-
+            //нарисовать связь
             paintConnection(idParent, block.getId())
         } catch (e) {
             dispatch({
@@ -68,27 +72,47 @@ export const addBlocks = (block: IBlock, idParent: string) => {
 }
 
 
-export const linkMaker = (currentBlockId: string,
-                          parentBlockId: string,) => {
-
-    paintConnection(currentBlockId, parentBlockId)
-
+export const dragBlock = (item: DragItem, monitor: DropTargetMonitor, snapToGrid: boolean) => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            // const response = originalBlocks
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
-            })
+            const delta = monitor.getDifferenceFromInitialOffset() as {
+                x: number
+                y: number
+            }
+
+            let left = Math.round(item.left + delta.x)
+            let top = Math.round(item.top + delta.y)
+
+            if (snapToGrid) {
+                ;[left, top] = doSnapToGrid(left, top)
+            }
+
+            moveBlock(item.id, left, top)
+
+
+
+
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
         } catch (e) {
             dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: DATA_LOADING_ERROR
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
             })
         }
     }
+}
+
+
+/**
+ * переместить блок или создать блок
+ */
+const moveBlock = (id: string, left: number, top: number) => {
+    const block = getBlockById(id)
+
+    //перетаскиваем блок
+    changingBlockCoor(id, left, top)
+
+    block?.getCanvasObject(contextCanvas!!)
+
 }
 
 
@@ -107,6 +131,8 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
         if (top !== -1) item.setTop(top)
         flag = true
     }
+
+    searchBlockBeUpdate(item!!)
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             if (flag) {
@@ -157,7 +183,7 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
 
     //если родитель присутствует, мы задаем соседство
     //если родителя нет - его id = -1
-    if(idParentBlock.localeCompare("-1")) {
+    if (idParentBlock.localeCompare("-1")) {
 
         const parentBlock = getBlockById(idParentBlock)
         const newBlock = getBlockById(idNewBlock)
@@ -184,9 +210,9 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
  * поиск блока, который необходимо обновить и его обновление
  * @param updateBlock - обновляемый блок
  */
-export const searchBlockBeUpdate =(updateBlock: IBlock) =>{
+export const searchBlockBeUpdate = (updateBlock: IBlock) => {
     blocks.forEach(item => {
-        if (!item.getId().localeCompare(updateBlock.getId())){
+        if (!item.getId().localeCompare(updateBlock.getId())) {
             item = updateBlock
         }
     })

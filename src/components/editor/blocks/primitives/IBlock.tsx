@@ -33,5 +33,5 @@ export interface IBlock {
     getCanvasObject(ctx: CanvasRenderingContext2D): void
 
 
-    clearBlockCanv(ctx: CanvasRenderingContext2D): void
+
 }

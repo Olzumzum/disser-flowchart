@@ -131,10 +131,7 @@ export class ParentBlock implements IBlock{
     render(): JSX.Element {
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
-
     }
-
-
 
     /**
      * Нарисовать блок из лирний
@@ -179,7 +176,10 @@ export class ParentBlock implements IBlock{
         return new LinePartConnect(size[0], size[1], size[2], size[3])
     }
 
-    //вызов контекстного меню блока
+    /**
+     * вызов контекстного меню блока
+     * @param e
+     */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
             BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
@@ -279,8 +279,6 @@ export class ParentBlock implements IBlock{
     setParentId(parentId: string): void {
         this._parentId = parentId
     }
-
-
 
 }
 
