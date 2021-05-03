@@ -44,7 +44,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //отрисовывает объекты-блоки
     let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
     // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor, dragBlock} = useActions()
+    const {fetchBlocks, addBlocks, dragBlock} = useActions()
 
     useEffect(() => {
         fetchBlocks()

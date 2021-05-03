@@ -52,11 +52,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
         try {
             blocks.push(block)
 
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+
 
             //установить соседей
             settingUpNeighborhood(idParent, block.getId())

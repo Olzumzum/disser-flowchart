@@ -11,6 +11,7 @@ import {BlocksEventEmitter} from "../../BlocksEmitter";
 import {LineCanvas} from "../../canvas/LineCanvas";
 import {contextCanvas} from "../../canvas/CanvasPainter";
 import { drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
+import {ContextMenuEmitter} from "../../context_menu/ContextMenuEmitter";
 
 /**
  * Родитель всех блоков
@@ -109,7 +110,7 @@ export class ParentBlock implements IBlock {
                     <OverlayTrigger
                         placement={"right"}
                         delay={{show: 250, hide: 400}}
-                        overlay={renderConvertPrompt}>
+                        overlay={renderConvertPrompt }>
                         <div
                             id={this._id}
                             style={{...stylesParentBlock, background}}
@@ -127,6 +128,7 @@ export class ParentBlock implements IBlock {
 
     //Отобразить
     render(): JSX.Element {
+        console.log("рендер")
         this._blockShape =
             drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
@@ -140,7 +142,7 @@ export class ParentBlock implements IBlock {
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
-            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 this.getId())
     }
 
