@@ -1,20 +1,20 @@
-import {LinePartConnect} from "./LinePartConnect";
+import {LineCanvas} from "../canvas/LineCanvas";
 import {generateId} from "../blocks/factory/CreatorBlock";
 
 export class ConnectionBlocks {
     private _id: string = ""
-    private _connection: LinePartConnect[] | undefined
+    private _connection: LineCanvas[] | undefined
 
     //массив из двух строк, каждая из строк - id связываемых блоков
     private _blockIds: string[] | undefined
 
-    constructor(lines: LinePartConnect[], idOneBlock: string, idTwoBlock: string) {
+    constructor(lines: LineCanvas[], idOneBlock: string, idTwoBlock: string) {
         this._connection = lines
         this._id = generateId()
         this._blockIds = [idOneBlock, idTwoBlock]
     }
 
-    get connection(): LinePartConnect[] {
+    get connection(): LineCanvas[] {
         return this._connection!!
     }
 

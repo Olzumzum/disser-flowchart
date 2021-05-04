@@ -48,21 +48,19 @@ export interface CustomDragLayerProps {
 
 export const CustomDragLayer: FC<CustomDragLayerProps> = (props) => {
     const {
-        itemType,
         isDragging,
         item,
         initialOffset,
         currentOffset,
     } = useDragLayer((monitor) => ({
         item: monitor.getItem(),
-        itemType: monitor.getItemType(),
         initialOffset: monitor.getInitialSourceClientOffset(),
         currentOffset: monitor.getSourceClientOffset(),
         isDragging: monitor.isDragging(),
     }))
 
     function renderItem() {
-        return <BlockDragPreview title={item.title} typeBlock={itemType} />
+        return <BlockDragPreview id={item.id} />
     }
 
     if (!isDragging) {

@@ -1,8 +1,8 @@
-import {CSSProperties, FC, useCallback, useEffect} from "react";
-import {CanvasPainter, contextCanvas} from "../connections/CanvasPainter";
-import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
+import {CSSProperties, FC, useEffect} from "react";
+import {CanvasPainter} from "../canvas/CanvasPainter";
+import {convert,rendersDragBlock} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, dragBlock, getBlockById} from "../../../store/action-creators/blocks";
+import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -10,7 +10,6 @@ import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
-import {snapToGrid as doSnapToGrid} from '../dnd/snapToGrid'
 import {BlockTypes} from "../blocks/primitives/BlockTypes";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
@@ -36,17 +35,14 @@ interface EditPanelProps {
 }
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    //приводит получаемые объекты к виду, пригодному для отображения
-    const renderManager = new RendrerManager()
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
-
+    //
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-    //отрисовывает объекты-блоки
-    let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
-    // действия
-    const {fetchBlocks, addBlocks, changingBlockCoor, dragBlock} = useActions()
-
+    //
+    // // действия
+    const {fetchBlocks, addBlocks, dragBlock} = useActions()
+    //
     useEffect(() => {
         fetchBlocks()
     }, [])
@@ -57,9 +53,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             //координаты добавляемого блока
 
             const coor = calcCoordinates(null, BlockTypes.BLOCK, data[1].idBlock)
-
+            const id = generateId()
             const block = creator.createBlock(
-                generateId(),
+                id,
                 BlockTypes.BLOCK,
                 coor[0],
                 coor[1],
@@ -68,6 +64,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
+
 
         })
     }, [])
@@ -89,11 +86,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     }
 
     return (
-        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
-             onClick={() => startClickPanel(blocks.length)}>
-            <StartTitleComp/>
-            {Object.keys(renderBlocks).map((id) =>
-                renderManager.renders(renderBlocks[Number(id)], id))}
+        <div id={"edit_panel"}
+             ref={drop}
+             style={stylesEditPanel}
+             onClick={() => startClickPanel(blocks.length)}
+        >
+             <StartTitleComp/>
+             {Object.keys(blocks).map((id) =>
+                 rendersDragBlock(convert(blocks)[Number(id)], id))}
             <CanvasPainter/>
         </div>
     )

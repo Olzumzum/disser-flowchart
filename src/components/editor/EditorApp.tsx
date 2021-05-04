@@ -29,14 +29,6 @@ export const EditorApp: FC = () => {
     const [snapToGridAfterDrop, setSnapToGridAfterDrop] = useState(false)
     const [snapToGridWhileDragging, setSnapToGridWhileDragging] = useState(false)
 
-    const handleSnapToGridAfterDropChange = useCallback(() => {
-        setSnapToGridAfterDrop(!snapToGridAfterDrop)
-    }, [snapToGridAfterDrop])
-
-    const handleSnapToGridWhileDraggingChange = useCallback(() => {
-        setSnapToGridWhileDragging(!snapToGridWhileDragging)
-    }, [snapToGridWhileDragging])
-
 
     return (
         <Provider store={store}>

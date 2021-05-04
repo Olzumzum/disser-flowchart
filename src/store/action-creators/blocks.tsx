@@ -6,17 +6,22 @@ import {
     COORDINATE_CHANGE_ERROR,
     DATA_INSERTION_ERROR,
     DATA_LOADING_ERROR,
-    ERROR_ADDING_BLOCK
+    ERROR_ADDING_BLOCK,
+    NOT_EXIST_BLOCK
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
-import {snapToGrid as doSnapToGrid} from "../../components/editor/dnd/snapToGrid";
-import {DragItem} from "../../components/editor/dnd/DragItem";
-import {DropTargetMonitor} from "react-dnd";
-import {contextCanvas} from "../../components/editor/connections/CanvasPainter";
+import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
 
+// const b1 = new ParentBlock("1", 150, 50)
+// const b2 = new ParentBlock("2", 150, 150)
+// const blocks = new Array<IBlock>(b1, b2)
 const blocks = new Array<IBlock>()
+
+export function getBlock() {
+    return blocks
+}
 
 /**
  *
@@ -26,11 +31,10 @@ const blocks = new Array<IBlock>()
 export const fetchBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            // const response = originalBlocks
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
+            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
+            // dispatch({
+            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            // })
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
@@ -51,11 +55,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
         try {
             blocks.push(block)
 
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
+
 
             //установить соседей
             settingUpNeighborhood(idParent, block.getId())
@@ -69,50 +70,6 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             })
         }
     }
-}
-
-
-export const dragBlock = (item: DragItem, monitor: DropTargetMonitor, snapToGrid: boolean) => {
-    return async (dispatch: Dispatch<BlocksAction>) => {
-        try {
-            const delta = monitor.getDifferenceFromInitialOffset() as {
-                x: number
-                y: number
-            }
-
-            let left = Math.round(item.left + delta.x)
-            let top = Math.round(item.top + delta.y)
-
-            if (snapToGrid) {
-                ;[left, top] = doSnapToGrid(left, top)
-            }
-
-            moveBlock(item.id, left, top)
-
-
-
-
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks})
-        } catch (e) {
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
-            })
-        }
-    }
-}
-
-
-/**
- * переместить блок или создать блок
- */
-const moveBlock = (id: string, left: number, top: number) => {
-    const block = getBlockById(id)
-
-    //перетаскиваем блок
-    changingBlockCoor(id, left, top)
-
-    block?.getCanvasObject(contextCanvas!!)
-
 }
 
 
@@ -155,8 +112,29 @@ export const changingBlockCoor = (id: string, left: number, top: number) => {
     }
 }
 
-//id блока с которым будет создаваться связь
-let idItemTwo: string | undefined = undefined
+
+export function loadBlockById(id: string) {
+    return async (dispatch: Dispatch<BlocksAction>) => {
+        try {
+            const block = getBlockById(id)
+            if (block === undefined)
+                dispatch({
+                    type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                    payload: DATA_LOADING_ERROR + NOT_EXIST_BLOCK + id
+                })
+            else
+                dispatch({
+                    type: BlocksActionTypes.GET_BLOCK,
+                    payload: block
+                })
+        } catch (e) {
+            dispatch({
+                type: BlocksActionTypes.FETCH_BLOCKS_ERROR,
+                payload: DATA_LOADING_ERROR
+            })
+        }
+    }
+}
 
 
 /**

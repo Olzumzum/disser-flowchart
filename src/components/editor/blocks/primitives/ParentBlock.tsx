@@ -8,10 +8,10 @@ import {ContextMenu} from "../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
 import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {calcSizeBlockCanvas, convertStyleToReadableFormat} from "../../calculat_coordinates/elementSizeCalc";
-import {LinePartConnect} from "../../connections/LinePartConnect";
-import {drawLine} from "../../connections/LinePainter";
-import {contextCanvas} from "../../connections/CanvasPainter";
+import {LineCanvas} from "../../canvas/LineCanvas";
+import {contextCanvas} from "../../canvas/CanvasPainter";
+import { drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
+import {ContextMenuEmitter} from "../../context_menu/ContextMenuEmitter";
 
 /**
  * Родитель всех блоков
@@ -37,7 +37,7 @@ export const DEFAULT_FOR_LINKS: string = "-1"
 //общий стиль для блоков
 const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
-    padding: '0.5rem 1rem',
+    padding: '1',
     cursor: 'move',
     width: "70px",
     height: "50px",
@@ -53,7 +53,7 @@ export function getStyleParentBlock(): CSSProperties {
     return stylesParentBlock
 }
 
-export class ParentBlock implements IBlock{
+export class ParentBlock implements IBlock {
 
     //уникальный ключ
     private _id: string = ""
@@ -63,7 +63,7 @@ export class ParentBlock implements IBlock{
     private _left: number | undefined
 
     //экземпляр класса
-    private _blockInstance: React.FC<BlockProps> | undefined
+    private _blockInstance: React.FC<BlockProps> | undefined = undefined
     //тип блока
     private _typeBlock: string = ""
 
@@ -78,16 +78,16 @@ export class ParentBlock implements IBlock{
     //комментарии из кода
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
-    private _blockCanvas: LinePartConnect[] | undefined
+    private _blockShape: LineCanvas[]
 
     constructor(id: string,
                 left: number,
                 top: number) {
-
+        console.log("Создать новый блок " + id)
         this._id = id
         this._left = left
         this._top = top
-        this.getCanvasObject(contextCanvas!!)
+        this._blockShape = getBlockShape(contextCanvas!!, stylesParentBlock, this._left!!, this._top!!)
     }
 
     getStyleBlock() {
@@ -96,7 +96,6 @@ export class ParentBlock implements IBlock{
 
     //создать экземпляр
     createBlock() {
-
         this._blockInstance = ({
                                    title,
                                    yellow,
@@ -111,17 +110,17 @@ export class ParentBlock implements IBlock{
                     <OverlayTrigger
                         placement={"right"}
                         delay={{show: 250, hide: 400}}
-                        overlay={renderConvertPrompt}>
+                        overlay={renderConvertPrompt }>
                         <div
-                            id={this._id}
+                            id={this.getId()}
                             style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
                             onClick={this.click}
                         >
-                            {title}
+                            {this._id}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={itemsContexMenu} showmenu={false} idBlock={this.getId()}/>
+                    <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
                 </div>
             )
         }
@@ -129,61 +128,23 @@ export class ParentBlock implements IBlock{
 
     //Отобразить
     render(): JSX.Element {
+
+        // this._blockShape =
+        //     drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
 
-    /**
-     * Нарисовать блок из лирний
-     * @param ctx
-     */
-    getCanvasObject(ctx: CanvasRenderingContext2D): void {
-        if (this._blockCanvas?.length !== 0) this.clearBlockCanv(ctx)
-
-        const l0 = this.getLineFormBlock(ctx, this._left!!, this._top!!, true)
-        const l1 = this.getLineFormBlock(ctx, this._left!!, this._top!!, false)
-
-        const l2 = this.getLineFormBlock(ctx, this._left!!, this._top!! - 1
-            + convertStyleToReadableFormat(stylesParentBlock.height)!!, true)
-
-        const l3 = this.getLineFormBlock(ctx,
-            this._left!! + convertStyleToReadableFormat(stylesParentBlock.width)!! -1
-            ,this._top!!, false)
-
-        this._blockCanvas = [l0, l1, l2, l3]
-        this.blockCanvas.forEach(item => {
-            drawLine(ctx, item)
-        })
-    }
-
-    clearBlockCanv(ctx: CanvasRenderingContext2D) {
-        this._blockCanvas?.forEach(item => {
-            ctx.clearRect(item.x, item.y,
-                item.width, item.height)
-        })
-
-    }
-    /**
-     * Создает линию для отображения блока с учетом всех стилистических особенностей
-     * @param ctx
-     * @param left
-     * @param top
-     * @param isHorizontal
-     */
-    getLineFormBlock(ctx: CanvasRenderingContext2D, left: number,
-                     top: number, isHorizontal: boolean): LinePartConnect{
-        let size = calcSizeBlockCanvas(stylesParentBlock, left, top, isHorizontal)!!
-        return new LinePartConnect(size[0], size[1], size[2], size[3])
-    }
 
     /**
      * вызов контекстного меню блока
      * @param e
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
+        console.log("клик " + this._id)
         if (e.button === 2)
-            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-                this.getId())
+            ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+                {idBlock: this.getId()})
     }
 
     //одинарное нажатие
@@ -208,12 +169,12 @@ export class ParentBlock implements IBlock{
         return stylesParentBlock
     }
 
-    get blockCanvas(): LinePartConnect[] {
-        return this._blockCanvas!!
+    get blockShape(): LineCanvas[] {
+        return this._blockShape!!
     }
 
-    set blockCanvas(lines:LinePartConnect[]){
-        this._blockCanvas = lines
+    set blockShape(lines: LineCanvas[]) {
+        this._blockShape = lines
     }
 
     getId(): string {
@@ -278,6 +239,12 @@ export class ParentBlock implements IBlock{
 
     setParentId(parentId: string): void {
         this._parentId = parentId
+    }
+
+    getColLine(): number {
+        if (this._blockShape !== undefined)
+            return this._blockShape?.length;
+        else return -1
     }
 
 }

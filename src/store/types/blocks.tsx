@@ -5,6 +5,7 @@ import {BlocksActionTypes} from "../actions/BlocksActionTypes";
 export interface BlockState {
     originBlocks: IBlock[];
     blocks: IBlock[];
+    block: IBlock | null;
     loading: boolean;
     error: null | string;
 }
@@ -48,6 +49,11 @@ interface UpdateBlocks {
     type: BlocksActionTypes.UPDATE_BLOCKS;
 }
 
+interface GetBlock {
+    type: BlocksActionTypes.GET_BLOCK;
+    payload: IBlock
+}
+
 //создание связи между блоками
 interface CreateConnection {
     type: BlocksActionTypes.CREATE_CONNECTION;
@@ -63,3 +69,4 @@ export type BlocksAction =
     | PuttData
     | UpdateBlocks
     | CreateConnection
+    | GetBlock

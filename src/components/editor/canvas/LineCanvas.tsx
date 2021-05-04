@@ -3,7 +3,7 @@
  */
 import {generateId} from "../blocks/factory/CreatorBlock";
 
-export class LinePartConnect {
+export class LineCanvas {
     private _x: number = 0;
     private _y: number = 0;
     private _width: number = 0;
