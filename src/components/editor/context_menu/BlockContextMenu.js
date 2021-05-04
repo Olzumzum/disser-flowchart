@@ -19,23 +19,27 @@ export class ContextMenu extends Component {
             yPos: "0px",
             showMenu: false,
             idBlock: props.idBlock,
-            data: []
         }
 
         this.handleContextMenu = this.handleContextMenu.bind(this)
+    }
+    componentDidMount() {
         ContextMenuEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
             (data) => {
-            console.log("ид элемента " + data + " а хранится " + this.state.idBlock)
-                if (!data.toString().localeCompare(this.state.idBlock)) {
-                    console.log("отображает")
-                    this.handleContextMenu(data)
-                }
-                else {
-                    if(this.state.showMenu){
-                        this.handleClick()
-                    }
-                }
+            console.log("data " + data)
+                this.checkId(data)
             })
+    }
+
+    checkId(data){
+        if (!data.toString().localeCompare(this.state.idBlock)) {
+            console.log("ид элемента " + data + " а хранится " + this.state.idBlock)
+            this.handleContextMenu(data)
+        }
+        else {
+            console.log("отмена для " + data + " а хранится " + this.state.idBlock )
+            this.handleClick()
+        }
     }
 
 

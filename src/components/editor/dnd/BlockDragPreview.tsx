@@ -36,7 +36,7 @@ export const BlockDragPreview: FC<BlockDragPreviewProps> = ({id}) => {
 
     return (
         <div style={styles}>
-            {block?.render()}
+            {/*{block?.render()}*/}
 
         </div>
     )

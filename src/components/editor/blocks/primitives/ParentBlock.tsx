@@ -36,16 +36,16 @@ export const DEFAULT_FOR_LINKS: string = "-1"
 
 //общий стиль для блоков
 const stylesParentBlock: CSSProperties = {
-    // border: '1px dashed gray',
+    border: '1px dashed gray',
     padding: '1',
     cursor: 'move',
     width: "70px",
     height: "50px",
-    // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
-    // backgroundPosition: 'contain',
-    // display: "flex",
-    // justifyContent: "center",
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'contain',
+    display: "flex",
+    justifyContent: "center",
     margin: "10px"
 }
 
@@ -63,7 +63,7 @@ export class ParentBlock implements IBlock {
     private _left: number | undefined
 
     //экземпляр класса
-    private _blockInstance: React.FC<BlockProps> | undefined
+    private _blockInstance: React.FC<BlockProps> | undefined = undefined
     //тип блока
     private _typeBlock: string = ""
 
@@ -120,7 +120,7 @@ export class ParentBlock implements IBlock {
                             {title}
                         </div>
                     </OverlayTrigger>
-                    <ContextMenu menu={itemsContexMenu} showmenu={false} idBlock={this.getId()}/>
+                    <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
                 </div>
             )
         }
@@ -128,9 +128,9 @@ export class ParentBlock implements IBlock {
 
     //Отобразить
     render(): JSX.Element {
-        console.log("рендер")
-        this._blockShape =
-            drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
+        console.log("рендер " + this._id)
+        // this._blockShape =
+        //     drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
@@ -141,6 +141,7 @@ export class ParentBlock implements IBlock {
      * @param e
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
+        console.log("клик")
         if (e.button === 2)
             ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 this.getId())

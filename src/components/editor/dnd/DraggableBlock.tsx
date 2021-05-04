@@ -2,10 +2,7 @@ import {CSSProperties, FC, useEffect} from "react";
 import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "./ItemTypes";
 import {getEmptyImage} from "react-dnd-html5-backend";
-import {IBlockFactory} from "../blocks/factory/IBlockFactory";
-import {CreatorBlock} from "../blocks/factory/CreatorBlock";
-import {IBlock} from "../blocks/primitives/IBlock";
-import {getBlockById} from "../../../store/action-creators/blocks";
+
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
 

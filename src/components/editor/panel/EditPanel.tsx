@@ -1,6 +1,6 @@
 import {CSSProperties, FC, useEffect} from "react";
 import {CanvasPainter} from "../canvas/CanvasPainter";
-import {BlockMap, RendrerManager} from "../dnd/RendrerManager";
+import {BlockMap, convert, renders} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
@@ -35,14 +35,11 @@ interface EditPanelProps {
 }
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
-    //приводит получаемые объекты к виду, пригодному для отображения
-    const renderManager = new RendrerManager()
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
 
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-    //отрисовывает объекты-блоки
-    let renderBlocks: Array<BlockMap> = renderManager.convert(blocks)
+
     // действия
     const {fetchBlocks, addBlocks, dragBlock} = useActions()
 
@@ -91,8 +88,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
              onClick={() => startClickPanel(blocks.length)}>
             <StartTitleComp/>
-            {Object.keys(renderBlocks).map((id) =>
-                renderManager.renders(renderBlocks[Number(id)], id))}
+            {Object.keys(blocks).map((id) =>
+                renders(convert(blocks)[Number(id)], id))}
             <CanvasPainter/>
         </div>
     )

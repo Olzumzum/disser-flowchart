@@ -27,11 +27,10 @@ export function getBlock() {
 export const fetchBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            // const response = originalBlocks
-            dispatch({
-                type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            })
+            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
+            // dispatch({
+            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
+            // })
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
