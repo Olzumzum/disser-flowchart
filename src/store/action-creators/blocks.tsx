@@ -12,7 +12,11 @@ import {
 import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
 import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
+import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
 
+// const b1 = new ParentBlock("1", 150, 50)
+// const b2 = new ParentBlock("2", 150, 150)
+// const blocks = new Array<IBlock>(b1, b2)
 const blocks = new Array<IBlock>()
 
 export function getBlock() {

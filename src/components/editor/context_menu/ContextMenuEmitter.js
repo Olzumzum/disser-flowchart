@@ -1,14 +1,13 @@
 export const ContextMenuEmitter = {
-    events: {},
+    eventsContext: {},
     dispatch: function (event, data){
-        if(!this.events[event]) return
+        if(!this.eventsContext[event]) return
         else {
-            console.log("эвент совпал " + data)
-            this.events[event].forEach(callback => callback(data))
+            this.eventsContext[event].forEach(callback => callback(data))
         }
     },
     subscribe: function (event, callback){
-        if(!this.events[event]) this.events[event] = []
-        this.events[event].push(callback)
+        if(!this.eventsContext[event]) this.eventsContext[event] = []
+        this.eventsContext[event].push(callback)
     }
 }

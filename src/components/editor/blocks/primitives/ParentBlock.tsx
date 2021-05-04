@@ -83,7 +83,7 @@ export class ParentBlock implements IBlock {
     constructor(id: string,
                 left: number,
                 top: number) {
-        console.log("Создать новый блок")
+        console.log("Создать новый блок " + id)
         this._id = id
         this._left = left
         this._top = top
@@ -112,12 +112,12 @@ export class ParentBlock implements IBlock {
                         delay={{show: 250, hide: 400}}
                         overlay={renderConvertPrompt }>
                         <div
-                            id={this._id}
+                            id={this.getId()}
                             style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
                             onClick={this.click}
                         >
-                            {title}
+                            {this._id}
                         </div>
                     </OverlayTrigger>
                     <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
@@ -128,7 +128,7 @@ export class ParentBlock implements IBlock {
 
     //Отобразить
     render(): JSX.Element {
-        console.log("рендер " + this._id)
+
         // this._blockShape =
         //     drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
@@ -141,10 +141,10 @@ export class ParentBlock implements IBlock {
      * @param e
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
-        console.log("клик")
+        console.log("клик " + this._id)
         if (e.button === 2)
             ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-                this.getId())
+                {idBlock: this.getId()})
     }
 
     //одинарное нажатие

@@ -5,6 +5,7 @@ import {getEmptyImage} from "react-dnd-html5-backend";
 
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {useActions} from "../hooks/blockActions";
+import {getBlockById} from "../../../store/action-creators/blocks";
 
 function getStyles(
     left: number,
@@ -38,20 +39,19 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
         loadBlockById(id)
     }, [])
 
-    const [{isDragging}, drag, preview] = useDrag({
+    const [{isDragging}, drag] = useDrag({
         item: {type: ItemTypes.BLOCK, left, top, title, typeBlock, id},
         collect: (monitor: DragSourceMonitor) => ({
             isDragging: monitor.isDragging(),
         }),
     })
 
-    useEffect(() => {
-        preview(getEmptyImage(), {captureDraggingState: true})
-    }, [])
+
+const b = getBlockById(id)
 
     return (
         <div ref={drag} style={getStyles(left, top, isDragging)}>
-            {block?.render()}
+            {b?.render()}
         </div>
     )
 }

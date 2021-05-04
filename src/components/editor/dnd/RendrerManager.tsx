@@ -15,7 +15,6 @@ export interface BlockMap {
     id: string
 }
 
-
 /**
  * Преобразовать имеющийся массив блоков в
  * мапу для отображения
@@ -24,10 +23,9 @@ export interface BlockMap {
 export function convert(blocks: Array<IBlock>): Array<BlockMap> {
     let convertBlocks = new Array<BlockMap>()
     blocks.forEach(item => {
-        convertBlocks.push(
-            {
 
-                id: item.getId()!.toString(),
+        convertBlocks.push(
+            {id: item.getId(),
                 title: item.getTypeBlock(),
                 left: item.getLeft(),
                 top: item.getTop(),
@@ -38,7 +36,7 @@ export function convert(blocks: Array<IBlock>): Array<BlockMap> {
     return convertBlocks
 }
 
-export function renders(item: any, key: any) {
+export function rendersDragBlock(item: any, key: any) {
     return <DraggableBlock key={key} id={item.id} {...item}/>
 }
 

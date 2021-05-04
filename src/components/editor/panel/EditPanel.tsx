@@ -1,6 +1,6 @@
 import {CSSProperties, FC, useEffect} from "react";
 import {CanvasPainter} from "../canvas/CanvasPainter";
-import {BlockMap, convert, renders} from "../dnd/RendrerManager";
+import {convert,rendersDragBlock} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
@@ -37,12 +37,12 @@ interface EditPanelProps {
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
-
+    //
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-
-    // действия
+    //
+    // // действия
     const {fetchBlocks, addBlocks, dragBlock} = useActions()
-
+    //
     useEffect(() => {
         fetchBlocks()
     }, [])
@@ -53,9 +53,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             //координаты добавляемого блока
 
             const coor = calcCoordinates(null, BlockTypes.BLOCK, data[1].idBlock)
-
+            const id = generateId()
             const block = creator.createBlock(
-                generateId(),
+                id,
                 BlockTypes.BLOCK,
                 coor[0],
                 coor[1],
@@ -64,6 +64,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
+
 
         })
     }, [])
@@ -85,11 +86,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     }
 
     return (
-        <div id={"edit_panel"} ref={drop} style={stylesEditPanel}
-             onClick={() => startClickPanel(blocks.length)}>
-            <StartTitleComp/>
-            {Object.keys(blocks).map((id) =>
-                renders(convert(blocks)[Number(id)], id))}
+        <div id={"edit_panel"}
+             ref={drop}
+             style={stylesEditPanel}
+             onClick={() => startClickPanel(blocks.length)}
+        >
+             <StartTitleComp/>
+             {Object.keys(blocks).map((id) =>
+                 rendersDragBlock(convert(blocks)[Number(id)], id))}
             <CanvasPainter/>
         </div>
     )

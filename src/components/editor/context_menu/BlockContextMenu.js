@@ -5,7 +5,6 @@ import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
 import {ContextMenuEmitter} from "./ContextMenuEmitter";
 
-
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
  * Отображает список возможных действий (преобразований) с текущим элементом (блоком)
@@ -20,26 +19,16 @@ export class ContextMenu extends Component {
             showMenu: false,
             idBlock: props.idBlock,
         }
-
+        ContextMenuEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            (data) => {
+                if (!data.idBlock.toString().localeCompare(this.state.idBlock)) {
+                    this.handleContextMenu(data)
+                }
+            })
         this.handleContextMenu = this.handleContextMenu.bind(this)
     }
     componentDidMount() {
-        ContextMenuEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-            (data) => {
-            console.log("data " + data)
-                this.checkId(data)
-            })
-    }
-
-    checkId(data){
-        if (!data.toString().localeCompare(this.state.idBlock)) {
-            console.log("ид элемента " + data + " а хранится " + this.state.idBlock)
-            this.handleContextMenu(data)
-        }
-        else {
-            console.log("отмена для " + data + " а хранится " + this.state.idBlock )
-            this.handleClick()
-        }
+        document.addEventListener("click", this.handleClick);
     }
 
 
