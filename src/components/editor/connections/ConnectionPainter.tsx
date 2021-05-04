@@ -37,7 +37,7 @@ export const paintConnection = (idItemOne: string, idItemTwo: string) => {
 
         if (coor !== null) {
             createOneConnect(contextCanvas!!, coor, idItemOne, idItemTwo)
-            const arr = arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
+
         }
         coor = buildConnectOneBlock(idItemTwo, false)
         if (coor !== null) {
@@ -100,6 +100,7 @@ function createOneConnect(ctx: CanvasRenderingContext2D, coor: number[],
 
     const connect = new ConnectionBlocks([line0], idItemOne, idItemTwo)
     drawLines(ctx, connect.connection)
+    arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
 }
 
 /**
