@@ -3,5 +3,5 @@ import * as DndActionCreator from './dndblock'
 
 export default {
     ...BlockActionCreator,
-    ...DndActionCreator
+    ...DndActionCreator,
 }

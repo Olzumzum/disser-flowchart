@@ -1,17 +1,17 @@
 import {CSSProperties, FC} from "react";
-import blockImage from "../../../../assets/images/romb.png";
+import blockImage from "../../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
 import {OverlayTrigger} from "react-bootstrap";
-import {renderConvertPrompt} from "../../prompt/block_prompt";
-import {ContextMenu} from "../../context_menu/BlockContextMenu";
-import {itemsContexMenu} from "../../context_menu/ItemsContextMenu";
-import {ContextMenuActionType} from "../../context_menu/ContextMenuActionType";
-import {BlocksEventEmitter} from "../../BlocksEmitter";
-import {LineCanvas} from "../../canvas/LineCanvas";
-import {contextCanvas} from "../../canvas/CanvasPainter";
-import { drawBlockShape, getBlockShape} from "../factory/BlockShapePainter";
-import {ContextMenuEmitter} from "../../context_menu/ContextMenuEmitter";
+import {renderConvertPrompt} from "../../../prompt/block_prompt";
+import {ContextMenu} from "../../../context_menu/BlockContextMenu";
+import {itemsContexMenu} from "../../../context_menu/ItemsContextMenu";
+import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
+import {BlocksEventEmitter} from "../../../BlocksEmitter";
+import {LineCanvas} from "../../../canvas/LineCanvas";
+import {contextCanvas} from "../../../canvas/CanvasPainter";
+import { drawBlockShape, getBlockShape} from "../../factory/BlockShapePainter";
+import {ContextMenuEmitter} from "../../../context_menu/ContextMenuEmitter";
 
 /**
  * Родитель всех блоков

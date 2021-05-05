@@ -9,15 +9,21 @@ import {
     ERROR_ADDING_BLOCK,
     NOT_EXIST_BLOCK
 } from "../../assets/strings/errorMessadges";
-import {IBlock} from "../../components/editor/blocks/primitives/IBlock";
-import {paintConnection} from "../../components/editor/connections/ConnectionPainter";
+import {IBlock} from "../../components/editor/blocks/primitives/bocks/IBlock";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
-import {ParentBlock} from "../../components/editor/blocks/primitives/ParentBlock";
+
+import {ff} from "../../components/editor/connections/ConnectionPainter";
+import {IConnect} from "../../components/editor/blocks/primitives/connects/IConnect";
 
 // const b1 = new ParentBlock("1", 150, 50)
 // const b2 = new ParentBlock("2", 150, 150)
 // const blocks = new Array<IBlock>(b1, b2)
 const blocks = new Array<IBlock>()
+const connects = new Array<IConnect>()
+
+export function getConnects() {
+    return connects
+}
 
 export function getBlock() {
     return blocks
@@ -35,6 +41,7 @@ export const fetchBlocks = () => {
             // dispatch({
             //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
             // })
+
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
@@ -57,13 +64,12 @@ export const addBlocks = (block: IBlock, idParent: string) => {
 
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
 
-
             //установить соседей
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
             recalculationCoorByEvent(block.getId())
-            //нарисовать связь
-            paintConnection(idParent, block.getId())
+            ff(idParent, block.getId())
+            console.log("Связей " + connects.length)
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK

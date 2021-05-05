@@ -1,25 +1,26 @@
-import {LineCanvas} from "../canvas/LineCanvas";
-import {generateId} from "../blocks/factory/CreatorBlock";
+import {LineCanvas} from "../../../canvas/LineCanvas";
+import {generateId} from "../../factory/CreatorBlock";
+import {IConnect} from "./IConnect";
 
-export class ConnectionBlocks {
+export class ConnectionBlocks implements IConnect{
     private _id: string = ""
-    private _connection: LineCanvas[] | undefined
+    private _connectLines: LineCanvas[] | undefined
 
     //массив из двух строк, каждая из строк - id связываемых блоков
     private _blockIds: string[] | undefined
 
     constructor(lines: LineCanvas[], idOneBlock: string, idTwoBlock: string) {
-        this._connection = lines
+        this._connectLines = lines
         this._id = generateId()
         this._blockIds = [idOneBlock, idTwoBlock]
     }
 
-    get connection(): LineCanvas[] {
-        return this._connection!!
+    getConnectLines(): LineCanvas[] {
+        return this._connectLines!!
     }
 
-    get blockIds(): string[] | undefined {
-        return this._blockIds
+    getBlockIds(): string[]{
+        return this._blockIds!!
     }
 
     set blockIds(ids: string[] | undefined){

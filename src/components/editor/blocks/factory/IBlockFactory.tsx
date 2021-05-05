@@ -1,4 +1,4 @@
-import {IBlock} from "../primitives/IBlock";
+import {IBlock} from "../primitives/bocks/IBlock";
 
 export interface IBlockFactory {
     createBlock(

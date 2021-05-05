@@ -1,9 +1,10 @@
 import {getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById, searchBlockBeUpdate} from "../../../store/action-creators/blocks";
 import {convertStyleToReadableFormat} from "./elementSizeCalc";
-import {getStyleParentBlock} from "../blocks/primitives/ParentBlock";
+import {getStyleParentBlock} from "../blocks/primitives/bocks/ParentBlock";
 import {CSSProperties} from "react";
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
+import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
+import {deleteConnect, ff} from "../connections/ConnectionPainter";
 
 export const MIN_BLOCKS_DISTANCE = 15;
 
@@ -133,12 +134,16 @@ export function recalculationCoorByEvent(idChangedBlock: string) {
 
         //получение экземпляра соседа и обновление координат
         const neighborChangedBlock = getBlockById(idNeighbor)
+        //стираем старую связь
+        deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+
         neighborChangedBlock?.setLeft(newCoor[0])
         neighborChangedBlock?.setTop(newCoor[1])
 
         //обновление блока
         searchBlockBeUpdate(neighborChangedBlock!!)
 
+        ff(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
         changedBlock = neighborChangedBlock
 
     }

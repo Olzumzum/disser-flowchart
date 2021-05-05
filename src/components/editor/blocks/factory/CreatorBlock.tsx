@@ -1,7 +1,7 @@
-import {IBlock} from "../primitives/IBlock";
-import {BlockTypes} from "../primitives/BlockTypes";
+import {IBlock} from "../primitives/bocks/IBlock";
+import {BlockTypes} from "../primitives/bocks/BlockTypes";
 import {IBlockFactory} from "./IBlockFactory";
-import {ParentBlock} from "../primitives/ParentBlock";
+import {ParentBlock} from "../primitives/bocks/ParentBlock";
 
 /**
  * Создать блок, который будет существовать на панели редактирования

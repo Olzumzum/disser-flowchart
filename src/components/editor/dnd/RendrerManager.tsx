@@ -1,4 +1,4 @@
-import {IBlock} from "../blocks/primitives/IBlock";
+import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {DraggableBlock} from "./DraggableBlock";
 
 

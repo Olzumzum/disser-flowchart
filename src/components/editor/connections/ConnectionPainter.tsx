@@ -1,14 +1,15 @@
-import {IBlock} from "../blocks/primitives/IBlock";
+import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {buildConnectOneBlock, scaleCoorConnection} from "../calculat_coordinates/connectionCoor";
 import {contextCanvas} from "../canvas/CanvasPainter";
 import {LineCanvas} from "../canvas/LineCanvas";
 import {getHeightElement} from "../calculat_coordinates/elementSizeCalc";
 import {getHeightEditPanel} from "../calculat_coordinates/panelCalc";
-import {changingBlockCoor, getBlockById} from "../../../store/action-creators/blocks";
-import {ConnectionBlocks} from "./ConnectionBlocks";
-import {DEFAULT_FOR_LINKS} from "../blocks/primitives/ParentBlock";
+import {changingBlockCoor, getBlockById, getConnects} from "../../../store/action-creators/blocks";
+import {ConnectionBlocks} from "../blocks/primitives/connects/ConnectionBlocks";
+import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
-import {drawLines} from "../canvas/LinePainter";
+import {clearLines, drawLines} from "../canvas/LinePainter";
+import {IConnect} from "../blocks/primitives/connects/IConnect";
 
 
 /** ТОЛЩИНА РИСУЕМОЙ СВЯЗИ ПО УМОЛЧАНИЮ **/
@@ -84,7 +85,7 @@ function createComplexConnection(ctx: CanvasRenderingContext2D,coor: number[],
         new LineCanvas(coor[0], (coor[3] - partConnect), (coor[2] - coor[0]), CONNECTION_WIDTH)
 
     const connect = new ConnectionBlocks([line0, line1, line2], idItemOne, idItemTwo)
-    drawLines(ctx, connect.connection)
+    drawLines(ctx, connect.getConnectLines())
 }
 
 /**
@@ -94,13 +95,26 @@ function createComplexConnection(ctx: CanvasRenderingContext2D,coor: number[],
  * @param idItemOne - id блока, который первее в последовательности
  * @param idItemTwo - id блока, который идет следующим в последовательности
  */
-function createOneConnect(ctx: CanvasRenderingContext2D, coor: number[],
-                          idItemOne: string, idItemTwo: string){
+export function createOneConnect(ctx: CanvasRenderingContext2D, coor: number[],
+                          idItemOne: string, idItemTwo: string) : IConnect | undefined{
     const line0: LineCanvas = new LineCanvas(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
 
     const connect = new ConnectionBlocks([line0], idItemOne, idItemTwo)
-    drawLines(ctx, connect.connection)
+    drawLines(ctx, connect.getConnectLines())
     arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
+     return connect
+}
+
+export function ff(idParent: string, idNewBlock: string) : IConnect | undefined{
+    const connects = getConnects()
+    const coor = buildConnectOneBlock(idNewBlock, true)
+    let conn: IConnect | undefined
+
+    if (coor !== null) {
+        conn = createOneConnect(contextCanvas!!, coor, idParent, idNewBlock)
+    }
+    connects.push(conn!!)
+    return conn
 }
 
 /**
@@ -164,4 +178,17 @@ function arrow(ctx: CanvasRenderingContext2D, coor: number[]){
     ctx.lineTo(coor[0] + 6, coor[1] - 7);
 
     ctx.stroke();
+}
+
+
+export function deleteConnect(idParent: string, idChanged: string){
+    const connects = getConnects()
+
+    connects.forEach(item => {
+        const neighbors = item.getBlockIds()
+        if(!neighbors[0].localeCompare(idParent) && !neighbors[1].localeCompare(idChanged)){
+            clearLines(contextCanvas!!, item.getConnectLines())
+
+        }
+    })
 }

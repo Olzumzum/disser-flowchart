@@ -1,4 +1,4 @@
-import {IBlock} from "../blocks/primitives/IBlock";
+import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convertStyleToReadableFormat} from "./elementSizeCalc";
 import {getBlockById} from "../../../store/action-creators/blocks";
 import {MIN_BLOCKS_DISTANCE} from "./blockCoordinates";

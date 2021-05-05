@@ -10,7 +10,7 @@ import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
-import {BlockTypes} from "../blocks/primitives/BlockTypes";
+import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {calcCoordinates} from "../calculat_coordinates/blockCoordinates";
@@ -37,12 +37,11 @@ interface EditPanelProps {
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
-    //
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-    //
-    // // действия
+
+    // действия
     const {fetchBlocks, addBlocks, dragBlock} = useActions()
-    //
+
     useEffect(() => {
         fetchBlocks()
     }, [])
@@ -64,11 +63,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-
-
         })
     }, [])
-
 
 
     /**
