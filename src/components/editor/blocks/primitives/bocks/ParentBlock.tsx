@@ -9,7 +9,7 @@ import {itemsContexMenu} from "../../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
-import {drawBlockShape, getBlockShape} from "../../factory/BlockShapePainter";
+import {drawBlockShape} from "../../factory/BlockShapePainter";
 import {ContextMenuEmitter} from "../../../context_menu/ContextMenuEmitter";
 
 /**
@@ -77,7 +77,7 @@ export class ParentBlock implements IBlock {
     //комментарии из кода
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
-    private _blockShape: LineCanvas[]
+    private _blockShape: LineCanvas[] | undefined = undefined
 
     //стили для строчек блока
     private _rowStyle: CSSProperties = {
@@ -88,12 +88,17 @@ export class ParentBlock implements IBlock {
 
     constructor(id: string,
                 left: number,
-                top: number) {
+                top: number,
+                type: string) {
         console.log("Создать новый блок " + id)
         this._id = id
         this._left = left
         this._top = top
-        this._blockShape = getBlockShape(contextCanvas!!, stylesParentBlock, this._left!!, this._top!!)
+        this._typeBlock = type
+    }
+
+    public setBlockShape(shape: LineCanvas[]) {
+        this.blockShape = shape
     }
 
     getStyleBlock() {
@@ -144,9 +149,9 @@ export class ParentBlock implements IBlock {
 
     //Отобразить
     render(): JSX.Element {
-
-        this._blockShape =
-            drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
+        if (this._blockShape !== undefined)
+            this._blockShape =
+                drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
@@ -198,7 +203,7 @@ export class ParentBlock implements IBlock {
     }
 
     getTypeBlock(): string {
-        return BlockTypes.BLOCK_PARENT;
+        return this._typeBlock;
     }
 
     getLeft(): number {

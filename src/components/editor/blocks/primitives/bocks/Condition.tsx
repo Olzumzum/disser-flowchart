@@ -1,12 +1,12 @@
 import {IBlock} from "./IBlock";
 import {ParentBlock} from "./ParentBlock";
-import {BlockTypes} from "./BlockTypes";
 import {CSSProperties} from "react";
-import {LineCanvas} from "../../../canvas/LineCanvas";
+import {BlockTypes} from "./BlockTypes";
 import {getBlockShape} from "../../factory/BlockShapePainter";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
+import {LineCanvas} from "../../../canvas/LineCanvas";
 
-export class Block implements IBlock {
+export class Condition implements IBlock {
     private _parentBlock: ParentBlock | undefined
     private _blockStyle: CSSProperties = {
         width: "120px",
@@ -63,7 +63,7 @@ export class Block implements IBlock {
     }
 
     getTypeBlock(): string {
-        return BlockTypes.BLOCK;
+        return BlockTypes.CONDITION;
     }
 
     render(): JSX.Element {
@@ -97,5 +97,4 @@ export class Block implements IBlock {
     setTop(top: number): void {
         this._parentBlock?.setTop(top)
     }
-
 }

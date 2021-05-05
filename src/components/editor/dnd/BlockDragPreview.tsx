@@ -1,5 +1,4 @@
 import {CSSProperties, FC, useEffect, useState} from "react";
-import {getPreviewBlock} from "../blocks/factory/CreatorBlock";
 import {useActions} from "../hooks/blockActions";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 

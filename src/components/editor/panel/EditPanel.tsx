@@ -55,7 +55,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             const id = generateId()
             const block = creator.createBlock(
                 id,
-                BlockTypes.BLOCK_PARENT,
+                BlockTypes.BLOCK,
                 coor[0],
                 coor[1],
             )!!
@@ -66,6 +66,25 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         })
     }, [])
 
+    //добаввить блок условия
+    useEffect(() => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.CONDITIONAL_OPERATOR, (data: any) => {
+            //координаты добавляемого блока
+
+            const coor = calcCoordinates(null, BlockTypes.BLOCK_PARENT, data[1].idBlock)
+            const id = generateId()
+            const block = creator.createBlock(
+                id,
+                BlockTypes.CONDITION,
+                coor[0],
+                coor[1],
+            )!!
+
+            addBlocks(
+                block, data[1].idBlock
+            )
+        })
+    }, [])
 
     /**
      * реакция на dnd

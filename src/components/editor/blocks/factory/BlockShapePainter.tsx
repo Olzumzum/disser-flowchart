@@ -51,6 +51,26 @@ export function getBlockShape(ctx: CanvasRenderingContext2D,
     return [l0, l1, l2, l3]
 }
 
+export function getConditionShape(ctx: CanvasRenderingContext2D,
+
+                                  styleBlock: CSSProperties,
+                                  left: number,
+                                  top: number){
+
+    const l0 = getLineFormBlock(ctx, left!!, top!!, true, styleBlock)
+
+    const l1 = getLineFormBlock(ctx, left!!, top!!
+        + convertStyleToReadableFormat(styleBlock.height)!!, true, styleBlock)
+
+    const l2 = getLineFormBlock(ctx, left!!, top!!, false, styleBlock)
+
+    const l3 = getLineFormBlock(ctx,
+        left!! + convertStyleToReadableFormat(styleBlock.width)!! , top!!, false, styleBlock)
+
+    return [l0, l1, l2, l3]
+}
+
+
 
 /**
  * Создает линию для отображения блока с учетом всех стилистических особенностей
