@@ -3,6 +3,7 @@ import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
+
 import {BlocksEventEmitter as BlockEventEmitter} from "../BlocksEmitter";
 
 /**

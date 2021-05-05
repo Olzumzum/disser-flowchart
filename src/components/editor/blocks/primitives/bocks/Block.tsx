@@ -18,6 +18,7 @@ export class Block implements IBlock {
     private _parentBlock: ParentBlock | undefined
     private _blockShape: LineCanvas[]
 
+
     constructor(id: string,
                 left: number,
                 top: number) {

@@ -11,8 +11,9 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {drawBlockShape} from "../../factory/BlockShapePainter";
 
 import {BlocksEventEmitter} from "../../../BlocksEmitter";
-import {BlockContent} from "../../../block_internal_fields/BlockContent";
+import {BlockFields} from "../../../block_internal_fields/BlockFields";
 import {BlockTransformationTypes} from "../../../block_conversion/BlockTransformationTypes";
+import {BlockNestingContent} from "../../../block_internal_fields/BlockNestingContent";
 
 /**
  * Родитель всех блоков
@@ -84,12 +85,13 @@ export class ParentBlock implements IBlock {
     private _isNesting: boolean = false
     //свернут ли блок
     private _isRolledUp: boolean = false
-
+    private content: JSX.Element | undefined
 
     constructor(id: string,
                 left: number,
                 top: number,
-                type: string) {
+                type: string,
+    ) {
         this._id = id
         this._left = left
         this._top = top
@@ -104,6 +106,12 @@ export class ParentBlock implements IBlock {
         return stylesParentBlock
     }
 
+    private styleContainer: CSSProperties = {
+        border: "3px solid purple",
+        height: "300px",
+        width: "300px",
+    }
+
     //создать экземпляр
     createBlock() {
         this._blockInstance = ({
@@ -116,26 +124,15 @@ export class ParentBlock implements IBlock {
             this._top = top
             const background = yellow ? 'yellow' : blockImage
             return (
-                <div>
-                    <OverlayTrigger
-                        placement={"right"}
-                        delay={{show: 250, hide: 400}}
-                        overlay={renderConvertPrompt}>
-                        <div
-                            id={this.getId()}
-                            style={{...stylesParentBlock, background}}
-                            onMouseDown={this.mouseDownClick}
-                            onClick={this.rolleUpContent}
-                        >
-                            <BlockContent id={this._id}
-                                          type={this._typeBlock}
-                                          isRolledUp={false}
-                                          left={this._left}
-                                          top={this._top}
-                            />
-                        </div>
-                    </OverlayTrigger>
-                    <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
+                <div className={"container"} style={this.styleContainer}>
+                    <BlockNestingContent
+                        id={this._id}
+                        typeBlock={this._typeBlock}
+                        left={this._left}
+                        top={this._top}
+                        isRollingUp={this._isRolledUp}
+                        style={stylesParentBlock}
+                        />
                 </div>
             )
         }
@@ -155,21 +152,6 @@ export class ParentBlock implements IBlock {
     }
 
 
-    /**
-     * вызов контекстного меню блока
-     * @param e
-     */
-    mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
-        if (e.button === 2)
-            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
-                {idBlock: this.getId()})
-    }
-
-    rolleUpContent =() =>{
-        this._isRolledUp = !this._isRolledUp;
-        BlocksEventEmitter.dispatch(BlockTransformationTypes.ROLLED_UP_BLOCK,
-            [{isRolledUp: this._isRolledUp}, {idBlock: this._id}] )
-    }
 
     get isRolledUp(): boolean {
         return this._isRolledUp

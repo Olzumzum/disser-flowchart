@@ -5,7 +5,7 @@ import {BlocksEventEmitter} from "../BlocksEmitter";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 
 
-export class BlockContent extends Component {
+export class BlockFields extends Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -93,6 +93,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 coorTwoBlocks[0],
                 coorTwoBlocks[1],
             )!!
+            block1.setInnerLevel(block.getInnerLevel() + 1)
             addBlocks(
                 block1, id
             )
@@ -102,6 +103,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 coorTwoBlocks[2],
                 coorTwoBlocks[3],
             )!!
+            block2.setInnerLevel(block.getInnerLevel() + 1)
             addBlocks(
                 block2, id
             )
