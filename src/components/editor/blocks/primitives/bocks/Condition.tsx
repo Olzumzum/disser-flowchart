@@ -2,7 +2,7 @@ import {IBlock} from "./IBlock";
 import {ParentBlock} from "./ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "./BlockTypes";
-import {getBlockShape} from "../../factory/BlockShapePainter";
+import {getBlockShape, getConditionShape} from "../../factory/BlockShapePainter";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 
@@ -24,7 +24,7 @@ export class Condition implements IBlock {
                 left: number,
                 top: number) {
         this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock())
-        this._blockShape = getBlockShape(contextCanvas!!, blockStyle, left, top)
+        this._blockShape = getConditionShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
 

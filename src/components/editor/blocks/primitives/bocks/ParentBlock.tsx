@@ -1,7 +1,6 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
-import {BlockTypes} from "./BlockTypes";
 import {Container, OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../../prompt/block_prompt";
 import {ContextMenu} from "../../../context_menu/BlockContextMenu";
@@ -79,12 +78,6 @@ export class ParentBlock implements IBlock {
     //массив линий для отрисовки формы блока
     private _blockShape: LineCanvas[] | undefined = undefined
 
-    //стили для строчек блока
-    private _rowStyle: CSSProperties = {
-        display: "flex",
-        flexDirection: "column",
-        flexWrap: "wrap"
-    }
 
     constructor(id: string,
                 left: number,
@@ -150,7 +143,11 @@ export class ParentBlock implements IBlock {
     render(): JSX.Element {
         if (this._blockShape !== undefined)
             this._blockShape =
-                drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
+                drawBlockShape(contextCanvas!!,
+                    this._blockShape!!,
+                    this._typeBlock,
+                    stylesParentBlock, this._left!!, this._top!!)
+
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }

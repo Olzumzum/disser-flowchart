@@ -6,8 +6,8 @@ import {generateId} from "../blocks/factory/CreatorBlock";
 export class LineCanvas {
     private _x: number = 0;
     private _y: number = 0;
-    private _width: number = 0;
-    private _height: number = 0;
+    private _x2: number = 0;
+    private _y2: number = 0;
 
     constructor(x: number,
                 y: number,
@@ -15,8 +15,8 @@ export class LineCanvas {
                 height:number) {
         this._x = x;
         this._y = y;
-        this._width = width;
-        this._height = height;
+        this._x2 = width;
+        this._y2 = height;
     }
 
     get x(): number {
@@ -27,12 +27,12 @@ export class LineCanvas {
         return this._y
     }
 
-    get width(): number {
-        return this._width
+    get x2(): number {
+        return this._x2
     }
 
-    get height(): number {
-        return this._height
+    get y2(): number {
+        return this._y2
     }
 
 }

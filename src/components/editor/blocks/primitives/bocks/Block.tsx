@@ -22,7 +22,7 @@ export class Block implements IBlock {
                 left: number,
                 top: number) {
         this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock())
-        this._blockShape = getBlockShape(contextCanvas!!, blockStyle, left, top)
+        this._blockShape = getBlockShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
 

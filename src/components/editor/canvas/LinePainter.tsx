@@ -18,14 +18,21 @@ export function drawLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]){
  */
 export function drawLine(ctx: CanvasRenderingContext2D,
                          line: LineCanvas){
+
+
     if (ctx !== null && ctx !== undefined){
         ctx.fillStyle = '#000000'
-        ctx.beginPath()
-        ctx.fillRect(line.x, line.y, line.width, line.height)
+        ctx.beginPath();
+        ctx.moveTo(line.x,line.y);
+        ctx.lineTo(line.x2, line.y2);
+
+        ctx.stroke();
         ctx.fill()
     } else Error("нулевой контекст")
 
 }
+
+
 
 /**
  * Функция стирает массив линий на канве
@@ -35,6 +42,6 @@ export function drawLine(ctx: CanvasRenderingContext2D,
 export function clearLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]) {
     lines.forEach(item => {
         ctx.clearRect(item.x, item.y,
-            item.width + 1, item.height)
+            item.x2 + 1, item.y2)
     })
 }
