@@ -5,20 +5,24 @@ import {CSSProperties} from "react";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {getBlockShape} from "../../factory/BlockShapePainter";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
+const blockStyle: CSSProperties = {
+    width: "120px",
+    height: "120px",
+}
+
+export function getBlockStyle(){
+    return blockStyle
+}
 
 export class Block implements IBlock {
     private _parentBlock: ParentBlock | undefined
-    private _blockStyle: CSSProperties = {
-        width: "120px",
-        height: "120px",
-    }
     private _blockShape: LineCanvas[]
 
     constructor(id: string,
                 left: number,
                 top: number) {
         this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock())
-        this._blockShape = getBlockShape(contextCanvas!!, this._blockStyle, left, top)
+        this._blockShape = getBlockShape(contextCanvas!!, blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
 
@@ -55,7 +59,7 @@ export class Block implements IBlock {
     }
 
     getStyleBlock(): React.CSSProperties {
-        return this._blockStyle;
+        return blockStyle;
     }
 
     getTop(): number {

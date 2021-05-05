@@ -62,7 +62,6 @@ export function calcSizeBlockCanvas(
         width = convertStyleToReadableFormat(style.width)!!
         height = LINE_WIDTH_BLOCK_SHAPE
     } else {
-        // console.log("Добрый вечер")
         width = LINE_WIDTH_BLOCK_SHAPE
         height = convertStyleToReadableFormat(style.height)!!
     }

@@ -5,6 +5,9 @@ import {getStyleParentBlock} from "../blocks/primitives/bocks/ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {deleteConnect, ff} from "../connections/ConnectionPainter";
+import {getBlockStyle} from "../blocks/primitives/bocks/Block";
+import {getConditionBlockStyle} from "../blocks/primitives/bocks/Condition";
+
 
 export const MIN_BLOCKS_DISTANCE = 15;
 
@@ -75,6 +78,15 @@ function getSizeBlockByType(typeBlock: string): number[] {
     switch (typeBlock) {
         case BlockTypes.BLOCK_PARENT:
             styleBlock = getStyleParentBlock()
+            break;
+        case BlockTypes.BLOCK:
+            styleBlock = getBlockStyle()
+            break;
+        case BlockTypes.CONDITION:
+            styleBlock = getConditionBlockStyle()
+            break;
+
+
     }
 
     size = [convertStyleToReadableFormat(styleBlock?.width),
@@ -149,3 +161,21 @@ export function recalculationCoorByEvent(idChangedBlock: string) {
     }
 }
 
+/**
+ * Рассчет координат двух блоков, следующих после блоков, чей тип подразумевает
+ * разделение последовательности действий на два варианта
+ * @param idBlock - блок, после которого идет раздвоение пути следования программы
+ */
+export function calcCoorBlockWithTwoBranches(idBlock: string) {
+    const sizeBlock = getSizeBlockById(idBlock!!)
+
+    const block = getBlockById(idBlock)!!
+
+    return [
+        /** left **/block?.getLeft()!! - (sizeBlock[0] / 2) - sizeBlock[0],
+        /** top **/block?.getTop()!! + sizeBlock[1] + MIN_BLOCKS_DISTANCE,
+        /** left **/block?.getLeft()!! + sizeBlock[0] + (sizeBlock[0] / 2),
+        /** top **/block?.getTop()!! + sizeBlock[1] + MIN_BLOCKS_DISTANCE
+    ]
+
+}

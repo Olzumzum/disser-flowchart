@@ -13,7 +13,7 @@ import {DragItem} from "../dnd/DragItem";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
-import {calcCoordinates} from "../calculat_coordinates/blockCoordinates";
+import {calcCoorBlockWithTwoBranches, calcCoordinates} from "../calculat_coordinates/blockCoordinates";
 import {StartTitleComp} from "./StartTitleComp";
 
 
@@ -52,6 +52,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             //координаты добавляемого блока
 
             const coor = calcCoordinates(null, BlockTypes.BLOCK_PARENT, data[1].idBlock)
+
             const id = generateId()
             const block = creator.createBlock(
                 id,
@@ -71,7 +72,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.CONDITIONAL_OPERATOR, (data: any) => {
             //координаты добавляемого блока
 
-            const coor = calcCoordinates(null, BlockTypes.BLOCK_PARENT, data[1].idBlock)
+            const coor = calcCoordinates(null, BlockTypes.CONDITION, data[1].idBlock)
+
             const id = generateId()
             const block = creator.createBlock(
                 id,
@@ -83,6 +85,27 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
+
+            const coorTwoBlocks = calcCoorBlockWithTwoBranches(id)
+            const block1 = creator.createBlock(
+                "1",
+                BlockTypes.BLOCK,
+                coorTwoBlocks[0],
+                coorTwoBlocks[1],
+            )!!
+            addBlocks(
+                block1, id
+            )
+            const block2 = creator.createBlock(
+                "2",
+                BlockTypes.BLOCK,
+                coorTwoBlocks[2],
+                coorTwoBlocks[3],
+            )!!
+            addBlocks(
+                block2, id
+            )
+
         })
     }, [])
 

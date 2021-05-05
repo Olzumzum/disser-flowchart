@@ -6,19 +6,25 @@ import {getBlockShape} from "../../factory/BlockShapePainter";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 
+const blockStyle: CSSProperties = {
+    width: "120px",
+    height: "120px",
+}
+
+export function getConditionBlockStyle(){
+    return blockStyle
+}
+
 export class Condition implements IBlock {
     private _parentBlock: ParentBlock | undefined
-    private _blockStyle: CSSProperties = {
-        width: "120px",
-        height: "120px",
-    }
+
     private _blockShape: LineCanvas[]
 
     constructor(id: string,
                 left: number,
                 top: number) {
         this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock())
-        this._blockShape = getBlockShape(contextCanvas!!, this._blockStyle, left, top)
+        this._blockShape = getBlockShape(contextCanvas!!, blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
 
@@ -55,7 +61,7 @@ export class Condition implements IBlock {
     }
 
     getStyleBlock(): React.CSSProperties {
-        return this._blockStyle;
+        return blockStyle;
     }
 
     getTop(): number {

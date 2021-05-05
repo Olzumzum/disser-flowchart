@@ -90,7 +90,6 @@ export class ParentBlock implements IBlock {
                 left: number,
                 top: number,
                 type: string) {
-        console.log("Создать новый блок " + id)
         this._id = id
         this._left = left
         this._top = top
@@ -162,7 +161,6 @@ export class ParentBlock implements IBlock {
      * @param e
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
-        console.log("клик " + this._id)
         if (e.button === 2)
             ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 {idBlock: this.getId()})

@@ -67,7 +67,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             //установить соседей
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
-            recalculationCoorByEvent(block.getId())
+            // recalculationCoorByEvent(block.getId())
             ff(idParent, block.getId())
             console.log("Связей " + connects.length)
         } catch (e) {
