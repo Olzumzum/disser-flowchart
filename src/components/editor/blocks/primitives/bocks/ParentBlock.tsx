@@ -167,14 +167,15 @@ export class ParentBlock implements IBlock {
 
     rolleUpContent =() =>{
         this._isRolledUp = !this._isRolledUp;
-        BlocksEventEmitter.dispatch(BlockTransformationTypes.ROLLED_UP_BLOCK, this._isRolledUp)
+        BlocksEventEmitter.dispatch(BlockTransformationTypes.ROLLED_UP_BLOCK,
+            [{isRolledUp: this._isRolledUp}, {idBlock: this._id}] )
     }
 
     get isRolledUp(): boolean {
         return this._isRolledUp
     }
 
-    //вернуть экземпляр блока
+    //вернуть экземпляр блок
     get blockInstance(): FC<BlockProps> {
         if (this._blockInstance === undefined)
             this.createBlock()

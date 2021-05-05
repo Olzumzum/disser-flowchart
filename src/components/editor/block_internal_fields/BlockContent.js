@@ -5,7 +5,7 @@ import {BlocksEventEmitter} from "../BlocksEmitter";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 
 
-export class BlockContent extends Component{
+export class BlockContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,16 +17,18 @@ export class BlockContent extends Component{
         }
 
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ROLLED_UP_BLOCK, (data) => {
-            if (data !== null && data !== undefined)
-                this.setState({isRolledUp: data})
+            if (data[0].isRolledUp !== null
+                && data[0].isRolledUp !== undefined
+                && !data[1].idBlock.localeCompare(this.state.id))
+                this.setState({isRolledUp: data[0].isRolledUp})
         })
     }
 
     render() {
         const {id, type, isRolledUp, top, left} = this.state
-        return(
+        return (
             <Motion defaultStyle={{opacity: 0}}
-                        style={{opacity: isRolledUp ? spring(0) : spring(1)}}
+                    style={{opacity: isRolledUp ? spring(0) : spring(1)}}
             >
                 {(interpolatedStyle) => (
                     <>
@@ -56,7 +58,7 @@ export class BlockContent extends Component{
                     </>
 
                 )}
-            </Motion >
+            </Motion>
         )
     }
 }
