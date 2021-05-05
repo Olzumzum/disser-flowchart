@@ -7,4 +7,6 @@ export enum BlockTransformationTypes {
     LOOP_WHILE = "LOOP_WHILE",
     LOOP_FOR = "LOOP_FOR",
     LOOP_UNTIL = "LOOP_UNTIL",
+    ROLLED_UP_BLOCK = "ROLLED_UP",
+    DEPLOYED_BLOCK = "DEPLOYED_BLOCK",
 }

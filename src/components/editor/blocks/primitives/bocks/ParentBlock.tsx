@@ -1,7 +1,7 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
-import {Container, OverlayTrigger} from "react-bootstrap";
+import {OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../../prompt/block_prompt";
 import {ContextMenu} from "../../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../../context_menu/ItemsContextMenu";
@@ -9,7 +9,10 @@ import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {drawBlockShape} from "../../factory/BlockShapePainter";
-import {ContextMenuEmitter} from "../../../context_menu/ContextMenuEmitter";
+
+import {BlocksEventEmitter} from "../../../BlocksEmitter";
+import {BlockContent} from "../../../block_internal_fields/BlockContent";
+import {BlockTransformationTypes} from "../../../block_conversion/BlockTransformationTypes";
 
 /**
  * Родитель всех блоков
@@ -77,6 +80,10 @@ export class ParentBlock implements IBlock {
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
     private _blockShape: LineCanvas[] | undefined = undefined
+    //вложено ли что-то в блок
+    private _isNesting: boolean = false
+    //свернут ли блок
+    private _isRolledUp: boolean = false
 
 
     constructor(id: string,
@@ -118,19 +125,14 @@ export class ParentBlock implements IBlock {
                             id={this.getId()}
                             style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
-                            onClick={this.click}
+                            onClick={this.rolleUpContent}
                         >
-                            <Container>
-                                <div>
-                                    {this._id}
-                                </div>
-                                <div>
-                                    {this.getTypeBlock()}
-                                </div>
-                                <div>
-                                    какие-то параметры
-                                </div>
-                            </Container>
+                            <BlockContent id={this._id}
+                                          type={this._typeBlock}
+                                          isRolledUp={false}
+                                          left={this._left}
+                                          top={this._top}
+                            />
                         </div>
                     </OverlayTrigger>
                     <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
@@ -159,13 +161,17 @@ export class ParentBlock implements IBlock {
      */
     mouseDownClick = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 2)
-            ContextMenuEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
                 {idBlock: this.getId()})
     }
 
-    //одинарное нажатие
-    click() {
+    rolleUpContent =() =>{
+        this._isRolledUp = !this._isRolledUp;
+        BlocksEventEmitter.dispatch(BlockTransformationTypes.ROLLED_UP_BLOCK, this._isRolledUp)
+    }
 
+    get isRolledUp(): boolean {
+        return this._isRolledUp
     }
 
     //вернуть экземпляр блока
