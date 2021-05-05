@@ -2,15 +2,14 @@ import {CSSProperties, FC} from "react";
 import blockImage from "../../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
 import {BlockTypes} from "./BlockTypes";
-import {OverlayTrigger} from "react-bootstrap";
+import {Container, OverlayTrigger} from "react-bootstrap";
 import {renderConvertPrompt} from "../../../prompt/block_prompt";
 import {ContextMenu} from "../../../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../../../context_menu/ItemsContextMenu";
 import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
-import {BlocksEventEmitter} from "../../../BlocksEmitter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
-import { drawBlockShape, getBlockShape} from "../../factory/BlockShapePainter";
+import {drawBlockShape, getBlockShape} from "../../factory/BlockShapePainter";
 import {ContextMenuEmitter} from "../../../context_menu/ContextMenuEmitter";
 
 /**
@@ -39,8 +38,8 @@ const stylesParentBlock: CSSProperties = {
     border: '1px dashed gray',
     padding: '1',
     cursor: 'move',
-    width: "70px",
-    height: "50px",
+    width: "120px",
+    height: "100px",
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'contain',
@@ -80,6 +79,13 @@ export class ParentBlock implements IBlock {
     //массив линий для отрисовки формы блока
     private _blockShape: LineCanvas[]
 
+    //стили для строчек блока
+    private _rowStyle: CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        flexWrap: "wrap"
+    }
+
     constructor(id: string,
                 left: number,
                 top: number) {
@@ -110,14 +116,24 @@ export class ParentBlock implements IBlock {
                     <OverlayTrigger
                         placement={"right"}
                         delay={{show: 250, hide: 400}}
-                        overlay={renderConvertPrompt }>
+                        overlay={renderConvertPrompt}>
                         <div
                             id={this.getId()}
                             style={{...stylesParentBlock, background}}
                             onMouseDown={this.mouseDownClick}
                             onClick={this.click}
                         >
-                            {this._id}
+                            <Container>
+                                <div>
+                                    {this._id}
+                                </div>
+                                <div>
+                                    {this.getTypeBlock()}
+                                </div>
+                                <div>
+                                    какие-то параметры
+                                </div>
+                            </Container>
                         </div>
                     </OverlayTrigger>
                     <ContextMenu menu={itemsContexMenu} idBlock={this._id}/>
@@ -129,8 +145,8 @@ export class ParentBlock implements IBlock {
     //Отобразить
     render(): JSX.Element {
 
-        // this._blockShape =
-        //     drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
+        this._blockShape =
+            drawBlockShape(contextCanvas!!, this._blockShape!!, stylesParentBlock, this._left!!, this._top!!)
         return <this.blockInstance title={this._typeBlock}
                                    left={this._left} top={this._top}/>;
     }
@@ -182,7 +198,7 @@ export class ParentBlock implements IBlock {
     }
 
     getTypeBlock(): string {
-        return BlockTypes.BLOCK;
+        return BlockTypes.BLOCK_PARENT;
     }
 
     getLeft(): number {

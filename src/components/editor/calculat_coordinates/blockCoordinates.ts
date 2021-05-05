@@ -73,7 +73,7 @@ function getSizeBlockByType(typeBlock: string): number[] {
     let styleBlock: CSSProperties | undefined
 
     switch (typeBlock) {
-        case BlockTypes.BLOCK:
+        case BlockTypes.BLOCK_PARENT:
             styleBlock = getStyleParentBlock()
     }
 

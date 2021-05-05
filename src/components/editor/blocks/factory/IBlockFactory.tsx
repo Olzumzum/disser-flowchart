@@ -8,7 +8,4 @@ export interface IBlockFactory {
         top: number,
     ): IBlock | undefined
 
-    createBlockByType(
-        typeBlock: string
-    ): IBlock | undefined
 }

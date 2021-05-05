@@ -2,6 +2,7 @@ import {IBlock} from "../primitives/bocks/IBlock";
 import {BlockTypes} from "../primitives/bocks/BlockTypes";
 import {IBlockFactory} from "./IBlockFactory";
 import {ParentBlock} from "../primitives/bocks/ParentBlock";
+import {Block} from "../primitives/bocks/Block";
 
 /**
  * Создать блок, который будет существовать на панели редактирования
@@ -15,23 +16,14 @@ export class CreatorBlock implements IBlockFactory {
         top: number,
     ): IBlock | undefined {
         switch (typeBlock) {
-            case BlockTypes.BLOCK:
+            case BlockTypes.BLOCK_PARENT:
                 return new ParentBlock(id, left, top)
-        }
-        return undefined;
-    }
-
-    createBlockByType(
-        typeBlock: string
-    ): IBlock | undefined {
-        const id = generateId()
-
-        switch (typeBlock) {
             case BlockTypes.BLOCK:
-                return new ParentBlock(id, 150, 50)
+                return new Block(id, left, top)
         }
         return undefined;
     }
+
 }
 
 export function getPreviewBlock(typeBlock: string | symbol | null): IBlock | undefined {
