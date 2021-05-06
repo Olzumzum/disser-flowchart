@@ -50,6 +50,19 @@ export class ContainerKeeper {
         }
     }
 
+    /**
+     * Поиск контейнера уровня вложенности
+     * @param level
+     */
+    getInnerLevel(level: number): InnerLevelContainer | undefined{
+        let result: InnerLevelContainer | undefined = undefined
+        this._members.forEach(item => {
+            if(result === undefined && item.level === level) {
+                result = item;
+            }
+        })
+        return result
+    }
 
     get members(): any[] {
         return this._members;

@@ -36,7 +36,7 @@ export function getStyleEditPanel() {
 interface EditPanelProps {
     snapToGrid: boolean
 }
-const containerKeeper = new ContainerKeeper()
+export const containerKeeper = new ContainerKeeper()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки

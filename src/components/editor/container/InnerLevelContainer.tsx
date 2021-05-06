@@ -1,25 +1,16 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convert, rendersDragBlock} from "../dnd/RendrerManager";
 import React, {CSSProperties} from "react";
+import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
+import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
 
-const styleContainer: CSSProperties = {
-    border: "3px solid purple",
-    height: "300px",
-    width: "300px",
-    margin: 0,
-    position: "absolute",
-    top: "60%",
-    left: "50%",
-    transform: "translate(-50%, -50%)"
-}
+export let styleContainerBlock: CSSProperties | undefined = undefined
 
-function getStyleContainer(
+export function changeStyleContainer(
     left: number,
     top: number,
-
 ): CSSProperties {
-
-    return {
+    styleContainerBlock = {
         position: 'absolute',
         zIndex: 3,
         border: "3px solid purple",
@@ -29,12 +20,13 @@ function getStyleContainer(
         height: "300px",
         width: "300px",
     }
+    return styleContainerBlock
 }
 
 export class InnerLevelContainer {
     private _content = new Array<IBlock>()
     private _level: number = 0;
-    private _parentId: string =""
+    private _parentId: string = ""
     private _top: number = 0
     private _left: number = 0
 
@@ -43,9 +35,22 @@ export class InnerLevelContainer {
         this._parentId = parentId
         this._left = left
         this._top = top
-
     }
 
+    getCoorForBlock(id: string): number[] {
+        let width = 0
+        let height = 0
+        this._content.forEach((item, i) => {
+            if(!item.getId().localeCompare(id)){
+                for(let j = 0; (j < this._content.length && j<i); j++){
+                    width += convertStyleToReadableFormat(this._content[j].getStyleBlock().width)!!
+                    height += convertStyleToReadableFormat(this._content[j].getStyleBlock().height)!!+ MIN_BLOCKS_DISTANCE
+                }
+            }
+        })
+        console.log("width " + width)
+        return [width, height]
+    }
     get parentId(): string {
         return this._parentId;
     }
@@ -70,13 +75,13 @@ export class InnerLevelContainer {
         this._content.push(value)
     }
 
-    render(): JSX.Element{
-       return(
-           <div className={"container"} style={getStyleContainer(this._left, this._top)}>
-            {Object.keys(this._content).map((id) =>
-                rendersDragBlock(convert(this._content)[Number(id)], id))
-            }
-        </div>
-       )
+    render(): JSX.Element {
+        return (
+            <div className={"container"} style={changeStyleContainer(this._left, this._top)}>
+                {Object.keys(this._content).map((id) =>
+                    rendersDragBlock(convert(this._content)[Number(id)], id))
+                }
+            </div>
+        )
     }
 }

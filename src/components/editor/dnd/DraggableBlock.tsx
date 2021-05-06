@@ -3,13 +3,18 @@ import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "./ItemTypes";
 import {useActions} from "../hooks/blockActions";
 import {getBlockById} from "../../../store/action-creators/blocks";
+import {styleContainerBlock} from "../container/InnerLevelContainer";
+import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
+import {ContainerKeeper} from "../container/ContainerKeeper";
+import {containerKeeper} from "../panel/EditPanel";
+
 
 function getStyles(
     left: number,
     top: number,
     isDragging: boolean
 ): CSSProperties {
-    const transform = `translate3d(${0}px, ${0}px, 0)`
+    const transform = `translate3d(${left}px, ${top}px, 0)`
     return {
         transform,
         WebkitTransform: transform,
@@ -19,6 +24,7 @@ function getStyles(
         position: "absolute",
     }
 }
+
 
 export interface DraggableBlockProps {
     id: string
@@ -44,11 +50,18 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     })
 
 
-    const b = getBlockById(id)
+    const block = getBlockById(id)
+    const innerLevel= containerKeeper.getInnerLevel(block?.getInnerLevel()!!)
+    console.log("inner " + innerLevel)
+    let coor: number[] = innerLevel?.getCoorForBlock(block?.getId()!!)!!
+    console.log("coor " + coor)
+    if (coor === undefined){
+        coor = [left, top]
+    }
 
     return (
-        <div ref={drag} style={getStyles(left, top, isDragging)}>
-            {b?.render()}
+        <div ref={drag} style={getStyles(coor[0], coor[1], isDragging)}>
+            {block?.render()}
         </div>
     )
 }
