@@ -17,7 +17,8 @@ export class ContainerKeeper {
     }
 
     innerLevelExists(block: IBlock): boolean {
-        if (this.members.length === 0) return false;
+       let result = false;
+        if (this.members.length === 0) result = false;
         else
             this._members.forEach(memb => {
 
@@ -34,11 +35,11 @@ export class ContainerKeeper {
 
                     if (!isOnList) {
                         memb.content.push(block)
-                        return true;
+                        result = true;
                     }
                 }
             })
-        return false;
+        return result;
     }
 
     createInnerLevel(block: IBlock) {

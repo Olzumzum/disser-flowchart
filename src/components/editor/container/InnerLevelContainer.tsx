@@ -18,17 +18,16 @@ function getStyleContainer(
     top: number,
 
 ): CSSProperties {
-    const transform = `translate3d(${left}px, ${top}px, 0)`
+
     return {
         position: 'absolute',
-        transform,
-        WebkitTransform: transform,
+        zIndex: 3,
         border: "3px solid purple",
+        margin: 0,
+        top: top,
+        left: left,
         height: "300px",
         width: "300px",
-        margin: 0,
-        top: "60%",
-        left: "50%",
     }
 }
 

@@ -133,6 +133,8 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
+    console.log("Слоев " + containerKeeper.members.length)
+
     return (
         <div id={"edit_panel"}
              ref={drop}
