@@ -19,6 +19,7 @@ function getStyles(
         WebkitTransform: transform,
         opacity: isDragging ? 0 : 1,
         height: isDragging ? 0 : '',
+        zIndex: 5
     }
 }
 
@@ -32,7 +33,6 @@ export interface DraggableBlockProps {
 
 export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
     const {left, top, title, typeBlock, id} = props
-    const {block} = blocksTypedSelector(state => state.blocks)
     const {loadBlockById} = useActions()
 
     useEffect(() => {

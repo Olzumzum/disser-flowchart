@@ -17,7 +17,6 @@ export interface BlockDragPreviewProps {
 
 export const BlockDragPreview: FC<BlockDragPreviewProps> = ({id}) => {
     const [tickTock, setTickTock] = useState(false)
-    const {block} = blocksTypedSelector(state => state.blocks)
     const {loadBlockById} = useActions()
 
     useEffect(() => {

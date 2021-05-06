@@ -1,18 +1,9 @@
 import {CSSProperties, FC} from "react";
 import blockImage from "../../../../../assets/images/romb.png";
 import {IBlock} from "./IBlock";
-import {OverlayTrigger} from "react-bootstrap";
-import {renderConvertPrompt} from "../../../prompt/block_prompt";
-import {ContextMenu} from "../../../context_menu/BlockContextMenu";
-import {itemsContexMenu} from "../../../context_menu/ItemsContextMenu";
-import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {drawBlockShape} from "../../factory/BlockShapePainter";
-
-import {BlocksEventEmitter} from "../../../BlocksEmitter";
-import {BlockFields} from "../../../block_internal_fields/BlockFields";
-import {BlockTransformationTypes} from "../../../block_conversion/BlockTransformationTypes";
 import {BlockNestingContent} from "../../../block_internal_fields/BlockNestingContent";
 
 /**
@@ -22,7 +13,7 @@ import {BlockNestingContent} from "../../../block_internal_fields/BlockNestingCo
 
 //типизация полей блока
 export interface BlockProps {
-    title: string
+    title?: string
     yellow?: boolean
     top?: number,
     left?: number
@@ -48,12 +39,14 @@ const stylesParentBlock: CSSProperties = {
     backgroundPosition: 'contain',
     display: "flex",
     justifyContent: "center",
-    margin: "10px"
+    margin: "10px",
+    position: "absolute",
 }
 
 export function getStyleParentBlock(): CSSProperties {
     return stylesParentBlock
 }
+
 
 export class ParentBlock implements IBlock {
 
@@ -74,7 +67,7 @@ export class ParentBlock implements IBlock {
     //последующий блок
     private _neighborId: string = DEFAULT_FOR_LINKS
     //уровень вложенности блока
-    private _innerLevel: number = -1
+    private _innerLevel: number = 0
     //выражение, которое хранится в скобках
     private _parameterId: string = ""
     //комментарии из кода
@@ -85,7 +78,7 @@ export class ParentBlock implements IBlock {
     private _isNesting: boolean = false
     //свернут ли блок
     private _isRolledUp: boolean = false
-    private content: JSX.Element | undefined
+
 
     constructor(id: string,
                 left: number,
@@ -106,34 +99,19 @@ export class ParentBlock implements IBlock {
         return stylesParentBlock
     }
 
-    private styleContainer: CSSProperties = {
-        border: "3px solid purple",
-        height: "300px",
-        width: "300px",
-    }
 
     //создать экземпляр
     createBlock() {
-        this._blockInstance = ({
-                                   title,
-                                   yellow,
-                                   left,
-                                   top
-                               }) => {
-            this._left = left
-            this._top = top
-            const background = yellow ? 'yellow' : blockImage
+        this._blockInstance = () => {
             return (
-                <div className={"container"} style={this.styleContainer}>
-                    <BlockNestingContent
-                        id={this._id}
-                        typeBlock={this._typeBlock}
-                        left={this._left}
-                        top={this._top}
-                        isRollingUp={this._isRolledUp}
-                        style={stylesParentBlock}
-                        />
-                </div>
+                <BlockNestingContent
+                    id={this._id}
+                    typeBlock={this._typeBlock}
+                    left={this._left}
+                    top={this._top}
+                    isRollingUp={this._isRolledUp}
+                    style={stylesParentBlock}
+                />
             )
         }
     }
@@ -147,10 +125,8 @@ export class ParentBlock implements IBlock {
                     this._typeBlock,
                     stylesParentBlock, this._left!!, this._top!!)
 
-        return <this.blockInstance title={this._typeBlock}
-                                   left={this._left} top={this._top}/>;
+        return <this.blockInstance title={this._typeBlock}/>;
     }
-
 
 
     get isRolledUp(): boolean {
@@ -164,11 +140,6 @@ export class ParentBlock implements IBlock {
 
         return this._blockInstance!!;
     }
-
-    // //задать фоновое изображение блока
-    // blockBackImg(img: string): void {
-    //     this.stylesBlokc.backgroundImage = `url(${img})`
-    // }
 
     get style(): CSSProperties {
         return stylesParentBlock

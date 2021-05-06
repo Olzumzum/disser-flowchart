@@ -1,7 +1,7 @@
 import {CSSProperties, FC} from "react";
 import {START_TITLE} from "../../../assets/strings/editor_strings";
 
-const styleContainer: CSSProperties = {
+export const styleContainer: CSSProperties = {
     margin: 0,
     position: "absolute",
     top: "60%",

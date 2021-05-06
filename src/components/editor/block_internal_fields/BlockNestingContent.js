@@ -43,23 +43,23 @@ export class BlockNestingContent extends React.Component{
     render() {
         const {idBlock, typeBlock, left, top, isRollingUp, style} = this.state
         return (
-            <div>
+            <div style={style}>
                 <OverlayTrigger
                     placement={"right"}
                     delay={{show: 250, hide: 400}}
                     overlay={renderConvertPrompt}>
                     <div
                         id={idBlock}
-                        style={style}
                         onMouseDown={this.mouseDownClick}
                         onClick={this.rolleUpContent}
                     >
-                        <BlockFields id={idBlock}
-                                      type={typeBlock}
-                                      isRolledUp={isRollingUp}
-                                      left={left}
-                                      top={top}
-                        />
+                        fff
+                        {/*<BlockFields id={idBlock}*/}
+                        {/*              type={typeBlock}*/}
+                        {/*              isRolledUp={isRollingUp}*/}
+                        {/*              left={left}*/}
+                        {/*              top={top}*/}
+                        {/*/>*/}
                     </div>
                 </OverlayTrigger>
                 <ContextMenu menu={itemsContexMenu} idBlock={idBlock}/>

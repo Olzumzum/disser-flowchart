@@ -1,17 +1,19 @@
 import {IBlock} from "./IBlock";
-import {ParentBlock} from "./ParentBlock";
+import {getStyleParentBlock, ParentBlock} from "./ParentBlock";
 import {BlockTypes} from "./BlockTypes";
 import {CSSProperties} from "react";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {getBlockShape} from "../../factory/BlockShapePainter";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
+
 const blockStyle: CSSProperties = {
     width: "120px",
     height: "120px",
+
 }
 
 export function getBlockStyle(){
-    return blockStyle
+    return getStyleParentBlock()
 }
 
 export class Block implements IBlock {

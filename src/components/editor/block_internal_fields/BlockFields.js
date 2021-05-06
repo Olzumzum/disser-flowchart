@@ -25,7 +25,7 @@ export class BlockFields extends Component {
     }
 
     render() {
-        const {id, type, isRolledUp, top, left} = this.state
+        const {id, type, isRolledUp, left, top} = this.state
         return (
             <Motion defaultStyle={{opacity: 0}}
                     style={{opacity: isRolledUp ? spring(0) : spring(1)}}
@@ -36,8 +36,8 @@ export class BlockFields extends Component {
                             <div
                                 className="menu-container"
                                 style={{
-                                    top: top,
                                     left: left,
+                                    top: top,
                                     opacity: interpolatedStyle.opacity,
                                     padding: "9px",
                                 }}
