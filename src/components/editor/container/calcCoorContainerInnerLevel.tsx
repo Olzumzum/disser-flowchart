@@ -1,9 +1,14 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
 
+/**
+ * Рассчитать координаты и размеры контейнера
+ * @param content - список объектов в контейнере
+ * @param parentId = идентификатор родителя, через который попадаем в контейнер
+ */
 export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: string): number[] {
     let left = content[0].getLeft()
-    let top = 0
+    let top = content[0].getTop()
     let width = 0
     let height = 0
 
@@ -13,9 +18,7 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
     let bottomBlock = content[0]
 
     content.forEach(item => {
-        if (!item.getParentId().localeCompare(parentId)) {
-            top = item.getTop()
-        }
+        if (item.getTop() < top) left = item.getTop()
 
         if (item.getLeft() < left) left = item.getLeft()
         //ищем самый правый блок

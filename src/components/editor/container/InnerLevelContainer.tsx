@@ -77,8 +77,6 @@ export class InnerLevelContainer {
         this._top = coor[1]
         this._width = coor[2]
         this._height = coor[3]
-        // this._width += convertStyleToReadableFormat(value.getStyleBlock().width)!!
-        // this._height += convertStyleToReadableFormat(value.getStyleBlock().height)!!
     }
 
     rolleUP(){
@@ -89,7 +87,6 @@ export class InnerLevelContainer {
     render(): JSX.Element {
 
         return (
-
             <div id={this._id} className={this._id}
                  style={this.getStyle()} >
                 <h6> {this._id}</h6>
