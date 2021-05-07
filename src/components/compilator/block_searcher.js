@@ -4,11 +4,11 @@ import {get_language_params, c_inic_construction, constructions_list} from "./co
 import {
     getCurrentComment,
     getCurrentPosition,
-    getTextInfo,
+    getTextInfo, in_out_block_param,
     newText,
     search, search_comment,
     search_construction,
-    search_construction_result, search_content,
+    search_construction_result, search_content, search_in_out_result,
     search_result, updateCurrentComment, updateCurrentPosition
 } from "./text_searcher";
 import {content_maker, CreateBlockContent} from "./block_creator";
@@ -32,13 +32,27 @@ export function block_processing(lines, lang) {
     let neighbour_id = -1;
     let inner_structure_numb = 0; //количество вложенных структур да следующей уровне
 
+
+    let ttttt = 3;
+
+    alert (ttttt++);
+
+    alert(ttttt++);
+
+    ttttt = 3;
+
+    alert(++ttttt);
+    alert(++ttttt);
+
+    alert("tttt = " + ttttt);
+
     //let block;
     newText(lang, lines);
     let l = getCurrentPosition().line;
     let p = 0;
     let t = getTextInfo().text.length - 1;
     let t_p = getTextInfo().text[t].length;
-    while (l < t) {
+    do{
         //let block =
 
         do
@@ -52,7 +66,7 @@ export function block_processing(lines, lang) {
         inner_structure_numb++;
         let test = obj_array;
         let testsss = "t";
-    }
+    }while (l < t)
 
 
     /*
@@ -78,7 +92,7 @@ function search_block(p_id, n_id, in_lvl) {
     let otladka = getCurrentPosition();
     let block_id = false;
 
-    let params = get_language_params('', 'c');
+    let params = get_language_params('', getTextInfo().lang);
     updateCurrentComment(search_comment(params));
     let comcheck = getCurrentComment();
 
@@ -86,24 +100,31 @@ function search_block(p_id, n_id, in_lvl) {
     in_lvl++;
 
     while (block_id == false) {
-        let block = search_init_block(p_id, n_id, in_lvl);
+        let block = search_init_block(p_id, n_id, in_lvl);  //Поиск инициализации и объявления
         if (block != false) {
-            let test = obj_array;
             block_id = getLastBlockInfo().id;
-        } else if (search_construction_result()) { //ЯК найдена
+        } else if (search_construction_result()) { //если найден ЯК
             block_id = switch_block_construction(p_id, n_id, in_lvl);
         } else {
-            block = search_action_block(p_id, n_id, in_lvl);
-            if (block != false)
+            let type = search_in_out_result();
+            if (type != false) {
+                in_out_block_param(type, p_id, n_id, in_lvl);
                 block_id = getLastBlockInfo().id;
-            else {
-                let t11 = getCurrentPosition().line;
-                let t22 = getTextInfo().text.length;
-                if (getCurrentPosition().line != getTextInfo().text.length - 1) {
-                    updateCurrentPosition(0, getCurrentPosition().line + 1);
-                    return false;
-                } else
-                    return false;
+
+
+            } else {
+                block = search_action_block(p_id, n_id, in_lvl); //Поиск операции над переменными
+                if (block != false)
+                    block_id = getLastBlockInfo().id;
+                else {
+                    let t11 = getCurrentPosition().line;
+                    let t22 = getTextInfo().text.length;
+                    if (getCurrentPosition().line != getTextInfo().text.length - 1) {
+                        updateCurrentPosition(0, getCurrentPosition().line + 1);
+                        return false;
+                    } else
+                        return false;
+                }
             }
         }
     }

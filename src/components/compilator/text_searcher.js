@@ -1,8 +1,9 @@
 //пакет функций по поиску символов и ЯК в тексте кода
 
 import {get_language_params, constructions_list} from "./constructions";
-import {content_maker} from "./block_creator";
-import {getLastBlockInfo, obj_array} from "./object_block";
+import {content_maker, safeCurrentPosition} from "./block_creator";
+import {createBlock, getLastBlockInfo, obj_array} from "./object_block";
+import {arr_list, var_list} from "./var_list";
 
 //объект, который хранит загруженный текст, рассматриваемую строку и номер символа
 export const text_info = {
@@ -51,7 +52,7 @@ export function updateCurrentPosition(pos, line) {
                 CurrentPosition.pos = 0;
             } else
                 CurrentPosition.pos = pos;
-        }else
+        } else
             CurrentPosition.pos = pos;
 
     } else if (CurrentPosition.line < t_i.text.length) {
@@ -77,7 +78,6 @@ export function updateCurrentComment(comment) {
         CurrentComment += comment;
 }
 
-
 //функция отображения результата поиска символа в тексте
 export function search_result(text, c, i) {
     if (typeof i !== "undefined") {
@@ -99,12 +99,12 @@ export function search(text, c, i) {
         return text.indexOf(c);
 }
 
-export function new_search(text, c, i) {
+export function new_search(c, p) {
     let tmp;
-    if (typeof i !== "undefined") {
-        tmp = text.indexOf(c, i);
-    } else
-        tmp = text.indexOf(c);
+    let text = getTextInfo().text[getCurrentPosition().line];
+    if (typeof p === "undefined")
+        p = getCurrentPosition().pos;
+    tmp = text.indexOf(c, p);
     return tmp;
 }
 
@@ -135,14 +135,22 @@ export function search_construction() {
 }
 
 //функция находит содержимое между двумя заданными символами
-export function search_content(symb_block) {
+export function search_content(symb_block, text) {
     let symb1 = symb_block[0];
     let symb2 = symb_block[1];
-    let text = getTextInfo().text;
-    let current_pos = getCurrentPosition();
-    let line = current_pos.line;
-    let pos = current_pos.pos;
+    let line, pos;
     let start_pos, end_pos;
+
+    if (text === undefined) {
+        text = getTextInfo().text;
+        let current_pos = getCurrentPosition();
+        line = current_pos.line;
+        pos = current_pos.pos;
+    } else {
+        line = 0;
+        pos = 0;
+    }
+
     if (search_result(text[line], symb1, pos))
         if (search_result(text[line], symb2, pos)) {
             end_pos = search(text[line], symb2, pos);
@@ -179,7 +187,7 @@ export function search_comment(params) {
     let c_p = getCurrentPosition();
     let block_start;
     let comment = "";
-    let comment_pos = new_search(text[c_p.line], params.single_line_comment, c_p.pos)
+    let comment_pos = new_search(params.single_line_comment, c_p.pos)
     if (comment_pos != -1) {
         block_start = {
             pos: comment_pos,
@@ -189,7 +197,7 @@ export function search_comment(params) {
         comment = content_maker(block_start);
         updateCurrentPosition(block_start.pos, block_start.line);
     } else {
-        comment_pos = new_search(text[c_p.line], params.multi_line_comment[0], c_p.pos);
+        comment_pos = new_search(params.multi_line_comment[0], c_p.pos);
         if (comment_pos != -1) {
             block_start = {
                 pos: comment_pos,
@@ -200,4 +208,139 @@ export function search_comment(params) {
         }
     }
     return comment;
+}
+
+export function search_in_out_result() {
+    let params = get_language_params('', getTextInfo().lang);
+    let data_in = params.data_in;
+    let data_out = params.data_out;
+
+    if (new_search(data_in) != -1) {
+        updateCurrentPosition(getCurrentPosition().pos + data_in.length);
+        return "input";
+    } else if (new_search(data_out) != -1) {
+        updateCurrentPosition(getCurrentPosition().pos + data_out.length);
+        return "output";
+    } else
+        return false;
+}
+
+
+export function in_out_block_param(type, p_id, n_id, in_lvl) {
+    let params = get_language_params("", getTextInfo().lang);
+    let start_symb, middle_symb, end_symb;
+    let tmp, start_block, var_name = "";
+    switch (type) {
+        case "input":
+            start_symb = params.input_construction.start_symb;
+            middle_symb = params.input_construction.middle_symb;
+            end_symb = params.input_construction.end_symb;
+            break;
+        case "output":
+            start_symb = params.output_construction.start_symb;
+            middle_symb = params.output_construction.middle_symb;
+            end_symb = params.output_construction.end_symb;
+            break;
+    }
+    let start_pos = new_search(start_symb);
+
+    if (start_pos != -1) {
+        start_pos = new_search(start_symb) + start_symb.length;
+        updateCurrentPosition(start_pos);
+        start_block = safeCurrentPosition();
+        while (true) {
+            let middle_pos = new_search(middle_symb);
+            if (middle_pos != -1) {
+                if (!string_check(middle_symb, text_info.text[getCurrentPosition().line].substring(start_pos, middle_pos+middle_symb.length))){
+                    updateCurrentPosition(middle_pos);
+                    tmp = content_maker(start_block);
+                    createBlock()
+                    //n_id = create_in_out_block(type, p_id, n_id, in_lvl, tmp);
+                    start_block = safeCurrentPosition();
+                    updateCurrentPosition(middle_pos + middle_symb.length);
+                }
+                else
+                    updateCurrentPosition(middle_pos + middle_symb.length);
+            } else {
+                let end_pos = new_search(end_symb);
+                if (end_pos != -1) {
+                    if (!string_check(end_symb, text_info.text[getCurrentPosition().line].substring(start_pos, end_pos+end_symb.length))) {
+                        updateCurrentPosition(end_pos);
+                        tmp = content_maker(start_block);
+                        n_id = create_in_out_block(type, p_id, n_id, in_lvl, tmp);
+                        updateCurrentPosition(end_pos + end_symb.length);
+                        return true;
+                    }else
+                        updateCurrentPosition(end_pos + end_symb.length);
+                } else
+                    return false; //chto-to
+            }
+
+        }
+
+        let string_test = false;
+        for (let i = 0; i < params.string_symbols.let; i++)
+            if (new_search(params.string_symbols[i] == -1)) {
+            }
+    } else return false;
+
+}
+//БЕСПОЛЕЗНАЯ ФУНКЦИЯ ПО МНЕНИЮ ОЛЬГИ
+export function create_in_out_block(type, p_id, n_id, in_lvl, tmp) {
+    let var_name = "";
+    for (let i = 0; i < var_list.length; i++)
+        if (search_result(tmp, var_list[i])) {
+            var_name = tmp.indexOf(search(tmp, var_list[i]), var_list[i].length);
+            break;
+        } else if (search_result(tmp, arr_list[i].name)) {
+            var_name = tmp.indexOf(search(tmp, arr_list[i].name), tmp.length - 1);
+            break;
+        }
+
+    if (var_name != "") {
+        createBlock(p_id, n_id, type, in_lvl, "",
+            0, "", getCurrentComment());
+    }
+    return getLastBlockInfo().id;
+}
+
+//Проверка, не является ли искомый символ частью текста
+export function string_check(symb, text, pos) {
+    let params = get_language_params('', getTextInfo().lang);
+    let line = 0;
+    if (typeof text === undefined) {
+        text = getTextInfo().text;
+        line = getCurrentPosition().line;
+        pos = getCurrentPosition().pos;
+    }
+    if (typeof pos === undefined)
+        pos = 0;
+
+
+    if (search_result(text[line], symb, pos)) {
+        let symb_pos = search(text[line], symb, pos); //координата искомого символа
+        for (let i = 0; i < params.string_symbols.length; i++) {
+            let flag = 0;
+            let start_pos = 0;
+            let check_pos = search(text[line], params.string_symbols[i], start_pos);
+            if (check_pos == -1) {
+                if (flag == 1)
+                    return true;
+            } else {
+                if (check_pos << symb_pos) {
+                    if (flag == 1)
+                        flag--;
+                    else
+                        flag++;
+                    check_pos = params.string_symbols[i].length;
+                } else if (flag == 1)
+                    return true;
+                else
+                    break;
+
+            }
+        }
+        return false;
+    } else
+        return false;
 }
