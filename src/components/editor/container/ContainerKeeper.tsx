@@ -1,6 +1,7 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {InnerLevelContainer} from "./InnerLevelContainer";
 import React, {CSSProperties} from "react";
+import {getBlock} from "../../../store/action-creators/blocks";
 
 const styleContainerKeeper: CSSProperties = {
     position: 'absolute',
@@ -10,6 +11,18 @@ const styleContainerKeeper: CSSProperties = {
 export class ContainerKeeper {
     private _members = new Array<InnerLevelContainer>()
 
+    constructor() {
+    }
+
+    init() {
+        const blocks = getBlock()
+        if (this._members.length === 0)
+            blocks.forEach(item =>
+                this.checkLevel(item))
+        console.log("Уровней вложенности " + this.members.length)
+        this._members.forEach(i => console.log("Уровень " + i.level))
+    }
+
     checkLevel(block: IBlock) {
         if (!this.innerLevelExists(block))
             this.createInnerLevel(block)
@@ -17,47 +30,66 @@ export class ContainerKeeper {
     }
 
     innerLevelExists(block: IBlock): boolean {
-       let result = false;
+        let result = false;
+        console.log("Элемент " + block.getId() + " уровень " + block.getInnerLevel())
         if (this.members.length === 0) result = false;
         else
-            this._members.forEach(memb => {
+            this._members.forEach((memb, iMemb) => {
+                    // console.log("член " + iMemb + " а " + memb.level)
+                if(!result) {
+                    memb.content.forEach(itemLevel => {
+                        if (!result) {
+                            if (!itemLevel.getId().localeCompare(block.getParentId())) {
+                                //если с родителем на одном уровне - добавить в этот уровень
+                                if (itemLevel.getInnerLevel() === block.getInnerLevel()) {
+                                    // console.log("Один уровень с родителем")
+                                    memb.addContent(block)
+                                    result = true
+                                }
 
-                //если уровень уже существует, добавляем туда блок
-                if (memb.level === block.getInnerLevel()
-                    // && !memb.parentId.localeCompare(block.getParameterId())
-                ) {
-                    //проверка, есть ли блок в списке
-                    let isOnList = false
-                    memb.content.forEach(item => {
-                        if (!item.getId().localeCompare(block.getId()))
-                            isOnList = true
+                                //если ниже родителя по уровню ищем соседей
+                                if (itemLevel.getInnerLevel() < block.getInnerLevel()) {
+                                    if (this._members.length > iMemb + 1) {
+                                        if (this._members[iMemb+1].level === block.getInnerLevel()) {
+                                            this._members[iMemb + 1].addContent(block)
+                                            result = true
+                                        } else console.log("Какой-то уникальный случай, когда уровень меньше," +
+                                            "чем у потомков данного родителя")
+                                    } else {
+
+                                        result = false
+                                    }
+                                }
+
+                                if (itemLevel.getInnerLevel() > block.getInnerLevel())
+                                    console.log("Какая-то ошибка вложенности, " +
+                                        "пересмотреть задачу проверки вложенности")
+
+                            }
+                        }
                     })
-
-                    if (!isOnList) {
-                        memb.content.push(block)
-                        result = true;
-                    }
                 }
             })
         return result;
     }
 
+    /**
+     * Создать новый уровень вложенности
+     * @param block
+     */
     createInnerLevel(block: IBlock) {
-        //если уровень больше, чем у
-        if (this._members.length === 0 ||(block.getInnerLevel() >= this.members[this._members.length - 1].level)) {
-            this.addMember(block)
-            this._members[this._members.length - 1].addContent(block)
-        }
+        this.addMember(block)
+        this._members[this._members.length - 1].addContent(block)
     }
 
     /**
      * Поиск контейнера уровня вложенности
      * @param level
      */
-    getInnerLevel(level: number): InnerLevelContainer | undefined{
+    getInnerLevel(level: number): InnerLevelContainer | undefined {
         let result: InnerLevelContainer | undefined = undefined
         this._members.forEach(item => {
-            if(result === undefined && item.level === level) {
+            if (result === undefined && item.level === level) {
                 result = item;
             }
         })
@@ -77,6 +109,7 @@ export class ContainerKeeper {
                 block.getTop())
         )
     }
+
 
     render(): JSX.Element {
         return (

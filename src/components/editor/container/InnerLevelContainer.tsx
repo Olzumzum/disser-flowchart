@@ -26,13 +26,13 @@ export function changeStyleContainer(
 export class InnerLevelContainer {
     private _content = new Array<IBlock>()
     private _level: number = 0;
-    private _parentId: string = ""
+
     private _top: number = 0
     private _left: number = 0
 
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
-        this._parentId = parentId
+
         this._left = left
         this._top = top
     }
@@ -48,15 +48,8 @@ export class InnerLevelContainer {
                 }
             }
         })
-        console.log("width " + width)
+        // console.log("width " + width)
         return [width, height]
-    }
-    get parentId(): string {
-        return this._parentId;
-    }
-
-    set parentId(value: string) {
-        this._parentId = value;
     }
 
     get level(): number {

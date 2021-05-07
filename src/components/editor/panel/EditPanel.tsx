@@ -16,9 +16,6 @@ import {BlocksEventEmitter} from "../BlocksEmitter";
 import {calcCoorBlockWithTwoBranches, calcCoordinates} from "../calculat_coordinates/blockCoordinates";
 import {StartTitleComp, styleContainer} from "./StartTitleComp";
 import {ContainerKeeper} from "../container/ContainerKeeper";
-import {drawLine} from "../canvas/LinePainter";
-import {LineCanvas} from "../canvas/LineCanvas";
-
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -42,7 +39,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-
+    containerKeeper.init()
     // действия
     const {fetchBlocks, addBlocks, dragBlock} = useActions()
 
@@ -67,7 +64,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-            containerKeeper.checkLevel(block)
+            // containerKeeper.checkLevel(block)
         })
     }, [])
 
@@ -112,9 +109,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block2, id
             )
 
-            containerKeeper.checkLevel(block)
-            containerKeeper.checkLevel(block1)
-            containerKeeper.checkLevel(block2)
+            // containerKeeper.checkLevel(block)
+            // containerKeeper.checkLevel(block1)
+            // containerKeeper.checkLevel(block2)
 
         })
     }, [])
@@ -141,7 +138,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
              style={stylesEditPanel}
              onClick={() => startClickPanel(blocks.length)}
         >
-             <StartTitleComp/>
+             {/*<StartTitleComp/>*/}
             {Object.keys(containerKeeper.members).map(() =>
                 containerKeeper.render())
             }

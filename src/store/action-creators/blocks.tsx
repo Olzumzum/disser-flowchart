@@ -14,11 +14,33 @@ import {recalculationCoorByEvent} from "../../components/editor/calculat_coordin
 
 import {ff} from "../../components/editor/connections/ConnectionPainter";
 import {IConnect} from "../../components/editor/blocks/primitives/connects/IConnect";
+import {Block} from "../../components/editor/blocks/primitives/bocks/Block";
+import {ParentBlock} from "../../components/editor/blocks/primitives/bocks/ParentBlock";
+import {BlockTypes} from "../../components/editor/blocks/primitives/bocks/BlockTypes";
+import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock";
 
-// const b1 = new ParentBlock("1", 150, 50)
-// const b2 = new ParentBlock("2", 150, 150)
-// const blocks = new Array<IBlock>(b1, b2)
-const blocks = new Array<IBlock>()
+// const b1 = new ParentBlock("1", 150, 50, BlockTypes.BLOCK)
+// const b2 = new ParentBlock("2", 150, 150, BlockTypes.BLOCK)
+const creator = new CreatorBlock()
+const b1 = creator.createBlock("b1", BlockTypes.BLOCK, 150, 150)!!
+const b2 = creator.createBlock("b2", BlockTypes.BLOCK, 150, 290)!!
+const b3 = creator.createBlock("b3", BlockTypes.BLOCK, 100, 430)!!
+const b4 = creator.createBlock("b4", BlockTypes.BLOCK, 240, 430)!!
+const b5 = creator.createBlock("b5", BlockTypes.BLOCK, 240 , 570)!!
+b1.setInnerLevel(0)
+b2.setParentId(b1.getId())
+b2.setInnerLevel(0)
+
+b3.setParentId(b2.getId())
+b3.setInnerLevel(1)
+b4.setParentId(b2.getId())
+b4.setInnerLevel(1)
+
+b5.setParentId(b4.getId())
+b5.setInnerLevel(2)
+
+const blocks = new Array<IBlock>(b1, b2, b3, b4, b5)
+// const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()
 
 export function getConnects() {
@@ -26,6 +48,13 @@ export function getConnects() {
 }
 
 export function getBlock() {
+    // const b1 = new Block("b1", 150, 150)
+    // const b2 = new Block("b2", 150, 200)
+    // const b3 = new Block("b3", 100, 240)
+    // const b4 = new Block("b4", 100, 290)
+    // const b5 = new Block("b5", 150 , 340)
+    //
+    // blocks.push(b1)
     return blocks
 }
 
@@ -68,7 +97,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             settingUpNeighborhood(idParent, block.getId())
             //прерасчитать координаты
             // recalculationCoorByEvent(block.getId())
-            ff(idParent, block.getId())
+            // ff(idParent, block.getId())
             console.log("Связей " + connects.length)
         } catch (e) {
             dispatch({
