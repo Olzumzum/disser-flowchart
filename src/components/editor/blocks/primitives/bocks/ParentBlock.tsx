@@ -84,11 +84,15 @@ export class ParentBlock implements IBlock {
                 left: number,
                 top: number,
                 type: string,
+                parentId: string,
+                innerLevel: number
     ) {
         this._id = id
         this._left = left
         this._top = top
         this._typeBlock = type
+        this._parentId = parentId
+        this._innerLevel = innerLevel
     }
 
     public setBlockShape(shape: LineCanvas[]) {

@@ -6,6 +6,8 @@ export interface IBlockFactory {
         typeBlock: string,
         left: number,
         top: number,
+        parentId: string,
+        innerLevel: number
     ): IBlock | undefined
 
 }

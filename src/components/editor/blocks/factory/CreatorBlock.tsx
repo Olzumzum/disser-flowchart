@@ -15,14 +15,16 @@ export class CreatorBlock implements IBlockFactory {
         typeBlock: string,
         left: number,
         top: number,
+        parentId: string,
+        innerLevel: number,
     ): IBlock | undefined {
         switch (typeBlock) {
             // case BlockTypes.BLOCK_PARENT:
             //     return new ParentBlock(id, left, top)
             case BlockTypes.BLOCK:
-                return new Block(id, left, top)
+                return new Block(id, left, top, parentId, innerLevel)
             case BlockTypes.CONDITION:
-                return new Condition(id, left, top)
+                return new Condition(id, left, top, parentId, innerLevel)
         }
         return undefined;
     }

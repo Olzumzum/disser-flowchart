@@ -102,8 +102,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
 
             //установить соседей
-            settingUpNeighborhood(idParent, block.getId())
-            //прерасчитать координаты
+            // settingUpNeighborhood(idParent, block.getId())
+            //прерасчитать координаqты
             // recalculationCoorByEvent(block.getId())
             // ff(idParent, block.getId())
             console.log("Связей " + connects.length)

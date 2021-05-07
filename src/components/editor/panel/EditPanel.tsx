@@ -1,7 +1,7 @@
 import {CSSProperties, FC, useEffect} from "react";
 import {CanvasPainter, redrewCanvas} from "../canvas/CanvasPainter";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -12,7 +12,7 @@ import {DragItem} from "../dnd/DragItem";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {calcCoorBlockWithTwoBranches, calcCoordinates} from "../calculat_coordinates/blockCoordinates";
-import {StartTitleComp, styleContainer} from "./StartTitleComp";
+import {StartTitleComp} from "./StartTitleComp";
 import {ContainerKeeper} from "../container/ContainerKeeper";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 
@@ -32,6 +32,7 @@ export function getStyleEditPanel() {
 interface EditPanelProps {
     snapToGrid: boolean
 }
+
 export const containerKeeper = new ContainerKeeper()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
@@ -51,6 +52,12 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         BlocksEventEmitter.subscribe(BlockTransformationTypes.ADD_TWO_BLOCKS, (data: any) => {
             //координаты добавляемого блока
             const coor = calcCoordinates(null, BlockTypes.BLOCK, data[1].idBlock)
+            let innerLevel = 0
+
+            if (data[1].idBlock.localeCompare("-1")) {
+                const parent = getBlockById(data[1].idBlock)
+                innerLevel = parent?.getInnerLevel()!!
+            }
 
             const id = generateId()
             const block = creator.createBlock(
@@ -58,7 +65,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 BlockTypes.BLOCK,
                 coor[0],
                 coor[1],
+                data[1].idBlock,
+                innerLevel
             )!!
+
 
             addBlocks(
                 block, data[1].idBlock
@@ -73,39 +83,47 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             //координаты добавляемого блока
 
             const coor = calcCoordinates(null, BlockTypes.CONDITION, data[1].idBlock)
+            const parent = getBlockById(data[1].idBlock)
 
-            const id = generateId()
             const block = creator.createBlock(
-                id,
+                generateId(),
                 BlockTypes.CONDITION,
                 coor[0],
                 coor[1],
+                data[1].idBlock,
+                parent?.getInnerLevel()!!
             )!!
 
             addBlocks(
                 block, data[1].idBlock
             )
 
-            const coorTwoBlocks = calcCoorBlockWithTwoBranches(id)
+            const coorTwoBlocks = calcCoorBlockWithTwoBranches(block.getId())
+
             const block1 = creator.createBlock(
                 generateId(),
                 BlockTypes.BLOCK,
                 coorTwoBlocks[0],
                 coorTwoBlocks[1],
+                block.getId(),
+                block.getInnerLevel()+1
             )!!
-            block1.setInnerLevel(block.getInnerLevel() + 1)
+
             addBlocks(
-                block1, id
+                block1, block.getId()
             )
+
             const block2 = creator.createBlock(
                 generateId(),
                 BlockTypes.BLOCK,
                 coorTwoBlocks[2],
                 coorTwoBlocks[3],
+                block.getId(),
+                block.getInnerLevel()+1
             )!!
-            block2.setInnerLevel(block.getInnerLevel() + 1)
+
             addBlocks(
-                block2, id
+                block2, block.getId()
             )
 
             containerKeeper.checkLevel(block)
@@ -136,7 +154,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
              style={stylesEditPanel}
              onClick={() => startClickPanel(blocks.length)}
         >
-             <StartTitleComp/>
+            <StartTitleComp/>
             {Object.keys(containerKeeper.members).map(() =>
                 containerKeeper.render())
             }

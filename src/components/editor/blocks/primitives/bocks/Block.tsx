@@ -23,8 +23,11 @@ export class Block implements IBlock {
 
     constructor(id: string,
                 left: number,
-                top: number) {
-        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock())
+                top: number,
+                parentId: string,
+                innerLevel: number
+    ) {
+        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(), parentId, innerLevel)
         this._blockShape = getBlockShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
