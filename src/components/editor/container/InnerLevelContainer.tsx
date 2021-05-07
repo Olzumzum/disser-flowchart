@@ -56,7 +56,6 @@ export class InnerLevelContainer {
                 }
             }
         })
-        // console.log("width " + width)
         return [width, height]
     }
 
@@ -74,9 +73,8 @@ export class InnerLevelContainer {
 
     addContent(value: IBlock) {
         this._content.push(value)
-        this._width += 100
-        this._height += 59
-        // console.log("Элементов " + this._content.length)
+        this._width += convertStyleToReadableFormat(value.getStyleBlock().width)!!
+        this._height += convertStyleToReadableFormat(value.getStyleBlock().height)!!
     }
 
     rolleUP(){
@@ -85,8 +83,7 @@ export class InnerLevelContainer {
 
 
     render(): JSX.Element {
-        // console.log("Рендер")
-        // this.changeStyleContainer()
+
         return (
 
             <div id={this._id} className={this._id}

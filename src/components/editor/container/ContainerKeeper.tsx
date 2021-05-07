@@ -26,7 +26,6 @@ export class ContainerKeeper {
 
     innerLevelExists(block: IBlock): boolean {
         let result = false;
-        console.log(block.getId() + " " + block.getParentId() + " " + block.getInnerLevel())
 
         if (this.members.length !== 0){
             //ищем уже существующий уровень с такими данными
