@@ -50,7 +50,9 @@ b7.setParentId(b3.getId())
 b7.setInnerLevel(2)
 b8.setParentId(b7.getId())
 b8.setInnerLevel(3)
-const blocks = new Array<IBlock>(b1, b2, b3, b4, b5, b6,b7,b8)
+const blocks = new Array<IBlock>(b1, b2,
+    b3, b4, b5, b6,b7,b8
+)
 // const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()
 

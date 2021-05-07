@@ -4,6 +4,7 @@ import React, {CSSProperties} from "react";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
 import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
 import {generateId} from "../blocks/factory/CreatorBlock";
+import {calcCoorInnerLevelContainer} from "./calcCoorContainerInnerLevel";
 
 // export
 
@@ -22,8 +23,6 @@ export class InnerLevelContainer {
 
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
-        this._left = left
-        this._top = top
         this._parentId = parentId
     }
 
@@ -73,8 +72,13 @@ export class InnerLevelContainer {
 
     addContent(value: IBlock) {
         this._content.push(value)
-        this._width += convertStyleToReadableFormat(value.getStyleBlock().width)!!
-        this._height += convertStyleToReadableFormat(value.getStyleBlock().height)!!
+        const coor = calcCoorInnerLevelContainer(this.content, this.parentId!!)
+        this._left = coor[0]
+        this._top = coor[1]
+        this._width = coor[2]
+        this._height = coor[3]
+        // this._width += convertStyleToReadableFormat(value.getStyleBlock().width)!!
+        // this._height += convertStyleToReadableFormat(value.getStyleBlock().height)!!
     }
 
     rolleUP(){

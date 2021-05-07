@@ -62,7 +62,7 @@ export class Block implements IBlock {
     }
 
     getStyleBlock(): React.CSSProperties {
-        return blockStyle;
+        return this._parentBlock?.getStyleBlock()!!;
     }
 
     getTop(): number {
