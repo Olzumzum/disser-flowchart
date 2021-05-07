@@ -46,6 +46,13 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
     return [left, top, width, height]
 }
 
+/**
+ * Расчет координат содержимого
+ * ПОЧЕМУ МЫ ВЫЧИТАЕМ 30 - Я НЕ ЗНАЮ!
+ * @param block
+ * @param left
+ * @param top
+ */
 export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): number[]{
 
     const leftBlock = block.getLeft()
