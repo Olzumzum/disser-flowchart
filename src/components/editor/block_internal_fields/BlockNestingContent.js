@@ -47,6 +47,7 @@ export class BlockNestingContent extends React.Component{
                 <OverlayTrigger
                     placement={"right"}
                     delay={{show: 250, hide: 400}}
+                    style={{zIndex:11}}
                     overlay={renderConvertPrompt}>
                     <div
                         id={idBlock}

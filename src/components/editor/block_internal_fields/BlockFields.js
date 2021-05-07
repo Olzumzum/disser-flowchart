@@ -1,9 +1,4 @@
 import {Component} from "react";
-import Motion from "react-motion/lib/Motion";
-import spring from "react-motion/lib/spring";
-import {BlocksEventEmitter} from "../BlocksEmitter";
-import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
-
 
 export class BlockFields extends Component {
     constructor(props) {
@@ -13,52 +8,26 @@ export class BlockFields extends Component {
             type: props.type,
             left: props.left,
             top: props.top,
-            isRolledUp: props.isRolledUp
         }
 
-        BlocksEventEmitter.subscribe(BlockTransformationTypes.ROLLED_UP_BLOCK, (data) => {
-            if (data[0].isRolledUp !== null
-                && data[0].isRolledUp !== undefined
-                && !data[1].idBlock.localeCompare(this.state.id))
-                this.setState({isRolledUp: data[0].isRolledUp})
-        })
     }
 
     render() {
-        const {id, type, isRolledUp, left, top} = this.state
+        const {id, type} = this.state
         return (
-            <Motion defaultStyle={{opacity: 0}}
-                    style={{opacity: isRolledUp ? spring(0) : spring(1)}}
-            >
-                {(interpolatedStyle) => (
-                    <>
-                        {!isRolledUp ? (
-                            <div
-                                className="menu-container"
-                                style={{
-                                    left: left,
-                                    top: top,
-                                    opacity: interpolatedStyle.opacity,
-                                    padding: "9px",
-                                }}
-                            >
-                                <div>
-                                    {id}
-                                </div>
-                                <div>
-                                    {type}
-                                </div>
-                                <div>
-                                    какие-то параметры
-                                </div>
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-                    </>
 
-                )}
-            </Motion>
+            <div className="menu-container">
+                <div>
+                    {id}
+                </div>
+                <div>
+                    {type}
+                </div>
+                <div>
+                    какие-то параметры
+                </div>
+            </div>
+
         )
     }
 }
