@@ -6,8 +6,6 @@ export class BlockFields extends Component {
         this.state = {
             id: props.id,
             type: props.type,
-            left: props.left,
-            top: props.top,
         }
 
     }

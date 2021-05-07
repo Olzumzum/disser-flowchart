@@ -5,6 +5,7 @@ import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
 
 import {BlocksEventEmitter as BlockEventEmitter} from "../BlocksEmitter";
+import {green} from "@material-ui/core/colors";
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
@@ -44,11 +45,16 @@ export class ContextMenu extends Component {
 
     handleContextMenu = (e) => {
         this.setState({
-            xPos: `${e.pageX}px`,
+            xPos: `${e.pageX}px` ,
             yPos: `${e.pageY}px`,
             showMenu: true
         });
 
+    }
+
+    defaultStyle ={
+        opacity: 0,
+        background: green,
     }
 
     render() {
@@ -56,7 +62,7 @@ export class ContextMenu extends Component {
         const menu = this.props.menu
         return (
             <Motion
-                defaultStyle={{opacity: 0}}
+                defaultStyle={this.defaultStyle}
                 style={{opacity: !showMenu ? spring(0) : spring(1)}}
             >
                 {(interpolatedStyle) => (
@@ -65,9 +71,10 @@ export class ContextMenu extends Component {
                             <div
                                 className="menu-container"
                                 style={{
+                                    zIndex: 12,
                                     top: yPos,
                                     left: xPos,
-                                    opacity: interpolatedStyle.opacity,
+                                    opacity: .9,
                                     backgroundColor: "white",
                                     padding: "9px",
                                 }}

@@ -86,7 +86,7 @@ export class InnerLevelContainer {
         return (
             <div id={this._id} className={this._id}
                  style={this.getStyle()} >
-                <h6> {this._id}</h6>
+                {/*<h6> {this._id}</h6>*/}
                 {Object.keys(this._content).map((id) =>
                     rendersDragBlock(convert(this._content)[Number(id)], id))
                 }

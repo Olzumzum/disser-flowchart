@@ -1,6 +1,5 @@
 import {CSSProperties, FC, useEffect} from "react";
-import {CanvasPainter, contextCanvas, redrewCanvas} from "../canvas/CanvasPainter";
-import {convert,rendersDragBlock} from "../dnd/RendrerManager";
+import {CanvasPainter, redrewCanvas} from "../canvas/CanvasPainter";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
@@ -10,12 +9,12 @@ import {useActions} from "../hooks/blockActions";
 
 import {ItemTypes} from "../dnd/ItemTypes";
 import {DragItem} from "../dnd/DragItem";
-import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {calcCoorBlockWithTwoBranches, calcCoordinates} from "../calculat_coordinates/blockCoordinates";
 import {StartTitleComp, styleContainer} from "./StartTitleComp";
 import {ContainerKeeper} from "../container/ContainerKeeper";
+import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -64,7 +63,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-            // containerKeeper.checkLevel(block)
+            containerKeeper.checkLevel(block)
         })
     }, [])
 
@@ -89,7 +88,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             const coorTwoBlocks = calcCoorBlockWithTwoBranches(id)
             const block1 = creator.createBlock(
-                "1",
+                generateId(),
                 BlockTypes.BLOCK,
                 coorTwoBlocks[0],
                 coorTwoBlocks[1],
@@ -99,7 +98,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block1, id
             )
             const block2 = creator.createBlock(
-                "2",
+                generateId(),
                 BlockTypes.BLOCK,
                 coorTwoBlocks[2],
                 coorTwoBlocks[3],
@@ -109,9 +108,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block2, id
             )
 
-            // containerKeeper.checkLevel(block)
-            // containerKeeper.checkLevel(block1)
-            // containerKeeper.checkLevel(block2)
+            containerKeeper.checkLevel(block)
+            containerKeeper.checkLevel(block1)
+            containerKeeper.checkLevel(block2)
 
         })
     }, [])
@@ -153,12 +152,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  * @param col
  */
 function startClickPanel(col: number) {
-    // if (col === 0) {
-        containerKeeper.init()
+    if (col === 0) {
         redrewCanvas()
         document.getElementById("start_title")!!.style.display = "none"
         BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-    // }
+    }
 }
 
 

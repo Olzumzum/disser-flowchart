@@ -58,8 +58,6 @@ export class BlockNestingContent extends React.Component{
                         <BlockFields id={idBlock}
                                       type={typeBlock}
                                       isRolledUp={isRollingUp}
-                                      left={left}
-                                      top={top}
                         />
                     </div>
                 </OverlayTrigger>
