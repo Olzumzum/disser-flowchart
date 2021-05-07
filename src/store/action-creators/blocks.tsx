@@ -27,6 +27,11 @@ const b2 = creator.createBlock("b2", BlockTypes.BLOCK, 150, 290)!!
 const b3 = creator.createBlock("b3", BlockTypes.BLOCK, 100, 430)!!
 const b4 = creator.createBlock("b4", BlockTypes.BLOCK, 240, 430)!!
 const b5 = creator.createBlock("b5", BlockTypes.BLOCK, 240 , 570)!!
+
+const b6 = creator.createBlock("b6", BlockTypes.BLOCK, 240 , 710)!!
+const b7 = creator.createBlock("b7", BlockTypes.BLOCK, 100 , 570)!!
+const b8 = creator.createBlock("b8", BlockTypes.BLOCK, 100 , 710)!!
+
 b1.setInnerLevel(0)
 b2.setParentId(b1.getId())
 b2.setInnerLevel(0)
@@ -39,7 +44,13 @@ b4.setInnerLevel(1)
 b5.setParentId(b4.getId())
 b5.setInnerLevel(2)
 
-const blocks = new Array<IBlock>(b1, b2, b3, b4, b5)
+b6.setParentId(b5.getId())
+b6.setInnerLevel(3)
+b7.setParentId(b3.getId())
+b7.setInnerLevel(2)
+b8.setParentId(b7.getId())
+b8.setInnerLevel(3)
+const blocks = new Array<IBlock>(b1, b2, b3, b4, b5, b6,b7,b8)
 // const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()
 

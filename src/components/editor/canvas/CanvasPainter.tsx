@@ -37,7 +37,13 @@ export const CanvasPainter: FC =
         )
     }
 
-
+/**
+ * Гениальная функция по увеличению канвы
+ */
+export function redrewCanvas(){
+    contextCanvas!!.canvas.width = contextCanvas!!.canvas.width + 100
+    contextCanvas!!.canvas.height = contextCanvas!!.canvas.height + 100
+}
 /**
  * Очистить канву
  * @param context - контекст канвы, с которой необходимо произвести

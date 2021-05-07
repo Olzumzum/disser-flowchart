@@ -1,5 +1,5 @@
 import {CSSProperties, FC, useEffect} from "react";
-import {CanvasPainter, contextCanvas} from "../canvas/CanvasPainter";
+import {CanvasPainter, contextCanvas, redrewCanvas} from "../canvas/CanvasPainter";
 import {convert,rendersDragBlock} from "../dnd/RendrerManager";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
 import {addBlocks} from "../../../store/action-creators/blocks";
@@ -138,7 +138,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
              style={stylesEditPanel}
              onClick={() => startClickPanel(blocks.length)}
         >
-             {/*<StartTitleComp/>*/}
+             <StartTitleComp/>
             {Object.keys(containerKeeper.members).map(() =>
                 containerKeeper.render())
             }
@@ -154,10 +154,11 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  * @param col
  */
 function startClickPanel(col: number) {
-    if (col === 0) {
+    // if (col === 0) {
+        redrewCanvas()
         document.getElementById("start_title")!!.style.display = "none"
         BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
-    }
+    // }
 }
 
 
