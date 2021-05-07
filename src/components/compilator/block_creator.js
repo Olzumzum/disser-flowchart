@@ -26,3 +26,12 @@ export function CreateBlockContent(block_start, c_t){
     return content;
 }
 
+export function safeCurrentPosition(){
+    let c_p = getCurrentPosition();
+    let block = {
+        pos: c_p.pos,
+        line: c_p.line
+    };
+    return block;
+}
+

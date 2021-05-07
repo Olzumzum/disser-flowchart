@@ -31,7 +31,7 @@ function compile_in(text) {
         let lines = text.split('\n'); //делим файл на строки
         for (let i = 0; i < lines.length; i++)
             lines[i] = lines[i].replaceAll('\r', '');
-        let lang = 'c'; //тут необходимо передавать используемый ЯП
+        let lang = 'cpp'; //тут необходимо передавать используемый ЯП
         block_processing(lines, lang);
     }
 }

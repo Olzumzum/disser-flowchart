@@ -11,12 +11,12 @@ export const constructions_list = [
     'return'
 ]
 
-export const c_inic_construction = [
+export const cpp_inic_construction = [
     'int',
     'double'
 ]
 
-export const c_action_operators = [
+export const cpp_action_operators = [
     '=',
     '+=',
     '-=',
@@ -30,8 +30,22 @@ export const c_action_operators = [
     '<<='
 ]
 
-export const c_single_line_comment = '//';
-export const c_multi_line_comment = ['/*', '*/'];
+export const cpp_single_line_comment = '//';
+export const cpp_multi_line_comment = ['/*', '*/'];
+
+export const cpp_data_in = "cin";
+export const cpp_data_out = "cout";
+export const cpp_input_construction = {
+    start_symb: ">>",
+    middle_symb: ">>",
+    end_symb: ";"
+};
+export const cpp_output_construction = {
+    start_symb: "<<",
+    middle_symb: "<<",
+    end_symb: ";"
+};
+export const cpp_string_symbols = ['"', "'", "`"];
 
 //выбор набора конструкций для ранзых ЯП и ЯК
 export function get_language_params(type, lang) {
@@ -40,17 +54,24 @@ export function get_language_params(type, lang) {
     let block_construction;
     let block_params;
     let block_end = ';';
-    let iniz_construction; //типы переменных для конкретного языка
+    let inic_construction; //типы переменных для конкретного языка
     let action_operators;
     let single_line_comment;
     let multi_line_comment;
-
+    let data_in, data_out;
+    let input_construction, output_construction;
+    let string_symbols;
     switch (lang) {
-        case 'c':
-            iniz_construction = c_inic_construction;
-            action_operators = c_action_operators;
-            single_line_comment = c_single_line_comment;
-            multi_line_comment = c_multi_line_comment;
+        case 'cpp':
+            inic_construction = cpp_inic_construction;
+            action_operators = cpp_action_operators;
+            single_line_comment = cpp_single_line_comment;
+            multi_line_comment = cpp_multi_line_comment;
+            data_in = cpp_data_in;
+            data_out = cpp_data_out;
+            input_construction = cpp_input_construction;
+            output_construction = cpp_output_construction;
+            string_symbols = cpp_string_symbols;
             break;
         default:
             break;
@@ -77,10 +98,15 @@ export function get_language_params(type, lang) {
         block_construction: block_construction,
         block_params: block_params,
         block_end: block_end,
-        inic_construction: iniz_construction,
+        inic_construction: inic_construction,
         action_operators: action_operators,
         single_line_comment: single_line_comment,
         multi_line_comment: multi_line_comment,
+        data_in: data_in,
+        data_out: data_out,
+        input_construction: input_construction,
+        output_construction: output_construction,
+        string_symbols: string_symbols,
     }
     return params;
 
