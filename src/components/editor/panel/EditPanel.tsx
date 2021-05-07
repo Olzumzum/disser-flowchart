@@ -39,7 +39,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     //создает новые блоки
     const creator: IBlockFactory = new CreatorBlock()
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
-    containerKeeper.init()
+
     // действия
     const {fetchBlocks, addBlocks, dragBlock} = useActions()
 
@@ -130,7 +130,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         return <h1>Идет загрузка...</h1>
     }
 
-    console.log("Слоев " + containerKeeper.members.length)
 
     return (
         <div id={"edit_panel"}
@@ -155,6 +154,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  */
 function startClickPanel(col: number) {
     // if (col === 0) {
+        containerKeeper.init()
         redrewCanvas()
         document.getElementById("start_title")!!.style.display = "none"
         BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])

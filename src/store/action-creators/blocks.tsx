@@ -22,13 +22,13 @@ import {CreatorBlock} from "../../components/editor/blocks/factory/CreatorBlock"
 // const b1 = new ParentBlock("1", 150, 50, BlockTypes.BLOCK)
 // const b2 = new ParentBlock("2", 150, 150, BlockTypes.BLOCK)
 const creator = new CreatorBlock()
-const b1 = creator.createBlock("b1", BlockTypes.BLOCK, 150, 150)!!
-const b2 = creator.createBlock("b2", BlockTypes.BLOCK, 150, 290)!!
+const b1 = creator.createBlock("b1", BlockTypes.BLOCK, 300, 150)!!
+const b2 = creator.createBlock("b2", BlockTypes.BLOCK, 300, 290)!!
 const b3 = creator.createBlock("b3", BlockTypes.BLOCK, 100, 430)!!
-const b4 = creator.createBlock("b4", BlockTypes.BLOCK, 240, 430)!!
-const b5 = creator.createBlock("b5", BlockTypes.BLOCK, 240 , 570)!!
+const b4 = creator.createBlock("b4", BlockTypes.BLOCK, 350, 430)!!
+const b5 = creator.createBlock("b5", BlockTypes.BLOCK, 350 , 570)!!
 
-const b6 = creator.createBlock("b6", BlockTypes.BLOCK, 240 , 710)!!
+const b6 = creator.createBlock("b6", BlockTypes.BLOCK, 350 , 710)!!
 const b7 = creator.createBlock("b7", BlockTypes.BLOCK, 100 , 570)!!
 const b8 = creator.createBlock("b8", BlockTypes.BLOCK, 100 , 710)!!
 

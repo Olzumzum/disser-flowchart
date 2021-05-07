@@ -42,7 +42,7 @@ export const CanvasPainter: FC =
  */
 export function redrewCanvas(){
     contextCanvas!!.canvas.width = contextCanvas!!.canvas.width + 100
-    contextCanvas!!.canvas.height = contextCanvas!!.canvas.height + 100
+    contextCanvas!!.canvas.height = contextCanvas!!.canvas.height + 1000
 }
 /**
  * Очистить канву

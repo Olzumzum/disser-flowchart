@@ -41,8 +41,8 @@ export function drawLine(ctx: CanvasRenderingContext2D,
  * @param lines - массив стираемых линий
  */
 export function clearLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]) {
-    // lines.forEach(item => {
-    //     contextCanvas.clearRect(item.x, item.y,
-    //         item.x2 + 1, item.y2)
-    // })
+    lines.forEach(item => {
+        contextCanvas!!.clearRect(item.x, item.y,
+            item.x2 + 1, item.y2)
+    })
 }

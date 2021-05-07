@@ -3,9 +3,6 @@ import {DragSourceMonitor, useDrag} from "react-dnd";
 import {ItemTypes} from "./ItemTypes";
 import {useActions} from "../hooks/blockActions";
 import {getBlockById} from "../../../store/action-creators/blocks";
-import {styleContainerBlock} from "../container/InnerLevelContainer";
-import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
-import {ContainerKeeper} from "../container/ContainerKeeper";
 import {containerKeeper} from "../panel/EditPanel";
 
 
