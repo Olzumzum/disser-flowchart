@@ -45,3 +45,12 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
 
     return [left, top, width, height]
 }
+
+export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): number[]{
+
+    const leftBlock = block.getLeft()
+    const topBlock = block.getTop() - 30
+
+    return [leftBlock - left, topBlock - top]
+
+}

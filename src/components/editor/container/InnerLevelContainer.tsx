@@ -4,7 +4,8 @@ import React, {CSSProperties} from "react";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
 import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
 import {generateId} from "../blocks/factory/CreatorBlock";
-import {calcCoorInnerLevelContainer} from "./calcCoorContainerInnerLevel";
+import {calcCoorBlockDisplay, calcCoorInnerLevelContainer} from "./calcCoorContainerInnerLevel";
+import {getBlockById} from "../../../store/action-creators/blocks";
 
 // export
 
@@ -45,17 +46,13 @@ export class InnerLevelContainer {
     }
 
     getCoorForBlock(id: string): number[] {
-        let width = 0
-        let height = 0
+        let coor: number[] = [0,0]
         this._content.forEach((item, i) => {
             if (!item.getId().localeCompare(id)) {
-                for (let j = 0; (j < this._content.length && j < i); j++) {
-                    width += convertStyleToReadableFormat(this._content[j].getStyleBlock().width)!!
-                    height += convertStyleToReadableFormat(this._content[j].getStyleBlock().height)!! + MIN_BLOCKS_DISTANCE
-                }
+                coor = calcCoorBlockDisplay(getBlockById(id)!!, this._left, this._top)
             }
         })
-        return [width, height]
+        return coor
     }
 
     get level(): number {
