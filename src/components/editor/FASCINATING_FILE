@@ -50,6 +50,22 @@ export interface IBlock {
      CONDITION: 'condition',
      LOOP: 'loop',
      BLOCK: 'block'
+
+     'while',
+     'for',
+     'do',
+     'else',
+     'switch',
+     'case',
+     'break',
+     'default',
+     'return',
+     'declaring',
+     'initialization',
+     'change_value',
+     'input',
+     'output'
+
  }
 
  То есть, вы будете получать то, что в кавычках. Это все имеющиеся у меня пока типы блоков, вы можете внести
