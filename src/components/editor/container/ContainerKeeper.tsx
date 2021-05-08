@@ -32,9 +32,6 @@ export class ContainerKeeper {
         if (this.members.length !== 0){
             //ищем уже существующий уровень с такими данными
             this._members.forEach(memb => {
-                console.log("Блок с парент " + block.getParentId() + " a уровень " + memb.parentId)
-                console.log("Блок с уровнем " + block.getInnerLevel() + "а уровень" + memb.level)
-
                 if(!memb.parentId?.localeCompare(block.getParentId())
                 && memb.level === block.getInnerLevel()){
 

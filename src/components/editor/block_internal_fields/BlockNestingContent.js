@@ -29,14 +29,8 @@ export class BlockNestingContent extends React.Component{
      */
     mouseDownClick = (e) => {
         if (e.button === 2)
-            BlocksEventEmitter.dispatch(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+            BlocksEventEmitter.dispatch(ContextMenuActionType.SHOW_CONTEXT_MENU,
                 {idBlock: this.state.idBlock})
-    }
-
-    rolleUpContent =() =>{
-        this.state.isRolledUp = !this.state.isRolledUp;
-        BlocksEventEmitter.dispatch(BlockTransformationTypes.ROLLED_UP_BLOCK,
-            [{isRolledUp: this.state.isRolledUp}, {idBlock: this.state.idBlock}] )
     }
 
 

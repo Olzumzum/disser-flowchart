@@ -3,7 +3,7 @@ import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
-import {BlocksEventEmitter as BlockEventEmitter} from "../BlocksEmitter";
+import {BlocksEventEmitter, BlocksEventEmitter as BlockEventEmitter} from "../BlocksEmitter";
 
 
 /**
@@ -20,7 +20,7 @@ export class ContextMenu extends Component {
             showMenu: false,
             idBlock: props.idBlock,
         }
-        BlockEventEmitter.subscribe(ContextMenuActionType.CHANGE_SHOW_CONTEXT_MENU,
+        BlockEventEmitter.subscribe(ContextMenuActionType.SHOW_CONTEXT_MENU,
             (data) => {
                 if (!data.idBlock.toString().localeCompare(this.state.idBlock)) {
                     this.handleContextMenu(data)
@@ -28,14 +28,16 @@ export class ContextMenu extends Component {
             })
         this.handleContextMenu = this.handleContextMenu.bind(this)
     }
+
     componentDidMount() {
         document.addEventListener("click", this.handleClick);
     }
 
 
     componentWillUnmount() {
+        if (this.state.showMenu)
+            BlocksEventEmitter.dispatch(ContextMenuActionType.CLOSE_CONTEXT_MENU)
         document.removeEventListener("click", this.handleClick);
-
     }
 
     handleClick = (e) => {
@@ -44,10 +46,11 @@ export class ContextMenu extends Component {
 
     handleContextMenu = (e) => {
         this.setState({
-            xPos: `${e.pageX}px` ,
+            xPos: `${e.pageX}px`,
             yPos: `${e.pageY}px`,
             showMenu: true
         });
+        BlocksEventEmitter.dispatch(ContextMenuActionType.OVERLAP_CONTEXT_MENU)
 
     }
 
@@ -73,7 +76,7 @@ export class ContextMenu extends Component {
                                     padding: "9px",
                                 }}
                             >
-                                <ul className="menu">
+                                <ul className="menu" style={{zIndex: 13}}>
                                     {menu.map((i) =>
                                         <li id={i.id} onClick={(e) => {
                                             if (showMenu)
@@ -94,6 +97,7 @@ export class ContextMenu extends Component {
     }
 
     clickItemMenu(e) {
+        BlocksEventEmitter.dispatch(ContextMenuActionType.CLOSE_CONTEXT_MENU)
         BlockConversionManager({id: e.target.id, idBlock: this.state.idBlock})
     }
 }
