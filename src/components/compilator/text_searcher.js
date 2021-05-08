@@ -6,7 +6,15 @@ import {create, getLastBlockInfo, obj_array} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_unary_operator} from "./variables";
 
-export let end_flag = true;
+let end_flag=false;
+
+export function get_end_flag(){
+    return end_flag;
+}
+
+export function set_end_flag(bool){
+    end_flag = bool;
+}
 
 //объект, который хранит загруженный текст, рассматриваемую строку и номер символа
 export const text_info = {
@@ -41,7 +49,7 @@ export function updateCurrentPosition(pos, line) {
         if (check_line(line))
             CurrentPosition.line = line;
         else {
-            end_flag = true;
+            set_end_flag(true);
             return;
         }
     else
@@ -60,9 +68,8 @@ export function updateCurrentPosition(pos, line) {
         updateCurrentPosition(0, line + 1);
 }
 
-
 function check_line(line) {
-    if (line < getTextInfo().text.length - 1)
+    if (line < getTextInfo().text.length)
         return true;
     else
         return false;
