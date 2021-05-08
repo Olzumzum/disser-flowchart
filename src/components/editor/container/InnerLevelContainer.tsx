@@ -1,14 +1,10 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convert, rendersDragBlock} from "../dnd/RendrerManager";
 import React, {CSSProperties} from "react";
-import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
-import {MIN_BLOCKS_DISTANCE} from "../calculat_coordinates/blockCoordinates";
 import {generateId} from "../blocks/factory/CreatorBlock";
 import {calcCoorBlockDisplay, calcCoorInnerLevelContainer} from "./calcCoorContainerInnerLevel";
 import {getBlockById} from "../../../store/action-creators/blocks";
-
-// export
-
+import {InnerLevelComponent} from "./InnerLevelComponent";
 
 export class InnerLevelContainer {
     private _id = generateId()
@@ -46,7 +42,7 @@ export class InnerLevelContainer {
     }
 
     getCoorForBlock(id: string): number[] {
-        let coor: number[] = [0,0]
+        let coor: number[] = [0, 0]
         this._content.forEach((item, i) => {
             if (!item.getId().localeCompare(id)) {
                 coor = calcCoorBlockDisplay(getBlockById(id)!!, this._left, this._top)
@@ -76,7 +72,7 @@ export class InnerLevelContainer {
         this._height = coor[3]
     }
 
-    rolleUP(){
+    rolleUP() {
         this.isRolledUp = !this.isRolledUp
     }
 
@@ -84,13 +80,8 @@ export class InnerLevelContainer {
     render(): JSX.Element {
 
         return (
-            <div id={this._id} className={this._id}
-                 style={this.getStyle()} >
-                {/*<h6> {this._id}</h6>*/}
-                {Object.keys(this._content).map((id) =>
-                    rendersDragBlock(convert(this._content)[Number(id)], id))
-                }
-            </div>
+           <InnerLevelComponent id={this._id}
+                                styleContainer={this.getStyle()} contentContainer={this._content}/>
         )
     }
 }

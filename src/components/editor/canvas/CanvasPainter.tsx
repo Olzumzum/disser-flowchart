@@ -10,7 +10,7 @@ import {
 export let contextCanvas: CanvasRenderingContext2D | null
 
 const canvasStyle: CSSProperties = {
-    backgroundColor: "yellow",
+    backgroundColor: "#D4D2D2",
 
 }
 

@@ -2,11 +2,13 @@ import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {InnerLevelContainer} from "./InnerLevelContainer";
 import React, {CSSProperties} from "react";
 import {getBlock} from "../../../store/action-creators/blocks";
+import {ContainerKeeperComponent} from "./ContainerKeeperComponent";
 
-const styleContainerKeeper: CSSProperties = {
+export const styleContainerKeeper: CSSProperties={
     position: 'absolute',
     backgroundColor: "green"
 }
+
 
 export class ContainerKeeper {
     private _members = new Array<InnerLevelContainer>()
@@ -99,11 +101,7 @@ export class ContainerKeeper {
 
     render(): JSX.Element {
         return (
-            <div style={styleContainerKeeper}>
-                {Object.keys(this._members).map((id) =>
-                    this._members[Number(id)].render())
-                }
-            </div>
+            <ContainerKeeperComponent members={this._members}/>
         )
     }
 

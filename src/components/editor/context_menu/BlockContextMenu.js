@@ -3,9 +3,8 @@ import Motion from "react-motion/lib/Motion";
 import spring from "react-motion/lib/spring";
 import {ContextMenuActionType} from "./ContextMenuActionType";
 import {BlockConversionManager} from "../block_conversion/BlockConversionManager";
-
 import {BlocksEventEmitter as BlockEventEmitter} from "../BlocksEmitter";
-import {green} from "@material-ui/core/colors";
+
 
 /**
  * Контекстное меню, открывающееся по щелчку правой кнопки мыши на блоке.
@@ -52,17 +51,12 @@ export class ContextMenu extends Component {
 
     }
 
-    defaultStyle ={
-        opacity: 0,
-        background: green,
-    }
-
     render() {
         const {showMenu, yPos, xPos} = this.state;
         const menu = this.props.menu
         return (
             <Motion
-                defaultStyle={this.defaultStyle}
+                defaultStyle={{opacity: 0}}
                 style={{opacity: !showMenu ? spring(0) : spring(1)}}
             >
                 {(interpolatedStyle) => (
