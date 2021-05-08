@@ -16,7 +16,7 @@ import {search_init_block, search_init_construction} from "./variables";
 import {
     object_block,
     obj_array,
-    createBlock,
+    create,
     getLastBlockInfo,
     updateBlockContent,
     updateBlockInnerStructureNumb, updateBlockParameter, getNeighbourBlockId
@@ -24,28 +24,15 @@ import {
 import {arr_list, var_list} from "./var_list";
 import {search_action_block} from "./action";
 
-
+function testtttt(i){
+    alert(i);
+}
 //функция нахождения ЯК
 export function block_processing(lines, lang) {
     let inner_lvl = 0;              //уровень вложенности
     let parent_id = -1;
     let neighbour_id = -1;
     let inner_structure_numb = 0; //количество вложенных структур да следующей уровне
-
-
-    let ttttt = 3;
-
-    alert (ttttt++);
-
-    alert(ttttt++);
-
-    ttttt = 3;
-
-    alert(++ttttt);
-    alert(++ttttt);
-
-    alert("tttt = " + ttttt);
-
     //let block;
     newText(lang, lines);
     let l = getCurrentPosition().line;
@@ -53,11 +40,10 @@ export function block_processing(lines, lang) {
     let t = getTextInfo().text.length - 1;
     let t_p = getTextInfo().text[t].length;
     do{
-        //let block =
-
         do
             neighbour_id = search_block(parent_id, neighbour_id, inner_lvl);
         while (neighbour_id == false)
+
         l = getCurrentPosition().line;
         let info = getLastBlockInfo();
 
@@ -110,8 +96,6 @@ function search_block(p_id, n_id, in_lvl) {
             if (type != false) {
                 in_out_block_param(type, p_id, n_id, in_lvl);
                 block_id = getLastBlockInfo().id;
-
-
             } else {
                 block = search_action_block(p_id, n_id, in_lvl); //Поиск операции над переменными
                 if (block != false)
@@ -184,7 +168,7 @@ function switch_block_construction(p_id, n_id, in_lvl) {
                 updateCurrentPosition(search(getTextInfo().text[getCurrentPosition().line], params.block_end, getCurrentPosition().pos));
                 content = content_maker(block_start); //написать функцию поиска параметра
             }
-            createBlock(p_id, n_id, construction, in_lvl, content,
+            create(p_id, n_id, construction, in_lvl, content,
                 0, "", getCurrentComment());
             updateCurrentPosition(getCurrentPosition().pos + 1);
             return block_id;
@@ -192,7 +176,7 @@ function switch_block_construction(p_id, n_id, in_lvl) {
 
             if (search_result(getTextInfo().text[getCurrentPosition().line], params.block_end, getCurrentPosition().pos))
                 updateCurrentPosition(search(getTextInfo().text[getCurrentPosition().line], params.block_end, getCurrentPosition().pos) + params.block_end.length);
-            createBlock(p_id, n_id, construction, in_lvl, "",
+            create(p_id, n_id, construction, in_lvl, "",
                 0, "", getCurrentPosition());
             return block_id;
         default:
@@ -203,7 +187,7 @@ function switch_block_construction(p_id, n_id, in_lvl) {
             break;
     }
 
-    createBlock(p_id, n_id, construction, in_lvl, "",
+    create(p_id, n_id, construction, in_lvl, "",
         0, parameter, getCurrentComment());
     block_id = getLastBlockInfo().id;
     let neighbour_id = block_id;

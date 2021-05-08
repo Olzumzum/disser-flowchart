@@ -2,7 +2,7 @@
 
 import {get_language_params} from "./constructions";
 import {getCurrentPosition, getTextInfo, search, search_result, updateCurrentPosition} from "./text_searcher";
-import {createBlock, obj_array, object_block} from "./object_block";
+import {create, obj_array, object_block} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {content_maker} from "./block_creator";
 
@@ -14,7 +14,7 @@ export function search_action_block(p_id, n_id, in_lvl) {
         content = content_maker(block[0]);
         let comment = "";
         let type = block[1];
-        createBlock(p_id, n_id, "prisvoation", in_lvl, content,
+        create(p_id, n_id, "prisvoation", in_lvl, content,
             0, type, comment);
         return type;
     } else return false;

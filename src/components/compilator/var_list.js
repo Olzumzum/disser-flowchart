@@ -16,3 +16,6 @@ export function newArr(name, type, size){
         size
     };
 }
+
+export const pre_action = [];
+export const post_action = [];

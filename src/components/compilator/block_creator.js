@@ -1,9 +1,10 @@
 //пакет функции, которые помогают формировать код
 
 import {getCurrentPosition, getTextInfo, updateCurrentPosition} from "./text_searcher";
+import {obj_array} from "./object_block";
 
 //функция по формированию текста содержимого блока
-export function content_maker(block) {
+export function content_maker(block, space_check) {
     let content = "";
     let t_i = getTextInfo();
     let c_p = getCurrentPosition();
@@ -15,7 +16,8 @@ export function content_maker(block) {
             content += t_i.text[c_p.line].substring(0, c_p.pos);
     } else if (c_p.pos != 0)
         content = t_i.text[block.line].substring(block.pos, c_p.pos);
-    content = content.replaceAll(' ', '');
+    if ((typeof space_check !== "undefined") &&((space_check == true)))
+        content = content.replaceAll(' ', '');
     return content;
 }
 
@@ -35,3 +37,9 @@ export function safeCurrentPosition(){
     return block;
 }
 
+export function neighbour_search(in_lvl){
+    for (let i = obj_array.length-1; i >= 0; i--){
+        if (obj_array[i].inner_lvl == in_lvl+1)
+            return obj_array[i].id;
+    }
+}

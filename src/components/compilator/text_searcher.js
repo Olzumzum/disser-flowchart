@@ -2,8 +2,9 @@
 
 import {get_language_params, constructions_list} from "./constructions";
 import {content_maker, safeCurrentPosition} from "./block_creator";
-import {createBlock, getLastBlockInfo, obj_array} from "./object_block";
+import {create, getLastBlockInfo, obj_array} from "./object_block";
 import {arr_list, var_list} from "./var_list";
+import {search_unary_operator} from "./variables";
 
 //объект, который хранит загруженный текст, рассматриваемую строку и номер символа
 export const text_info = {
@@ -225,7 +226,6 @@ export function search_in_out_result() {
         return false;
 }
 
-
 export function in_out_block_param(type, p_id, n_id, in_lvl) {
     let params = get_language_params("", getTextInfo().lang);
     let start_symb, middle_symb, end_symb;
@@ -251,26 +251,32 @@ export function in_out_block_param(type, p_id, n_id, in_lvl) {
         while (true) {
             let middle_pos = new_search(middle_symb);
             if (middle_pos != -1) {
-                if (!string_check(middle_symb, text_info.text[getCurrentPosition().line].substring(start_pos, middle_pos+middle_symb.length))){
+                if (!string_check(middle_symb, text_info.text[getCurrentPosition().line].substring(start_pos, middle_pos + middle_symb.length))) {
                     updateCurrentPosition(middle_pos);
                     tmp = content_maker(start_block);
-                    createBlock()
-                    //n_id = create_in_out_block(type, p_id, n_id, in_lvl, tmp);
-                    start_block = safeCurrentPosition();
+                    tmp = search_unary_operator(tmp);
+                    create(p_id, n_id, type, in_lvl, tmp,
+                        0, "", getCurrentComment());
+
+                    n_id = getLastBlockInfo().id;
                     updateCurrentPosition(middle_pos + middle_symb.length);
-                }
-                else
+                    start_block = safeCurrentPosition();
+                } else
                     updateCurrentPosition(middle_pos + middle_symb.length);
             } else {
                 let end_pos = new_search(end_symb);
                 if (end_pos != -1) {
-                    if (!string_check(end_symb, text_info.text[getCurrentPosition().line].substring(start_pos, end_pos+end_symb.length))) {
+                    if (!string_check(end_symb, text_info.text[getCurrentPosition().line].substring(start_pos, end_pos + end_symb.length))) {
                         updateCurrentPosition(end_pos);
                         tmp = content_maker(start_block);
-                        n_id = create_in_out_block(type, p_id, n_id, in_lvl, tmp);
+                        tmp = search_unary_operator(tmp);
+                        create(p_id, n_id, type, in_lvl, tmp,
+                            0, "", getCurrentComment());
+
+                        n_id = getLastBlockInfo().id;
                         updateCurrentPosition(end_pos + end_symb.length);
                         return true;
-                    }else
+                    } else
                         updateCurrentPosition(end_pos + end_symb.length);
                 } else
                     return false; //chto-to
@@ -284,24 +290,6 @@ export function in_out_block_param(type, p_id, n_id, in_lvl) {
             }
     } else return false;
 
-}
-//БЕСПОЛЕЗНАЯ ФУНКЦИЯ ПО МНЕНИЮ ОЛЬГИ
-export function create_in_out_block(type, p_id, n_id, in_lvl, tmp) {
-    let var_name = "";
-    for (let i = 0; i < var_list.length; i++)
-        if (search_result(tmp, var_list[i])) {
-            var_name = tmp.indexOf(search(tmp, var_list[i]), var_list[i].length);
-            break;
-        } else if (search_result(tmp, arr_list[i].name)) {
-            var_name = tmp.indexOf(search(tmp, arr_list[i].name), tmp.length - 1);
-            break;
-        }
-
-    if (var_name != "") {
-        createBlock(p_id, n_id, type, in_lvl, "",
-            0, "", getCurrentComment());
-    }
-    return getLastBlockInfo().id;
 }
 
 //Проверка, не является ли искомый символ частью текста
