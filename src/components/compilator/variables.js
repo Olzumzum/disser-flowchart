@@ -81,7 +81,6 @@ function variables_searcher(text, type, p_id, n_id, in_lvl) {
     let comm = getCurrentComment();
 
     //ПЕРЕСМОТРЕТЬ
-
     while (pos != text.length) {
         if (search_result(text, '=', pos))
             pos_equal = search(text, '=', pos) + 1;
@@ -120,14 +119,16 @@ function variables_searcher(text, type, p_id, n_id, in_lvl) {
                 arr_list.push(newArr(variable, type, size));
             }
 
-            let content = text.substring(block[0].start, block[1].end);
-            let comment = "";
+            let equal = search_unary_operator(text.substring(block[1].start, block[1].end));
+
+            //ТУТ ВСТАВИТЬ ФУНКЦИЮ create_content()
+            let content = variable + " = " + equal;
+
             //создание объекта блока инициализации переменной
             create(p_id, n_id, "initializing", in_lvl, content, 0, type, getCurrentComment());
         } else {
             variable = text.substring(pos_s, pos_dat);
             var_list.push(newVar(variable, type));
-            let arr = obj_array; //после отладки удалить
 
             //создание объекта блока инициализации переменной
             create(p_id, n_id, "declaring", in_lvl, variable, 0, type, getCurrentComment());
@@ -202,6 +203,7 @@ export function search_unary_operator(text) {
         while (oper_pos != -1) {
             if (!string_check(operators[i], text, oper_pos)) {
                 for (let j = 0; j < var_list.length; j++) {
+                    let test_var = var_list[j].name
                     let var_pos = search(text, var_list[j].name);
                     while (var_pos != -1) {
                         if (!string_check(var_list[j].name, text, var_pos)) {

@@ -6,6 +6,8 @@ import {create, getLastBlockInfo, obj_array} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_unary_operator} from "./variables";
 
+export let end_flag = true;
+
 //объект, который хранит загруженный текст, рассматриваемую строку и номер символа
 export const text_info = {
     lang: "",
@@ -35,31 +37,35 @@ export function updateCurrentPosition(pos, line) {
     let sub, test;
     let t_i = getTextInfo();
 
-    if (typeof line !== "undefined") {
-        if (line < t_i.text.length) {
+    if (typeof line !== "undefined")
+        if (check_line(line))
             CurrentPosition.line = line;
+        else {
+            end_flag = true;
+            return;
         }
-    } else
-        line = getCurrentPosition().line
+    else
+        line = getCurrentPosition().line;
 
     let check = text_info.text[line].length;
     if (pos < text_info.text[line].length) {
         sub = t_i.text[line].substring(pos, t_i.text[line].length);
         test = sub.replaceAll(" ", "");
-
         if (test.length < 1) {
-            if (CurrentPosition.line < t_i.text.length) {
-                CurrentPosition.line++;
-                CurrentPosition.pos = 0;
-            } else
-                CurrentPosition.pos = pos;
+            updateCurrentPosition(0, line + 1);
         } else
             CurrentPosition.pos = pos;
 
-    } else if (CurrentPosition.line < t_i.text.length) {
-        CurrentPosition.line++;
-        CurrentPosition.pos = 0;
-    }
+    } else
+        updateCurrentPosition(0, line + 1);
+}
+
+
+function check_line(line) {
+    if (line < getTextInfo().text.length - 1)
+        return true;
+    else
+        return false;
 }
 
 export let CurrentComment = "";

@@ -2,6 +2,7 @@
 
 import {get_language_params, c_inic_construction, constructions_list} from "./constructions";
 import {
+    end_flag,
     getCurrentComment,
     getCurrentPosition,
     getTextInfo, in_out_block_param,
@@ -12,23 +13,25 @@ import {
     search_result, updateCurrentComment, updateCurrentPosition
 } from "./text_searcher";
 import {content_maker, CreateBlockContent} from "./block_creator";
-import {search_init_block, search_init_construction} from "./variables";
+import {search_init_block, search_init_construction, search_unary_operator} from "./variables";
 import {
     object_block,
     obj_array,
     create,
     getLastBlockInfo,
     updateBlockContent,
-    updateBlockInnerStructureNumb, updateBlockParameter, getNeighbourBlockId
+    updateBlockInnerStructureNumb, updateBlockParameter, getNeighbourBlockId, createBlock
 } from "./object_block";
-import {arr_list, var_list} from "./var_list";
+import {arr_list, post_action, pre_action, var_list} from "./var_list";
 import {search_action_block} from "./action";
 
-function testtttt(i){
+function testtttt(i) {
     alert(i);
 }
+
 //функция нахождения ЯК
 export function block_processing(lines, lang) {
+    end_flag = false;
     let inner_lvl = 0;              //уровень вложенности
     let parent_id = -1;
     let neighbour_id = -1;
@@ -39,20 +42,24 @@ export function block_processing(lines, lang) {
     let p = 0;
     let t = getTextInfo().text.length - 1;
     let t_p = getTextInfo().text[t].length;
-    do{
-        do
-            neighbour_id = search_block(parent_id, neighbour_id, inner_lvl);
-        while (neighbour_id == false)
+    let finded_block_id;
+    do {
+
+        finded_block_id = search_block(parent_id, neighbour_id, inner_lvl);
+        if ((finded_block_id != neighbour_id)&&(finded_block_id != false)){
+            neighbour_id = finded_block_id;
+            inner_structure_numb++; // возможно лучше заменить на функцию
+        }
 
         l = getCurrentPosition().line;
         let info = getLastBlockInfo();
 
         let otladka = getCurrentPosition();
 
-        inner_structure_numb++;
+
         let test = obj_array;
         let testsss = "t";
-    }while (l < t)
+    } while (!end_flag)
 
 
     /*
@@ -85,7 +92,7 @@ function search_block(p_id, n_id, in_lvl) {
     let in_str_numb = 0;
     in_lvl++;
 
-    while (block_id == false) {
+
         let block = search_init_block(p_id, n_id, in_lvl);  //Поиск инициализации и объявления
         if (block != false) {
             block_id = getLastBlockInfo().id;
@@ -101,23 +108,43 @@ function search_block(p_id, n_id, in_lvl) {
                 if (block != false)
                     block_id = getLastBlockInfo().id;
                 else {
-                    let t11 = getCurrentPosition().line;
-                    let t22 = getTextInfo().text.length;
-                    if (getCurrentPosition().line != getTextInfo().text.length - 1) {
-                        updateCurrentPosition(0, getCurrentPosition().line + 1);
-                        return false;
-                    } else
-                        return false;
+                    let text = getTextInfo().text;
+                    let c_p = getCurrentPosition();
+                    let line = c_p.line;
+                    text = text[line];
+                    let pos = c_p.pos;
+                    if(text.substring(pos, text.length-1) !=
+                        search_unary_operator(text.substring(pos, text.length-1))){
+                        let content = "";
+                        if (pre_action.length != 0)
+                            content = pre_action.shift();
+                        else if (post_action.length != 0)
+                            content = post_action.shift();
+                        createBlock(p_id, n_id, "change_value", in_lvl, content, 0, "", getCurrentComment());
+                        block_id = getLastBlockInfo().id;
+                        updateCurrentPosition(getTextInfo().text[getCurrentPosition().line].length - 1);
+                    }
+                    //переход на следующую строку
+                    else {
+                        if (getCurrentPosition().line != getTextInfo().text.length - 1) {
+                            updateCurrentPosition(0, getCurrentPosition().line + 1);
+                            return n_id;
+                        } else
+                            return false;
+                    }
                 }
+
             }
         }
-    }
-    //удалить в финальной версии
-    let otladka1 = getCurrentPosition();
-    let test2 = var_list;
-    let test3 = arr_list;
-    let test = obj_array;
-    return block_id;
+
+
+
+//удалить в финальной версии
+let otladka1 = getCurrentPosition();
+let test2 = var_list;
+let test3 = arr_list;
+let test = obj_array;
+return block_id;
 }
 
 
