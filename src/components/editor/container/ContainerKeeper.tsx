@@ -1,51 +1,84 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {InnerLevelContainer} from "./InnerLevelContainer";
 import React, {CSSProperties} from "react";
-import {getBlock} from "../../../store/action-creators/blocks";
 import {ContainerKeeperComponent} from "./ContainerKeeperComponent";
+import {BlocksEventEmitter} from "../BlocksEmitter";
+import {ContainerTypes} from "./ContainerTypes";
 
-export const styleContainerKeeper: CSSProperties={
+export const styleContainerKeeper: CSSProperties = {
     position: 'absolute',
     backgroundColor: "green"
 }
 
-
+/**
+ * Сущность, отвечающая за хранение и отображение всех уровней вложенности
+ */
 export class ContainerKeeper {
+    //все уровни вложенности
     private _members = new Array<InnerLevelContainer>()
+    private _renderMembers = new Array<InnerLevelContainer>()
 
-    init() {
-        const blocks = getBlock()
-        if (this._members.length === 0)
-            blocks.forEach(item =>
-                this.checkLevel(item))
+
+    get renderMembers(): InnerLevelContainer[] {
+        return this._renderMembers;
     }
 
-    checkLevel(block: IBlock) {
+    constructor() {
+        this._renderMembers = this.members
+        BlocksEventEmitter.subscribe(ContainerTypes.IS_ROLLED,
+            ([isRolled, idInnerLevel]: any) => {
+            this._renderMembers = new Array<InnerLevelContainer>()
+
+                this.traversingNestingTree(idInnerLevel, isRolled)
+                console.log("Сработало")
+
+
+                console.log("итемов " + this._renderMembers.length)
+                this.render()
+                BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, this._renderMembers)
+            })
+    }
+
+    // init() {
+    //     const blocks = getBlock()
+    //     if (this._members.length === 0)
+    //         blocks.forEach(item =>
+    //             this.checkLevel(item))
+    // }
+
+    /**
+     *
+     * @param block
+     */
+    addBlockToInnerLevel(block: IBlock) {
         if (!this.innerLevelExists(block))
             this.createInnerLevel(block)
-
     }
 
+    /**
+     * Проверить существует ли уровень вложенности с таким родителем и значением уровня
+     * @param block - блок, который необходимо добавить в какой-то уровень
+     */
     innerLevelExists(block: IBlock): boolean {
         let result = false;
 
-        if (this.members.length !== 0){
+        if (this.members.length !== 0) {
             //ищем уже существующий уровень с такими данными
             this._members.forEach(memb => {
-                if(!memb.parentId?.localeCompare(block.getParentId())
-                && memb.level === block.getInnerLevel()){
+                if (!memb.parentId?.localeCompare(block.getParentId())
+                    && memb.level === block.getInnerLevel()) {
 
                     memb.addContent(block)
                     result = true
                 }
             })
             //если такого блока не нашлось, ищем родитея и либо создаем от него уровень, либо помещаем в тот же уровень
-            if(!result){
+            if (!result) {
                 this._members.forEach(memb => {
                     memb.content.forEach(cont => {
                         //если блок на том же уровне с родителем - добавить
-                        if(!cont.getId().localeCompare(block.getParentId())
-                        && cont.getInnerLevel() === block.getInnerLevel()){
+                        if (!cont.getId().localeCompare(block.getParentId())
+                            && cont.getInnerLevel() === block.getInnerLevel()) {
                             memb.addContent(block)
                             result = true
                         }
@@ -58,11 +91,10 @@ export class ContainerKeeper {
 
     /**
      * Создать новый уровень вложенности
-     * @param block
+     * @param block - блок, добавляемый в новый уровень
      */
     createInnerLevel(block: IBlock) {
         this.addMember(block)
-
     }
 
     /**
@@ -79,10 +111,34 @@ export class ContainerKeeper {
         return result
     }
 
+    getInnerLevelByParentId(parentId: string): InnerLevelContainer | undefined {
+        let result: InnerLevelContainer | undefined = undefined
+        this._members.forEach(item => {
+            if (result === undefined && !item.parentId?.localeCompare(parentId)) {
+                result = item;
+            }
+        })
+        return result
+    }
+
+    getInnerLevelById(id: string): InnerLevelContainer | undefined {
+        let result: InnerLevelContainer | undefined = undefined
+        this._members.forEach(item => {
+            if (result === undefined && !item.id.localeCompare(id)) {
+                result = item;
+            }
+        })
+        return result
+    }
+
     get members(): any[] {
         return this._members;
     }
 
+    /**
+     * добавление нового уровня вложенности
+     * @param block - блок, который добавляется в уровень
+     */
     addMember(block: IBlock) {
         const innerLevel = new InnerLevelContainer(
             block.getInnerLevel(),
@@ -96,11 +152,37 @@ export class ContainerKeeper {
     }
 
 
+    /**
+     * отобразить все уровни вложенности
+     */
     render(): JSX.Element {
         return (
-            <ContainerKeeperComponent members={this._members}/>
+            <ContainerKeeperComponent members={this._renderMembers}/>
         )
     }
 
+    traversingNestingTree(idInnerLevel: string, isRolledUp: boolean) {
+        //контейнер, на который кликнули
+        let innerLevelRolledUp = this.getInnerLevelById(idInnerLevel)
+        console.log("кликнули контейнер " + idInnerLevel)
+        do{
+            //его последний элемент
+            const lastBlock = innerLevelRolledUp?.getLastNodeId()
+            console.log("его последний элемент " + lastBlock)
+            innerLevelRolledUp = undefined
+            //получаем следующий контейнер по значению родителя
+            innerLevelRolledUp = this.getInnerLevelByParentId(lastBlock!!)
+            console.log("контейнер " + innerLevelRolledUp)
+            if(innerLevelRolledUp !== undefined){
+                innerLevelRolledUp!!.isRolledUp = isRolledUp
+                console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
+            }
+        }while (innerLevelRolledUp !== undefined)
+
+        this.members.forEach(item => {
+            if (item.isRolledUp)
+                this._renderMembers.push(item)
+        })
+    }
 
 }

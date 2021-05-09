@@ -20,6 +20,7 @@ export class InnerLevelComponent extends React.Component {
         super(props);
 
         this.state = {
+            id: this.props.id,
             isOpened: this.props.isOpened,
             level: 4,
             idContainer: this.props.id
@@ -36,12 +37,13 @@ export class InnerLevelComponent extends React.Component {
     }
 
     render() {
-        const {isOpened, level} = this.state
+        const {isOpened, id, level} = this.state
         return (
-            <div id={this._id}
-                 className={this.props.id}
+            <div id={id}
+                 className={id}
                  style={this.props.styleContainer}
             >
+                <div>{id}</div>
                 <Collapse isOpened={isOpened}>
                     {isOpened ?
                         Object.keys(this.props.contentContainer).map((id) =>

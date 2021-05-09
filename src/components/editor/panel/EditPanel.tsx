@@ -1,7 +1,7 @@
 import {CSSProperties, FC, useEffect} from "react";
 import {CanvasPainter, redrewCanvas} from "../canvas/CanvasPainter";
 import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
-import {addBlocks, getBlockById} from "../../../store/action-creators/blocks";
+import {addBlocks, getBlockById, searchBlockBeUpdate} from "../../../store/action-creators/blocks";
 import {useDrop} from "react-dnd";
 import {IBlockFactory} from "../blocks/factory/IBlockFactory";
 import {CreatorBlock, generateId} from "../blocks/factory/CreatorBlock";
@@ -41,7 +41,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
     const {blocks, loading} = blocksTypedSelector(state => state.blocks)
 
     // действия
-    const {fetchBlocks, addBlocks, dragBlock} = useActions()
+    const {fetchBlocks, addBlocks, dragBlock, searchBlockBeUpdate} = useActions()
 
     useEffect(() => {
         fetchBlocks()
@@ -73,7 +73,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-            containerKeeper.checkLevel(block)
+            containerKeeper.addBlockToInnerLevel(block)
         })
     }, [])
 
@@ -97,6 +97,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
+
+            parent?.setNeighborId(block.getId())
+            searchBlockBeUpdate(parent!!)
+
 
             const coorTwoBlocks = calcCoorBlockWithTwoBranches(block.getId())
 
@@ -126,9 +130,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block2, block.getId()
             )
 
-            containerKeeper.checkLevel(block)
-            containerKeeper.checkLevel(block1)
-            containerKeeper.checkLevel(block2)
+            containerKeeper.addBlockToInnerLevel(block)
+            containerKeeper.addBlockToInnerLevel(block1)
+            containerKeeper.addBlockToInnerLevel(block2)
 
         })
     }, [])

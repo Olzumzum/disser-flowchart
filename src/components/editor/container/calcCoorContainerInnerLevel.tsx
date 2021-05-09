@@ -1,5 +1,6 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
+import {InnerLevelContainer} from "./InnerLevelContainer";
 
 /**
  * Рассчитать координаты и размеры контейнера
@@ -60,4 +61,15 @@ export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): 
 
     return [leftBlock - left, topBlock - top]
 
+}
+
+export function hideContent(memebers: Array<InnerLevelContainer>,
+                           ): Array<InnerLevelContainer>{
+    const result = Array<InnerLevelContainer>()
+    memebers.forEach(innerLev => {
+        if(innerLev.isRolledUp)
+            result.push(innerLev)
+    })
+    console.log("result " + result.length )
+    return result
 }
