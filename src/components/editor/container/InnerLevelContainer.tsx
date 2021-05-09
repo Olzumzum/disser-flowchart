@@ -29,22 +29,15 @@ export class InnerLevelContainer {
     private _width: number = 0
     private _height: number = 0
 
-    private _isRolledUp: boolean = true
+    private _isRolledUp: boolean = false
     context: boolean = false
 
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
         this._parentId = parentId
 
-        BlockEventEmitter.subscribe(ContextMenuActionType.CLOSE_CONTEXT_MENU,
-            () => {
-                console.log("закрыли контекст")
-                // this.context = false
-            })
-
         BlockEventEmitter.subscribe(ContextMenuActionType.OVERLAP_CONTEXT_MENU,
             () => {
-                console.log("открыли контекст")
                 this.context = true
             })
     }
@@ -115,11 +108,13 @@ export class InnerLevelContainer {
         this._height = coor[3]
     }
 
-    getFirstNode():string {
-        if (!this.parentId?.localeCompare(DEFAULT_FOR_LINKS))
-            return this._content[0].getId()
-        else
-            return getBlockById(this._parentId)?.getNeighborId()!!
+    getFirstNode(): string | null {
+        let result: string | null = null
+        this.content.forEach(item => {
+            if (!item.getParentId().localeCompare(this._parentId))
+                result = item.getId()
+        })
+        return result
     }
 
     /**
@@ -138,16 +133,18 @@ export class InnerLevelContainer {
     }
 
     getLastNodeId(): string | null {
+        this._content.forEach(item =>{
+            console.log("Я " + item.getId() + " имею соседа " + item.getNeighborId() + " мой парент " + item.getParentId())
+        })
         //первый блок в контейнере
         let idStart: string = this.getFirstNode()!!
-        console.log("id start " + idStart)
-
+        console.log("Первый " + idStart)
         let resultId: string | null = null
+
         let block = getBlockById(idStart)
-        console.log("block " + block?.getNeighborId())
+        console.log("Сосед " + block?.getNeighborId())
         while (block?.getNeighborId().localeCompare(DEFAULT_FOR_LINKS)) {
             let nextBlock = getBlockById(block?.getNeighborId())
-            console.log("nextBlock " + nextBlock?.getId())
             resultId = nextBlock?.getId()!!
             block = nextBlock
         }
@@ -158,11 +155,26 @@ export class InnerLevelContainer {
     /**
      * отобразить список всех блоков на уровне
      */
-    render(): JSX.Element {
+    render(idILRolledUp: string): JSX.Element {
+        let renderContent: Array<IBlock> = new Array<IBlock>()
+        // renderContent = this._content
+
+        if (idILRolledUp.localeCompare("empty")) {
+            // console.log("Не дефолтное значение " + this.id + " isRolled" + this.isRolledUp)
+            if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
+                renderContent.push(getBlockById(this.getFirstNode()!!)!!)
+            } else {
+                if(this.id.localeCompare(idILRolledUp) && !this.isRolledUp)
+                    this.content.forEach(item => renderContent.push(item))
+            }
+        } else {
+            // console.log("Дэфолтное значение")
+            this.content.forEach(item => renderContent.push(item))
+        }
         return (
             <div onClick={this.click}>
-                <InnerLevelComponent id={this._id} isOpened={this._isRolledUp}
-                                     styleContainer={this.getStyle()} contentContainer={this._content}/>
+                <InnerLevelComponent id={this._id} isOpened={true}
+                                     styleContainer={this.getStyle()} contentContainer={renderContent}/>
             </div>
         )
     }

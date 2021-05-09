@@ -104,25 +104,29 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
             const coorTwoBlocks = calcCoorBlockWithTwoBranches(block.getId())
 
+            const idBlock1 = generateId()
+            const idBlock2 = generateId()
+
             const block1 = creator.createBlock(
-                generateId(),
+                idBlock1,
                 BlockTypes.BLOCK,
-                coorTwoBlocks[0],
-                coorTwoBlocks[1],
+                coorTwoBlocks[2],
+                coorTwoBlocks[3],
                 block.getId(),
                 block.getInnerLevel()+1
             )!!
+            block1.setNeighborId(idBlock2)
 
             addBlocks(
                 block1, block.getId()
             )
 
             const block2 = creator.createBlock(
-                generateId(),
+                idBlock2,
                 BlockTypes.BLOCK,
-                coorTwoBlocks[2],
-                coorTwoBlocks[3],
-                block.getId(),
+                coorTwoBlocks[0],
+                coorTwoBlocks[1],
+                idBlock1,
                 block.getInnerLevel()+1
             )!!
 

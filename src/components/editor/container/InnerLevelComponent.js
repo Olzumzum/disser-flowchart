@@ -45,10 +45,9 @@ export class InnerLevelComponent extends React.Component {
             >
                 <div>{id}</div>
                 <Collapse isOpened={isOpened}>
-                    {isOpened ?
-                        Object.keys(this.props.contentContainer).map((id) =>
+                    {Object.keys(this.props.contentContainer).map((id) =>
                             rendersDragBlock(convert(this.props.contentContainer)[Number(id)], id))
-                        : <h1>Свернуто</h1>
+
                     }
                 </Collapse>
             </div>

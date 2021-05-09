@@ -9,11 +9,12 @@ export class ContainerKeeperComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            members: this.props.members
+            members: this.props.members,
+            idInnerLevel: "empty"
         }
 
-        BlocksEventEmitter.subscribe(ContainerTypes.HIDE_CONTENT, (data) => {
-            this.setState({members: data})
+        BlocksEventEmitter.subscribe(ContainerTypes.HIDE_CONTENT, ([members, idInnerLevel]) => {
+            this.setState({members: members, idInnerLevel: idInnerLevel})
         })
     }
 
@@ -22,7 +23,7 @@ export class ContainerKeeperComponent extends React.Component {
         return (
             <div style={styleContainerKeeper}>
                 {Object.keys(members).map((id) =>
-                    members[Number(id)].render())
+                    members[Number(id)].render(this.state.idInnerLevel))
                 }
             </div>
         )

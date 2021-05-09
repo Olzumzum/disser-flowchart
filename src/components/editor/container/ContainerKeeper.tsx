@@ -27,15 +27,9 @@ export class ContainerKeeper {
         this._renderMembers = this.members
         BlocksEventEmitter.subscribe(ContainerTypes.IS_ROLLED,
             ([isRolled, idInnerLevel]: any) => {
-            this._renderMembers = new Array<InnerLevelContainer>()
-
                 this.traversingNestingTree(idInnerLevel, isRolled)
-                console.log("Сработало")
-
-
-                console.log("итемов " + this._renderMembers.length)
-                this.render()
-                BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, this._renderMembers)
+                BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, [this.members,
+                    idInnerLevel])
             })
     }
 
@@ -157,15 +151,20 @@ export class ContainerKeeper {
      */
     render(): JSX.Element {
         return (
-            <ContainerKeeperComponent members={this._renderMembers}/>
+            <ContainerKeeperComponent members={this.members}/>
         )
     }
 
     traversingNestingTree(idInnerLevel: string, isRolledUp: boolean) {
+
+        this._members.forEach(item => {
+            console.log("я " + item.id + " isRo "+ item.isRolledUp)
+        })
+
         //контейнер, на который кликнули
         let innerLevelRolledUp = this.getInnerLevelById(idInnerLevel)
-        console.log("кликнули контейнер " + idInnerLevel)
-        do{
+        console.log("сворачиваем " + innerLevelRolledUp?.id + " isRo " + innerLevelRolledUp?.isRolledUp)
+        while (innerLevelRolledUp !== undefined){
             //его последний элемент
             const lastBlock = innerLevelRolledUp?.getLastNodeId()
             console.log("его последний элемент " + lastBlock)
@@ -177,12 +176,9 @@ export class ContainerKeeper {
                 innerLevelRolledUp!!.isRolledUp = isRolledUp
                 console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
             }
-        }while (innerLevelRolledUp !== undefined)
+        }
 
-        this.members.forEach(item => {
-            if (item.isRolledUp)
-                this._renderMembers.push(item)
-        })
+
     }
 
 }
