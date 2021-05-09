@@ -167,13 +167,11 @@ export class ContainerKeeper {
         while (innerLevelRolledUp !== undefined){
             //его последний элемент
             const lastBlock = innerLevelRolledUp?.getLastNodeId()
-            console.log("его последний элемент " + lastBlock)
-            innerLevelRolledUp = undefined
             //получаем следующий контейнер по значению родителя
             innerLevelRolledUp = this.getInnerLevelByParentId(lastBlock!!)
-            console.log("контейнер " + innerLevelRolledUp)
+            console.log("контейнер " + innerLevelRolledUp?.id)
             if(innerLevelRolledUp !== undefined){
-                innerLevelRolledUp!!.isRolledUp = isRolledUp
+                innerLevelRolledUp!!.isRolledUp = !innerLevelRolledUp!!.isRolledUp
                 console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
             }
         }

@@ -133,16 +133,11 @@ export class InnerLevelContainer {
     }
 
     getLastNodeId(): string | null {
-        this._content.forEach(item =>{
-            console.log("Я " + item.getId() + " имею соседа " + item.getNeighborId() + " мой парент " + item.getParentId())
-        })
         //первый блок в контейнере
         let idStart: string = this.getFirstNode()!!
-        console.log("Первый " + idStart)
         let resultId: string | null = null
-
         let block = getBlockById(idStart)
-        console.log("Сосед " + block?.getNeighborId())
+
         while (block?.getNeighborId().localeCompare(DEFAULT_FOR_LINKS)) {
             let nextBlock = getBlockById(block?.getNeighborId())
             resultId = nextBlock?.getId()!!
@@ -160,11 +155,10 @@ export class InnerLevelContainer {
         // renderContent = this._content
 
         if (idILRolledUp.localeCompare("empty")) {
-            // console.log("Не дефолтное значение " + this.id + " isRolled" + this.isRolledUp)
             if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
                 renderContent.push(getBlockById(this.getFirstNode()!!)!!)
             } else {
-                if(this.id.localeCompare(idILRolledUp) && !this.isRolledUp)
+                if(!this.isRolledUp)
                     this.content.forEach(item => renderContent.push(item))
             }
         } else {
