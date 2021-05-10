@@ -11,6 +11,8 @@ import {
 } from "../../assets/strings/errorMessadges";
 import {IBlock} from "../../components/editor/blocks/primitives/bocks/IBlock";
 import {IConnect} from "../../components/editor/blocks/primitives/connects/IConnect";
+import {containerKeeper} from "../../components/editor/panel/EditPanel";
+import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
 
 const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()
@@ -20,7 +22,7 @@ export function getConnects() {
 }
 
 export function getBlock() {
- return blocks
+    return blocks
 }
 
 /**
@@ -59,11 +61,14 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
 
             //установить соседей
-            // settingUpNeighborhood(idParent, block.getId())
+            settingUpNeighborhood(block.getParentId(), block.getId())
             //прерасчитать координаqты
-            // recalculationCoorByEvent(block.getId())
+            recalculationCoorByEvent(block.getId(), block.getParentId())
+            containerKeeper.addBlockToInnerLevel(block)
+
+
             // ff(idParent, block.getId())
-            console.log("Связей " + connects.length)
+
         } catch (e) {
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: ERROR_ADDING_BLOCK
@@ -168,19 +173,27 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
         const idPastNeighborBlock = parentBlock?.getNeighborId()
         //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
         parentBlock?.setNeighborId(idNewBlock)
-        newBlock?.setParentId(idParentBlock)
 
         //если у блока были соседи до этого
-        if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")) {
+        if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")
+        && idPastNeighborBlock.localeCompare(idNewBlock)) {
 
             const pastNeihborBlock = getBlockById(idPastNeighborBlock)
+            // console.log("neighborBlock " + pastNeihborBlock?.getId() + " parent " + pastNeihborBlock?.getParentId()
+            //     + " neighbor " + pastNeihborBlock?.getNeighborId())
             newBlock?.setNeighborId(idPastNeighborBlock)
             pastNeihborBlock?.setParentId(idNewBlock)
+
             searchBlockBeUpdate(pastNeihborBlock!!)
         }
-
+        // console.log("newBlock " + newBlock?.getId() + " parent " + newBlock?.getParentId()
+        //     + " neighbor " + newBlock?.getNeighborId())
         searchBlockBeUpdate(newBlock!!)
+        // console.log("parentBlock " + parentBlock?.getId() + " parent " + parentBlock?.getParentId()
+        //     + " neighbor " + parentBlock?.getNeighborId())
         searchBlockBeUpdate(parentBlock!!)
+
+
     }
 }
 

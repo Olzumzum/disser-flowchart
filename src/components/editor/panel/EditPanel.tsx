@@ -73,7 +73,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-            containerKeeper.addBlockToInnerLevel(block)
+
         })
     }, [])
 
@@ -134,9 +134,9 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block2, block.getId()
             )
 
-            containerKeeper.addBlockToInnerLevel(block)
-            containerKeeper.addBlockToInnerLevel(block1)
-            containerKeeper.addBlockToInnerLevel(block2)
+            // containerKeeper.addBlockToInnerLevel(block)
+            // containerKeeper.addBlockToInnerLevel(block1)
+            // containerKeeper.addBlockToInnerLevel(block2)
 
         })
     }, [])

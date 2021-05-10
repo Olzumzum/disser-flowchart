@@ -1,12 +1,13 @@
 import {getStyleEditPanel} from "../panel/EditPanel";
-import {getBlockById, searchBlockBeUpdate} from "../../../store/action-creators/blocks";
+import {getBlockById} from "../../../store/action-creators/blocks";
 import {convertStyleToReadableFormat} from "./elementSizeCalc";
 import {getStyleParentBlock} from "../blocks/primitives/bocks/ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
-import {deleteConnect, ff} from "../connections/ConnectionPainter";
+import {deleteConnect} from "../connections/ConnectionPainter";
 import {getBlockStyle} from "../blocks/primitives/bocks/Block";
 import {getConditionBlockStyle} from "../blocks/primitives/bocks/Condition";
+import {IBlock} from "../blocks/primitives/bocks/IBlock";
 
 
 export const MIN_BLOCKS_DISTANCE = 15;
@@ -136,29 +137,59 @@ function calcDistanceBlocks(idBlock: string | null, typeBlock: string | null, pa
  * перерасчет координат при изменениях
  * @param idChangedBlock - id блока, который был изменен
  */
-export function recalculationCoorByEvent(idChangedBlock: string) {
+export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlock: string) {
 
     let changedBlock = getBlockById(idChangedBlock)
+    let lastParentBlock = getBlockById(idLastParentBlock)
+    console.log("changeBLock " + idChangedBlock)
+    let newCoor: number[]
+    let neighborChangedBlock: IBlock | undefined
+
+    let parentBlock = lastParentBlock
     while (changedBlock?.getNeighborId().localeCompare("-1")) {
         const idNeighbor = changedBlock?.getNeighborId()
-        //подсчет новых координат соседа
-        const newCoor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
+        neighborChangedBlock = calcCoorByTypeBlock(parentBlock!!, changedBlock, idNeighbor)
 
-        //получение экземпляра соседа и обновление координат
-        const neighborChangedBlock = getBlockById(idNeighbor)
-        //стираем старую связь
-        deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
-
-        neighborChangedBlock?.setLeft(newCoor[0])
-        neighborChangedBlock?.setTop(newCoor[1])
-
-        //обновление блока
-        searchBlockBeUpdate(neighborChangedBlock!!)
-
-        ff(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+        // //подсчет новых координат соседа
+        // const newCoor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
+        //
+        // //получение экземпляра соседа и обновление координат
+        // const neighborChangedBlock = getBlockById(idNeighbor)
+        // // //стираем старую связь
+        // deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+        // //
+        // neighborChangedBlock?.setLeft(newCoor[0])
+        // neighborChangedBlock?.setTop(newCoor[1])
+        //
+        // //обновление блока
+        // searchBlockBeUpdate(neighborChangedBlock!!)
+        //
+        // // ff(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+        parentBlock = changedBlock
         changedBlock = neighborChangedBlock
+        console.log("neighbor " + neighborChangedBlock)
 
     }
+}
+
+
+function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighbor: string): IBlock | undefined {
+    let coor: number[]
+    let neighborChangedBlock: IBlock | undefined
+    switch (parentBlock?.getTypeBlock()) {
+        case BlockTypes.BLOCK:
+            //подсчет новых координат соседа
+            coor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
+            neighborChangedBlock = getBlockById(idNeighbor)
+            deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+            neighborChangedBlock?.setLeft(coor[0])
+            neighborChangedBlock?.setTop(coor[1])
+            break;
+        case BlockTypes.CONDITION:
+
+            break;
+    }
+    return neighborChangedBlock
 }
 
 /**
