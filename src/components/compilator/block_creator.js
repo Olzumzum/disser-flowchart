@@ -31,8 +31,8 @@ export function CreateBlockContent(block_start, c_t){
 export function safeCurrentPosition(){
     let c_p = getCurrentPosition();
     let block = {
-        pos: c_p.pos,
-        line: c_p.line
+        line: c_p.line,
+        pos: c_p.pos
     };
     return block;
 }

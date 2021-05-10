@@ -22,6 +22,10 @@ export const text_info = {
     text: "",
 }
 
+export function updateText(line, text){
+    text_info.text[line] = text;
+}
+
 //функция создания
 export function newText(lang, text) {
     text_info.lang = lang;
@@ -155,7 +159,7 @@ export function search_content(symb_block, text) {
     let line, pos;
     let start_pos, end_pos;
 
-    if (text === undefined) {
+    if (typeof text === "undefined") {
         text = getTextInfo().text;
         let current_pos = getCurrentPosition();
         line = current_pos.line;
@@ -196,29 +200,32 @@ export function search_content(symb_block, text) {
     }
 }
 
-export function search_comment(params) {
+export function search_comment() {
+    let params = get_language_params("",getTextInfo().lang);
     let text = getTextInfo().text;
-    let c_p = getCurrentPosition();
-    let block_start;
+    let c_p = safeCurrentPosition();
+    let comment_start;
     let comment = "";
     let comment_pos = new_search(params.single_line_comment, c_p.pos)
     if (comment_pos != -1) {
-        block_start = {
+        let block_start = safeCurrentPosition();
+        comment_start = {
             pos: comment_pos,
             line: c_p.line
         };
-        updateCurrentPosition(text[c_p.line].length - 1);
-        comment = content_maker(block_start);
+        updateCurrentPosition(text[c_p.line].length);
+        comment = content_maker(comment_start);
+        updateText(c_p.line, text[c_p.line].substring(0, comment_start.pos));
         updateCurrentPosition(block_start.pos, block_start.line);
     } else {
         comment_pos = new_search(params.multi_line_comment[0], c_p.pos);
         if (comment_pos != -1) {
-            block_start = {
+            comment_start = {
                 pos: comment_pos,
                 line: c_p.line
             };
             if (search_content(params.multi_line_comment))
-                comment = content_maker(block_start);
+                comment = content_maker(comment_start);
         }
     }
     return comment;
@@ -328,7 +335,48 @@ export function string_check(symb, text, pos) {
                 if (flag == 1)
                     return true;
             } else {
-                if (check_pos << symb_pos) {
+                if (check_pos < symb_pos) {
+                    if (flag == 1)
+                        flag--;
+                    else
+                        flag++;
+                    check_pos = params.string_symbols[i].length;
+                } else if (flag == 1)
+                    return true;
+                else
+                    break;
+
+            }
+        }
+        return false;
+    } else
+        return false;
+}
+
+//Проверка, не является ли искомый символ частью текста
+export function param_check(symb, text, pos) {
+    let params = get_language_params('', getTextInfo().lang);
+    let line = 0;
+    if (typeof text === undefined) {
+        text = getTextInfo().text;
+        line = getCurrentPosition().line;
+        pos = getCurrentPosition().pos;
+    }
+    if (typeof pos === undefined)
+        pos = 0;
+
+
+    if (search_result(text[line], symb, pos)) {
+        let symb_pos = search(text[line], symb, pos); //координата искомого символа
+        for (let i = 0; i < params.string_symbols.length; i++) {
+            let flag = 0;
+            let start_pos = 0;
+            let check_pos = search(text[line], params.string_symbols[i], start_pos);
+            if (check_pos == -1) {
+                if (flag == 1)
+                    return true;
+            } else {
+                if (check_pos < symb_pos) {
                     if (flag == 1)
                         flag--;
                     else
