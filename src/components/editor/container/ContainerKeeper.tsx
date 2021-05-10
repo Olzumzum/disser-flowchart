@@ -40,13 +40,11 @@ export class ContainerKeeper {
 
         BlocksEventEmitter.subscribe(ContainerTypes.IS_ROLLED,
             ([isRolled, idInnerLevel]: any) => {
-                console.log("мы кликлуни " + idInnerLevel)
 
                 //последний блок в родительском контейнере
                 const currentInnerLevel = this.getInnerLevelById(idInnerLevel)
                 const parentInnerLevel =
                     this.getInnerLevelByLastNode(currentInnerLevel?.parentId!!, currentInnerLevel?.level!!)
-                console.log("parentInnerLevel " + parentInnerLevel?.id)
 
                 if (parentInnerLevel !== undefined) {
                     parentInnerLevel!!.isNesting = true
@@ -217,13 +215,11 @@ export class ContainerKeeper {
     }
 
     traversingNestingTree(idInnerLevel: string, isRolledUp: boolean) {
-
-        this._members.forEach(item => {
-            console.log("я " + item.id + " isRo " + item.isRolledUp)
-        })
-
         //контейнер, на который кликнули
         let innerLevelRolledUp = this.getInnerLevelById(idInnerLevel)
+        //уровень контейнера на который кликнули, выше него или на том же уровне не скрывать элементы
+        const rolledUpLevel = innerLevelRolledUp?.level
+        console.log("rolledUpInnerLevel " + rolledUpLevel)
         // console.log("сворачиваем " + innerLevelRolledUp?.id + " isRo " + innerLevelRolledUp?.isRolledUp)
         while (innerLevelRolledUp !== undefined) {
             //его последний элемент
@@ -231,7 +227,7 @@ export class ContainerKeeper {
             //получаем следующий контейнер по значению родителя
             innerLevelRolledUp = this.getInnerLevelByParentId(lastBlock!!)
             // console.log("контейнер " + innerLevelRolledUp?.id)
-            if (innerLevelRolledUp !== undefined) {
+            if (innerLevelRolledUp !== undefined && innerLevelRolledUp.level > rolledUpLevel!!) {
                 innerLevelRolledUp!!.isRolledUp = !innerLevelRolledUp!!.isRolledUp
                 // console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
             }
