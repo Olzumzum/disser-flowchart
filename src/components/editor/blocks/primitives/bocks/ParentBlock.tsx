@@ -132,10 +132,6 @@ export class ParentBlock implements IBlock {
     }
 
 
-    get isRolledUp(): boolean {
-        return this._isRolledUp
-    }
-
     //вернуть экземпляр блок
     get blockInstance(): FC<BlockProps> {
         if (this._blockInstance === undefined)
@@ -220,10 +216,8 @@ export class ParentBlock implements IBlock {
         this._parentId = parentId
     }
 
-    getColLine(): number {
-        if (this._blockShape !== undefined)
-            return this._blockShape?.length;
-        else return -1
+    getBlockShape(): LineCanvas[] {
+        return this.blockShape
     }
 
 }

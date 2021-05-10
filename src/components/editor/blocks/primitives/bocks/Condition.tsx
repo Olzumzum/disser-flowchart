@@ -31,9 +31,6 @@ export class Condition implements IBlock {
         this._parentBlock.setBlockShape(this._blockShape)
     }
 
-    getColLine(): number {
-        return this._parentBlock?.getColLine()!!;
-    }
 
     getCommentId(): string {
         return "";
@@ -105,5 +102,9 @@ export class Condition implements IBlock {
 
     setTop(top: number): void {
         this._parentBlock?.setTop(top)
+    }
+
+    getBlockShape(): LineCanvas[] {
+        return this._parentBlock?.getBlockShape()!!;
     }
 }

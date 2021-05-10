@@ -1,4 +1,5 @@
 import {CSSProperties} from "react";
+import {LineCanvas} from "../../../canvas/LineCanvas";
 
 export interface IBlock {
     getId(): string,
@@ -30,7 +31,7 @@ export interface IBlock {
 
     getStyleBlock(): CSSProperties
 
-    getColLine(): number
+    getBlockShape(): LineCanvas[]
 
 
 

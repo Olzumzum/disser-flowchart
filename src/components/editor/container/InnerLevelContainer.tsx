@@ -8,6 +8,8 @@ import {BlocksEventEmitter as BlockEventEmitter, BlocksEventEmitter} from "../Bl
 import {ContainerTypes} from "./ContainerTypes";
 import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
+import {clearLines} from "../canvas/LinePainter";
+import {contextCanvas} from "../canvas/CanvasPainter";
 
 /**
  * Сущность, отвечающая за определенный уровень равный для всех блоков,
@@ -154,6 +156,10 @@ export class InnerLevelContainer {
 
     nestingCheck(idILRolledUp: string): Array<IBlock>{
         let renderContent: Array<IBlock> = new Array<IBlock>()
+        this._content.forEach(item => {
+            clearLines(contextCanvas!!, item.getBlockShape())
+        })
+
         if (idILRolledUp !== undefined && idILRolledUp.localeCompare("empty")) {
 
             if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
