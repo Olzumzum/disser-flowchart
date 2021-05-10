@@ -4,7 +4,7 @@ import React, {CSSProperties} from "react";
 import {ContainerKeeperComponent} from "./ContainerKeeperComponent";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {ContainerTypes} from "./ContainerTypes";
-import {getBlockById} from "../../../store/action-creators/blocks";
+import {getBlock, getBlockById} from "../../../store/action-creators/blocks";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 
 export const styleContainerKeeper: CSSProperties = {
@@ -56,20 +56,23 @@ export class ContainerKeeper {
             })
     }
 
-    // init() {
-    //     const blocks = getBlock()
-    //     if (this._members.length === 0)
-    //         blocks.forEach(item =>
-    //             this.checkLevel(item))
-    // }
+    init(blocks: Array<IBlock>) {
+        // const blocks = getBlock()
+        // if (this._members.length === 0)
+            blocks.forEach(item =>
+                this.addBlockToInnerLevel(item))
+    }
 
     /**
      *
      * @param block
      */
     addBlockToInnerLevel(block: IBlock) {
-        if (!this.innerLevelExists(block))
+
+        if (!this.innerLevelExists(block)) {
+            console.log("Не существует")
             this.createInnerLevel(block)
+        }
     }
 
     /**

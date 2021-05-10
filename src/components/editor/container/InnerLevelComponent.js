@@ -43,7 +43,6 @@ export class InnerLevelComponent extends React.Component {
                  className={id}
                  style={this.props.styleContainer}
             >
-                <div>{id}</div>
                 <Collapse isOpened={isOpened}>
                     {Object.keys(this.props.contentContainer).map((id) =>
                             rendersDragBlock(convert(this.props.contentContainer)[Number(id)], id))

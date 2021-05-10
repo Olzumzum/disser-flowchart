@@ -113,7 +113,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 coorTwoBlocks[2],
                 coorTwoBlocks[3],
                 block.getId(),
-                block.getInnerLevel()+1
+                block.getInnerLevel() + 1
             )!!
             block1.setNeighborId(idBlock2)
 
@@ -127,7 +127,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 coorTwoBlocks[0],
                 coorTwoBlocks[1],
                 idBlock1,
-                block.getInnerLevel()+1
+                block.getInnerLevel() + 1
             )!!
 
             addBlocks(
@@ -175,13 +175,14 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  * Реакция на клик по панели редактирования
  * Запускает процесс создания алгоритма,
  * скрывает надпись-приветствие
- * @param col
+ * @param col - количество элементов в списке
  */
 function startClickPanel(col: number) {
     if (col === 0) {
-        redrewCanvas()
-        document.getElementById("start_title")!!.style.display = "none"
-        BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
+    redrewCanvas()
+
+    document.getElementById("start_title")!!.style.display = "none"
+    BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
     }
 }
 
