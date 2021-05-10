@@ -55,7 +55,7 @@ export class InnerLevelContainer {
         return {
             position: 'absolute',
             zIndex: 2,
-            border: "3px solid",
+            border: "3px dashed #7d7d7d",
             margin: 0,
             top: this._top!!,
             left: this._left!!,

@@ -141,7 +141,6 @@ export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlo
 
     let changedBlock = getBlockById(idChangedBlock)
     let lastParentBlock = getBlockById(idLastParentBlock)
-    console.log("changeBLock " + idChangedBlock)
     let newCoor: number[]
     let neighborChangedBlock: IBlock | undefined
 
@@ -150,24 +149,8 @@ export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlo
         const idNeighbor = changedBlock?.getNeighborId()
         neighborChangedBlock = calcCoorByTypeBlock(parentBlock!!, changedBlock, idNeighbor)
 
-        // //подсчет новых координат соседа
-        // const newCoor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
-        //
-        // //получение экземпляра соседа и обновление координат
-        // const neighborChangedBlock = getBlockById(idNeighbor)
-        // // //стираем старую связь
-        // deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
-        // //
-        // neighborChangedBlock?.setLeft(newCoor[0])
-        // neighborChangedBlock?.setTop(newCoor[1])
-        //
-        // //обновление блока
-        // searchBlockBeUpdate(neighborChangedBlock!!)
-        //
-        // // ff(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
         parentBlock = changedBlock
         changedBlock = neighborChangedBlock
-        console.log("neighbor " + neighborChangedBlock)
 
     }
 }
@@ -177,7 +160,7 @@ function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighb
     let coor: number[]
     let neighborChangedBlock: IBlock | undefined
     if (parentBlock.getInnerLevel() === changedBlock.getInnerLevel()) {
-        console.log("у нас имеется parent " + parentBlock.getInnerLevel() + " и " + changedBlock.getInnerLevel())
+
         switch (parentBlock?.getTypeBlock()) {
             case BlockTypes.BLOCK:
                 //подсчет новых координат соседа
@@ -193,7 +176,6 @@ function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighb
 
                 const heightContainerCondition = containerKeeper.getInnerLevelByParentId(parentBlock.getId())
                 coor[1] += convertStyleToReadableFormat(heightContainerCondition?.getStyle().height)!!*2
-                console.log("Мы в кондишен " + coor[1])
                 changedBlock.setLeft(coor[0])
                 changedBlock.setTop(coor[1])
 

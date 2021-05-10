@@ -13,6 +13,7 @@ import {IBlock} from "../../components/editor/blocks/primitives/bocks/IBlock";
 import {IConnect} from "../../components/editor/blocks/primitives/connects/IConnect";
 import {containerKeeper} from "../../components/editor/panel/EditPanel";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
+import {ff} from "../../components/editor/connections/ConnectionPainter";
 
 const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()
@@ -67,7 +68,7 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             containerKeeper.addBlockToInnerLevel(block)
 
 
-            // ff(idParent, block.getId())
+            // ff(block.getParentId(), block.getId())
 
         } catch (e) {
             dispatch({
@@ -179,18 +180,15 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
         && idPastNeighborBlock.localeCompare(idNewBlock)) {
 
             const pastNeihborBlock = getBlockById(idPastNeighborBlock)
-            // console.log("neighborBlock " + pastNeihborBlock?.getId() + " parent " + pastNeihborBlock?.getParentId()
-            //     + " neighbor " + pastNeihborBlock?.getNeighborId())
+
             newBlock?.setNeighborId(idPastNeighborBlock)
             pastNeihborBlock?.setParentId(idNewBlock)
 
             searchBlockBeUpdate(pastNeihborBlock!!)
         }
-        // console.log("newBlock " + newBlock?.getId() + " parent " + newBlock?.getParentId()
-        //     + " neighbor " + newBlock?.getNeighborId())
+
         searchBlockBeUpdate(newBlock!!)
-        // console.log("parentBlock " + parentBlock?.getId() + " parent " + parentBlock?.getParentId()
-        //     + " neighbor " + parentBlock?.getNeighborId())
+
         searchBlockBeUpdate(parentBlock!!)
 
 

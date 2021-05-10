@@ -15,6 +15,7 @@ import {calcCoorBlockWithTwoBranches, calcCoordinates} from "../calculat_coordin
 import {StartTitleComp} from "./StartTitleComp";
 import {ContainerKeeper} from "../container/ContainerKeeper";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
+import {ff} from "../connections/ConnectionPainter";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -73,7 +74,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block, data[1].idBlock
             )
-
+            ff("-1", block.getId())
         })
     }, [])
 
@@ -133,10 +134,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             addBlocks(
                 block2, block.getId()
             )
-
-            // containerKeeper.addBlockToInnerLevel(block)
-            // containerKeeper.addBlockToInnerLevel(block1)
-            // containerKeeper.addBlockToInnerLevel(block2)
 
         })
     }, [])

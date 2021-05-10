@@ -97,24 +97,30 @@ function createComplexConnection(ctx: CanvasRenderingContext2D,coor: number[],
  */
 export function createOneConnect(ctx: CanvasRenderingContext2D, coor: number[],
                           idItemOne: string, idItemTwo: string) : IConnect | undefined{
-    const line0: LineCanvas = new LineCanvas(coor[0], coor[1], CONNECTION_WIDTH, MIN_BLOCKS_DISTANCE)
+
+    const line0: LineCanvas = new LineCanvas(700, 360, 600, 400)
 
     const connect = new ConnectionBlocks([line0], idItemOne, idItemTwo)
     drawLines(ctx, connect.getConnectLines())
-    arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
+    // arrow(contextCanvas!!, [coor[0], (coor[1] + MIN_BLOCKS_DISTANCE)])
      return connect
 }
 
 export function ff(idParent: string, idNewBlock: string) : IConnect | undefined{
-    const connects = getConnects()
-    const coor = buildConnectOneBlock(idNewBlock, true)
-    let conn: IConnect | undefined
 
-    if (coor !== null) {
-        conn = createOneConnect(contextCanvas!!, coor, idParent, idNewBlock)
-    }
-    connects.push(conn!!)
-    return conn
+    // const connects = getConnects()
+    // const coor = buildConnectOneBlock(idNewBlock, true)
+    // console.log("coor connection " + coor!![0] + " " + coor!![1])
+    // let conn: IConnect | undefined
+    //
+    // if (coor !== null) {
+    //     conn = createOneConnect(contextCanvas!!, coor, idParent, idNewBlock)
+    // }
+    //
+    // connects.push(conn!!)
+    drawLines(contextCanvas!!, [new LineCanvas(700, 400, 700, 450)])
+    // return conn
+    return undefined
 }
 
 /**

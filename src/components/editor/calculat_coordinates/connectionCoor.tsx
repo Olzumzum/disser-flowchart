@@ -69,10 +69,10 @@ export function buildConnectOneBlock(idBlock: string, isLower: boolean): number[
         if (coorConnect !== null)
             if (isLower)
                 return [
-                    coorConnect[0], coorConnect[1],
+                    coorConnect[0], coorConnect[1], coorConnect[0], coorConnect[1] + MIN_BLOCKS_DISTANCE
                 ]
             else return [
-                coorConnect[0], coorConnect[1]- MIN_BLOCKS_DISTANCE,
+                coorConnect[0], coorConnect[1]- MIN_BLOCKS_DISTANCE, coorConnect[0], coorConnect[1] + MIN_BLOCKS_DISTANCE
             ]
 
         else return null;
