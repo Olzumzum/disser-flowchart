@@ -19,8 +19,6 @@ export class CreatorBlock implements IBlockFactory {
         innerLevel: number,
     ): IBlock | undefined {
         switch (typeBlock) {
-            // case BlockTypes.BLOCK_PARENT:
-            //     return new ParentBlock(id, left, top)
             case BlockTypes.BLOCK:
                 return new Block(id, left, top, parentId, innerLevel)
             case BlockTypes.CONDITION:

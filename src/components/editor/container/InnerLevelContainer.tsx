@@ -10,6 +10,7 @@ import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {clearLines} from "../canvas/LinePainter";
 import {contextCanvas} from "../canvas/CanvasPainter";
+import {LineCanvas} from "../canvas/LineCanvas";
 
 /**
  * Сущность, отвечающая за определенный уровень равный для всех блоков,
@@ -31,9 +32,10 @@ export class InnerLevelContainer {
     private _width: number = 0
     private _height: number = 0
 
+    //свернут ли блок
     private _isRolledUp: boolean = false
-    context: boolean = false
-
+    //нажатием на блок вызывалось контекстное меню или нет
+    isContext: boolean = false
     //вложено ли что-то в блок (вложен - если мы свернули детали реализации)
     private _isNesting: boolean = false
 
@@ -43,16 +45,30 @@ export class InnerLevelContainer {
 
         BlockEventEmitter.subscribe(ContextMenuActionType.OVERLAP_CONTEXT_MENU,
             () => {
-                this.context = true
+                this.isContext = true
             })
     }
 
     //возвращает стиль блока
     getStyle(): CSSProperties {
+
         return {
             position: 'absolute',
             zIndex: 2,
             border: "3px solid",
+            margin: 0,
+            top: this._top!!,
+            left: this._left!!,
+            height: this._height,
+            width: this._width,
+        }
+    }
+
+    getDefaultStyle(): CSSProperties {
+        return {
+            position: 'absolute',
+            zIndex: 2,
+            // border: "3px solid",
             margin: 0,
             top: this._top!!,
             left: this._left!!,
@@ -101,15 +117,11 @@ export class InnerLevelContainer {
      * @param e
      */
     click = (e: React.MouseEvent<HTMLElement>) => {
-        console.log("Клик " + this.context)
         if (e.button === 0) {
-            if (this.context) {
-                this.context = false
+            if (this.isContext) {
+                this.isContext = false
             } else {
-                console.log("тут")
-
                 if (this._isNesting){
-
                     BlocksEventEmitter.dispatch(ContainerTypes.CLICK_BY_PARENT,
                         this._id)
                     this._isNesting = false
@@ -145,15 +157,31 @@ export class InnerLevelContainer {
      */
     render(idILRolledUp: string): JSX.Element {
         let renderContent: Array<IBlock> = this.nestingCheck(idILRolledUp)
+    if (renderContent.length !== 0)
+        this.isRolledUp = false
+        let style: CSSProperties
+        if(this._isRolledUp) style = this.getDefaultStyle()
+        else style = this.getStyle()
 
         return (
             <div onClick={this.click}>
-                <InnerLevelComponent id={this._id} isOpened={true}
-                                     styleContainer={this.getStyle()} contentContainer={renderContent}/>
+                <InnerLevelComponent id={this._id}
+                                     isOpened={this._isRolledUp}
+                                     styleContainer={style}
+                                     contentContainer={renderContent}
+                                     top={this._top}
+                                     left={this._left}
+                                     height={this._height}
+                                     width={this._width}
+                />
             </div>
         )
     }
 
+    /**
+     * Проверка свернутости
+     * @param idILRolledUp
+     */
     nestingCheck(idILRolledUp: string): Array<IBlock>{
         let renderContent: Array<IBlock> = new Array<IBlock>()
         this._content.forEach(item => {
@@ -173,8 +201,10 @@ export class InnerLevelContainer {
             // console.log("Дэфолтное значение")
             this.content.forEach(item => renderContent.push(item))
         }
+
         return renderContent
     }
+
 
     get level(): number {
         return this._level;

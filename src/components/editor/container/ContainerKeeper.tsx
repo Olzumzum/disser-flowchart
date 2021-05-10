@@ -31,9 +31,6 @@ export class ContainerKeeper {
             const lastNodeId = this.getInnerLevelById(idParentInner)?.getLastNodeId()!!
             const innerLevel = this.getInnerLevelByLastNode(lastNodeId,
                 getBlockById(lastNodeId)?.getInnerLevel()!!)
-
-
-            console.log("idOnner " + innerLevel?.id)
             BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, [this.members,
                 innerLevel?.id])
         })
@@ -48,7 +45,7 @@ export class ContainerKeeper {
 
                 if (parentInnerLevel !== undefined) {
                     parentInnerLevel!!.isNesting = true
-                    parentInnerLevel!!.context = false
+                    parentInnerLevel!!.isContext = false
                 }
                 this.traversingNestingTree(idInnerLevel, isRolled)
                 BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, [this.members,

@@ -23,7 +23,8 @@ export class InnerLevelComponent extends React.Component {
             id: this.props.id,
             isOpened: this.props.isOpened,
             level: 4,
-            idContainer: this.props.id
+            idContainer: this.props.id,
+            styleContainer: this.props.styleContainer,
         };
 
 
@@ -31,21 +32,23 @@ export class InnerLevelComponent extends React.Component {
             if (!this.state.idContainer.localeCompare(idContainer))
                 this.setState({isOpened: isOpened})
 
+
         })
-
-
     }
+
 
     render() {
         const {isOpened, id, level} = this.state
+        const {top, left, height, width} = this.props
+
         return (
             <div id={id}
                  className={id}
-                 style={this.props.styleContainer}
+                 style={ this.props.styleContainer}
             >
                 <Collapse isOpened={isOpened}>
                     {Object.keys(this.props.contentContainer).map((id) =>
-                            rendersDragBlock(convert(this.props.contentContainer)[Number(id)], id))
+                        rendersDragBlock(convert(this.props.contentContainer)[Number(id)], id))
 
                     }
                 </Collapse>
