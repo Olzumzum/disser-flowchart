@@ -1,4 +1,4 @@
-import {getStyleEditPanel} from "../panel/EditPanel";
+import {containerKeeper, getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById} from "../../../store/action-creators/blocks";
 import {convertStyleToReadableFormat} from "./elementSizeCalc";
 import {getStyleParentBlock} from "../blocks/primitives/bocks/ParentBlock";
@@ -146,7 +146,7 @@ export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlo
     let neighborChangedBlock: IBlock | undefined
 
     let parentBlock = lastParentBlock
-    while (changedBlock?.getNeighborId().localeCompare("-1")) {
+    while (changedBlock?.getNeighborId().localeCompare("-1") && changedBlock !== undefined) {
         const idNeighbor = changedBlock?.getNeighborId()
         neighborChangedBlock = calcCoorByTypeBlock(parentBlock!!, changedBlock, idNeighbor)
 
@@ -176,19 +176,31 @@ export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlo
 function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighbor: string): IBlock | undefined {
     let coor: number[]
     let neighborChangedBlock: IBlock | undefined
-    switch (parentBlock?.getTypeBlock()) {
-        case BlockTypes.BLOCK:
-            //подсчет новых координат соседа
-            coor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
-            neighborChangedBlock = getBlockById(idNeighbor)
-            deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
-            neighborChangedBlock?.setLeft(coor[0])
-            neighborChangedBlock?.setTop(coor[1])
-            break;
-        case BlockTypes.CONDITION:
+    if (parentBlock.getInnerLevel() === changedBlock.getInnerLevel()) {
+        console.log("у нас имеется parent " + parentBlock.getInnerLevel() + " и " + changedBlock.getInnerLevel())
+        switch (parentBlock?.getTypeBlock()) {
+            case BlockTypes.BLOCK:
+                //подсчет новых координат соседа
+                coor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
+                neighborChangedBlock = getBlockById(idNeighbor)
+                deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+                neighborChangedBlock?.setLeft(coor[0])
+                neighborChangedBlock?.setTop(coor[1])
+                break;
+            case BlockTypes.CONDITION:
 
-            break;
-    }
+                coor = [parentBlock.getLeft(), parentBlock.getTop()]
+
+                const heightContainerCondition = containerKeeper.getInnerLevelByParentId(parentBlock.getId())
+                coor[1] += convertStyleToReadableFormat(heightContainerCondition?.getStyle().height)!!*2
+                console.log("Мы в кондишен " + coor[1])
+                changedBlock.setLeft(coor[0])
+                changedBlock.setTop(coor[1])
+
+                neighborChangedBlock = undefined
+                break;
+        }
+    }else neighborChangedBlock = undefined
     return neighborChangedBlock
 }
 
