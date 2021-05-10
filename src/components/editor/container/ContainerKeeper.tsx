@@ -4,6 +4,8 @@ import React, {CSSProperties} from "react";
 import {ContainerKeeperComponent} from "./ContainerKeeperComponent";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {ContainerTypes} from "./ContainerTypes";
+import {getBlockById} from "../../../store/action-creators/blocks";
+import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 
 export const styleContainerKeeper: CSSProperties = {
     position: 'absolute',
@@ -25,8 +27,31 @@ export class ContainerKeeper {
 
     constructor() {
         this._renderMembers = this.members
+        BlocksEventEmitter.subscribe(ContainerTypes.CLICK_BY_PARENT, (idParentInner: string) => {
+            const lastNodeId = this.getInnerLevelById(idParentInner)?.getLastNodeId()!!
+            const innerLevel = this.getInnerLevelByLastNode(lastNodeId,
+                getBlockById(lastNodeId)?.getInnerLevel()!!)
+
+
+            console.log("idOnner " + innerLevel?.id)
+            BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, [this.members,
+                innerLevel?.id])
+        })
+
         BlocksEventEmitter.subscribe(ContainerTypes.IS_ROLLED,
             ([isRolled, idInnerLevel]: any) => {
+                console.log("мы кликлуни " + idInnerLevel)
+
+                //последний блок в родительском контейнере
+                const currentInnerLevel = this.getInnerLevelById(idInnerLevel)
+                const parentInnerLevel =
+                    this.getInnerLevelByLastNode(currentInnerLevel?.parentId!!, currentInnerLevel?.level!!)
+                console.log("parentInnerLevel " + parentInnerLevel?.id)
+
+                if (parentInnerLevel !== undefined) {
+                    parentInnerLevel!!.isNesting = true
+                    parentInnerLevel!!.context = false
+                }
                 this.traversingNestingTree(idInnerLevel, isRolled)
                 BlocksEventEmitter.dispatch(ContainerTypes.HIDE_CONTENT, [this.members,
                     idInnerLevel])
@@ -105,6 +130,10 @@ export class ContainerKeeper {
         return result
     }
 
+    /**
+     * получить уровень вложенности, зная идентификатор родителя, который породил этот уровень
+     * @param parentId
+     */
     getInnerLevelByParentId(parentId: string): InnerLevelContainer | undefined {
         let result: InnerLevelContainer | undefined = undefined
         this._members.forEach(item => {
@@ -115,6 +144,10 @@ export class ContainerKeeper {
         return result
     }
 
+    /**
+     * вернуть уровень вложенности, зная его id
+     * @param id
+     */
     getInnerLevelById(id: string): InnerLevelContainer | undefined {
         let result: InnerLevelContainer | undefined = undefined
         this._members.forEach(item => {
@@ -123,6 +156,34 @@ export class ContainerKeeper {
             }
         })
         return result
+    }
+
+    getInnerLevelByLastNode(idLastNode: string, level: number) {
+        let innerLevelId: string | null = null
+        let resultInnerLevel: InnerLevelContainer | undefined
+
+        const currentLevel = level - 1
+
+        if (currentLevel >= 0) {
+            let block = getBlockById(idLastNode)
+            while (block?.getInnerLevel() === currentLevel) {
+                block = getBlockById(block.getParentId())
+            }
+            //на выходе у нас первый блок уровня
+            if (!block?.getParentId().localeCompare(DEFAULT_FOR_LINKS)) {
+                this._members.forEach(item => {
+                    if (item.level === 0) {
+                        innerLevelId = item.id
+                        resultInnerLevel = this.getInnerLevelById(innerLevelId)
+                    }
+                })
+            } else {
+                innerLevelId = block?.getParentId()
+                resultInnerLevel = this.getInnerLevelByParentId(innerLevelId)
+            }
+
+        }
+        return resultInnerLevel
     }
 
     get members(): any[] {
@@ -158,21 +219,21 @@ export class ContainerKeeper {
     traversingNestingTree(idInnerLevel: string, isRolledUp: boolean) {
 
         this._members.forEach(item => {
-            console.log("я " + item.id + " isRo "+ item.isRolledUp)
+            console.log("я " + item.id + " isRo " + item.isRolledUp)
         })
 
         //контейнер, на который кликнули
         let innerLevelRolledUp = this.getInnerLevelById(idInnerLevel)
-        console.log("сворачиваем " + innerLevelRolledUp?.id + " isRo " + innerLevelRolledUp?.isRolledUp)
-        while (innerLevelRolledUp !== undefined){
+        // console.log("сворачиваем " + innerLevelRolledUp?.id + " isRo " + innerLevelRolledUp?.isRolledUp)
+        while (innerLevelRolledUp !== undefined) {
             //его последний элемент
             const lastBlock = innerLevelRolledUp?.getLastNodeId()
             //получаем следующий контейнер по значению родителя
             innerLevelRolledUp = this.getInnerLevelByParentId(lastBlock!!)
-            console.log("контейнер " + innerLevelRolledUp?.id)
-            if(innerLevelRolledUp !== undefined){
+            // console.log("контейнер " + innerLevelRolledUp?.id)
+            if (innerLevelRolledUp !== undefined) {
                 innerLevelRolledUp!!.isRolledUp = !innerLevelRolledUp!!.isRolledUp
-                console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
+                // console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
             }
         }
 

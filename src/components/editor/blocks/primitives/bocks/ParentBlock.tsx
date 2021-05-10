@@ -74,8 +74,7 @@ export class ParentBlock implements IBlock {
     private _commentId: string = ""
     //массив линий для отрисовки формы блока
     private _blockShape: LineCanvas[] | undefined = undefined
-    //вложено ли что-то в блок
-    private _isNesting: boolean = false
+
     //свернут ли блок
     private _isRolledUp: boolean = false
 

@@ -32,6 +32,9 @@ export class InnerLevelContainer {
     private _isRolledUp: boolean = false
     context: boolean = false
 
+    //вложено ли что-то в блок (вложен - если мы свернули детали реализации)
+    private _isNesting: boolean = false
+
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
         this._parentId = parentId
@@ -40,15 +43,6 @@ export class InnerLevelContainer {
             () => {
                 this.context = true
             })
-    }
-
-
-    get id(): string {
-        return this._id;
-    }
-
-    get parentId(): string | undefined {
-        return this._parentId;
     }
 
     //возвращает стиль блока
@@ -79,6 +73,103 @@ export class InnerLevelContainer {
         return coor
     }
 
+    addContent(value: IBlock) {
+        this._content.push(value)
+        const coor = calcCoorInnerLevelContainer(this.content, this.parentId!!)
+        this._left = coor[0]
+        this._top = coor[1]
+        this._width = coor[2]
+        this._height = coor[3]
+    }
+
+    /**
+     * Возвращает первый в последовательности на уровне блок
+     */
+    getFirstNode(): string | null {
+        let result: string | null = null
+        this.content.forEach(item => {
+            if (!item.getParentId().localeCompare(this._parentId))
+                result = item.getId()
+        })
+        return result
+    }
+
+    /**
+     * обработка нажатия на блок (скрытие, свертка элементов)
+     * @param e
+     */
+    click = (e: React.MouseEvent<HTMLElement>) => {
+        console.log("Клик " + this.context)
+        if (e.button === 0) {
+            if (this.context) {
+                this.context = false
+            } else {
+                console.log("тут")
+
+                if (this._isNesting){
+
+                    BlocksEventEmitter.dispatch(ContainerTypes.CLICK_BY_PARENT,
+                        this._id)
+                    this._isNesting = false
+                } else if(!this.isRolledUp) {
+                    this._isRolledUp = !this._isRolledUp
+
+                    BlocksEventEmitter.dispatch(ContainerTypes.IS_ROLLED, [this._isRolledUp, this._id])
+                }
+            }
+        }
+    }
+
+    /**
+     * Возвращает последний в последовательности блоков на уровне блок
+     */
+    getLastNodeId(): string | null {
+        //первый блок в контейнере
+        let idStart: string = this.getFirstNode()!!
+        let resultId: string | null = null
+        let block = getBlockById(idStart)
+
+        while (block?.getNeighborId().localeCompare(DEFAULT_FOR_LINKS)) {
+            let nextBlock = getBlockById(block?.getNeighborId())
+            resultId = nextBlock?.getId()!!
+            block = nextBlock
+        }
+
+        return resultId
+    }
+
+    /**
+     * отобразить список всех блоков на уровне
+     */
+    render(idILRolledUp: string): JSX.Element {
+        let renderContent: Array<IBlock> = this.nestingCheck(idILRolledUp)
+
+        return (
+            <div onClick={this.click}>
+                <InnerLevelComponent id={this._id} isOpened={true}
+                                     styleContainer={this.getStyle()} contentContainer={renderContent}/>
+            </div>
+        )
+    }
+
+    nestingCheck(idILRolledUp: string): Array<IBlock>{
+        let renderContent: Array<IBlock> = new Array<IBlock>()
+        if (idILRolledUp !== undefined && idILRolledUp.localeCompare("empty")) {
+
+            if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
+
+                // renderContent.push(getBlockById(this.getFirstNode()!!)!!)
+            } else {
+                if(!this.isRolledUp)
+                    this.content.forEach(item => renderContent.push(item))
+            }
+        } else {
+            // console.log("Дэфолтное значение")
+            this.content.forEach(item => renderContent.push(item))
+        }
+        return renderContent
+    }
+
     get level(): number {
         return this._level;
     }
@@ -99,77 +190,20 @@ export class InnerLevelContainer {
         return this._content;
     }
 
-    addContent(value: IBlock) {
-        this._content.push(value)
-        const coor = calcCoorInnerLevelContainer(this.content, this.parentId!!)
-        this._left = coor[0]
-        this._top = coor[1]
-        this._width = coor[2]
-        this._height = coor[3]
+    get id(): string {
+        return this._id;
     }
 
-    getFirstNode(): string | null {
-        let result: string | null = null
-        this.content.forEach(item => {
-            if (!item.getParentId().localeCompare(this._parentId))
-                result = item.getId()
-        })
-        return result
+    get parentId(): string | undefined {
+        return this._parentId;
     }
 
-    /**
-     * обработка нажатия на блок (скрытие, свертка элементов)
-     * @param e
-     */
-    click = (e: React.MouseEvent<HTMLElement>) => {
-        if (e.button === 0) {
-            if (this.context) {
-                this.context = false
-            } else {
-                this._isRolledUp = !this._isRolledUp
-                BlocksEventEmitter.dispatch(ContainerTypes.IS_ROLLED, [this._isRolledUp, this._id])
-            }
-        }
+
+    get isNesting(): boolean {
+        return this._isNesting;
     }
 
-    getLastNodeId(): string | null {
-        //первый блок в контейнере
-        let idStart: string = this.getFirstNode()!!
-        let resultId: string | null = null
-        let block = getBlockById(idStart)
-
-        while (block?.getNeighborId().localeCompare(DEFAULT_FOR_LINKS)) {
-            let nextBlock = getBlockById(block?.getNeighborId())
-            resultId = nextBlock?.getId()!!
-            block = nextBlock
-        }
-
-        return resultId
-    }
-
-    /**
-     * отобразить список всех блоков на уровне
-     */
-    render(idILRolledUp: string): JSX.Element {
-        let renderContent: Array<IBlock> = new Array<IBlock>()
-        // renderContent = this._content
-
-        if (idILRolledUp.localeCompare("empty")) {
-            if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
-                renderContent.push(getBlockById(this.getFirstNode()!!)!!)
-            } else {
-                if(!this.isRolledUp)
-                    this.content.forEach(item => renderContent.push(item))
-            }
-        } else {
-            // console.log("Дэфолтное значение")
-            this.content.forEach(item => renderContent.push(item))
-        }
-        return (
-            <div onClick={this.click}>
-                <InnerLevelComponent id={this._id} isOpened={true}
-                                     styleContainer={this.getStyle()} contentContainer={renderContent}/>
-            </div>
-        )
+    set isNesting(value: boolean) {
+        this._isNesting = value;
     }
 }
