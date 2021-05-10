@@ -1,6 +1,8 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
 import {InnerLevelContainer} from "./InnerLevelContainer";
+import {containerKeeper} from "../panel/EditPanel";
+import {getBlockById} from "../../../store/action-creators/blocks";
 
 /**
  * Рассчитать координаты и размеры контейнера
@@ -44,6 +46,24 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
         height += margin * 2
     }
 
+    // const lastBlock = getBlockById(parentId)
+    //
+    // let nextInnerLevel = containerKeeper.getInnerLevelByParentId(parentId)
+    // let currentLevel = nextInnerLevel?.level!! - 1
+    // // while (nextInnerLevel !== undefined) {
+    // console.log("next " + nextInnerLevel + " curlev " + currentLevel)
+    // if (nextInnerLevel?.level!! > currentLevel) {
+    //     left = nextInnerLevel?.left!!
+    //     top = nextInnerLevel?.top!!
+    //     if (nextInnerLevel?.width!! > width)
+    //         width = nextInnerLevel?.width!!
+    //     if (nextInnerLevel?.height!! > height)
+    //         height += nextInnerLevel?.height!!
+    // }
+    // nextInnerLevel = containerKeeper.getInnerLevelByParentId(nextInnerLevel?.parentId!!)
+    // }
+
+
     return [left, top, width, height]
 }
 
@@ -54,7 +74,7 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
  * @param left
  * @param top
  */
-export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): number[]{
+export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): number[] {
 
     const leftBlock = block.getLeft()
     const topBlock = block.getTop()
@@ -64,12 +84,12 @@ export function calcCoorBlockDisplay(block: IBlock, left: number, top: number): 
 }
 
 export function hideContent(memebers: Array<InnerLevelContainer>,
-                           ): Array<InnerLevelContainer>{
+): Array<InnerLevelContainer> {
     const result = Array<InnerLevelContainer>()
     memebers.forEach(innerLev => {
-        if(innerLev.isRolledUp)
+        if (innerLev.isRolledUp)
             result.push(innerLev)
     })
-    console.log("result " + result.length )
+    console.log("result " + result.length)
     return result
 }

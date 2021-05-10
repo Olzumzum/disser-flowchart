@@ -11,6 +11,7 @@ import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {clearLines} from "../canvas/LinePainter";
 import {contextCanvas} from "../canvas/CanvasPainter";
 import {LineCanvas} from "../canvas/LineCanvas";
+import {containerKeeper} from "../panel/EditPanel";
 
 /**
  * Сущность, отвечающая за определенный уровень равный для всех блоков,
@@ -98,6 +99,15 @@ export class InnerLevelContainer {
         this._top = coor[1]
         this._width = coor[2]
         this._height = coor[3]
+
+        containerKeeper.members.forEach(item => {
+            const c = calcCoorInnerLevelContainer(item.content, item.parentId)
+            item.left = c[0]
+            item.top = c[1]
+            item.width = c[2]
+            item.height = c[3]
+            item.render("")
+        })
     }
 
     /**
@@ -159,6 +169,8 @@ export class InnerLevelContainer {
         let renderContent: Array<IBlock> = this.nestingCheck(idILRolledUp)
     if (renderContent.length !== 0)
         this.isRolledUp = false
+
+
         let style: CSSProperties
         if(this._isRolledUp) style = this.getDefaultStyle()
         else style = this.getStyle()
@@ -177,6 +189,8 @@ export class InnerLevelContainer {
             </div>
         )
     }
+
+
 
     /**
      * Проверка свернутости
@@ -241,5 +255,39 @@ export class InnerLevelContainer {
 
     set isNesting(value: boolean) {
         this._isNesting = value;
+    }
+
+
+    get top(): number {
+        return this._top;
+    }
+
+    set top(value: number) {
+        this._top = value;
+    }
+
+    get left(): number {
+        return this._left;
+    }
+
+    set left(value: number) {
+        this._left = value;
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    set width(value: number) {
+        this._width = value;
+    }
+
+
+    get height(): number {
+        return this._height;
+    }
+
+    set height(value: number) {
+        this._height = value;
     }
 }
