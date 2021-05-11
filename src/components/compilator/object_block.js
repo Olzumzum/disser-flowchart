@@ -9,11 +9,38 @@
 //В НАЧАЛЕ ИДЕТ НЕМНОГО ДРИСНИ ПОД НАЗВАНИЕ ФУНКЦИИ И МАССИВЫ ДЛЯ ЗАПИСИ И ОБНОВЛЕНИЯ ОБЪЕКТОВ-БЛОКОВ
 
 //функция создает объект и записывает его в массив
+import {post_action, pre_action} from "./var_list";
+import {getTextInfo, search_result} from "./text_searcher";
+import {get_language_params} from "./constructions";
+
+
+//Функция создает сначала блоки с предобработкой данных, затем основной блок, затем блок с постобработкой данных
+export function create(p_id, n_id, type, in_lvl, content,
+                       in_str_numb, param, com){
+
+    while (pre_action.length != 0){
+        let action_block = pre_action.shift();
+        createBlock(p_id, n_id, "change_value", in_lvl, pre_action.shift(), 0, "", "");
+        n_id = getLastBlockInfo().id
+    }
+
+    createBlock(p_id, n_id, type, in_lvl, content, in_str_numb, param, com);
+
+    n_id = getLastBlockInfo().id;
+    while (post_action.length != 0){
+        createBlock(p_id, n_id, "change_value", in_lvl, post_action.shift(), 0, "", "");
+        n_id = getLastBlockInfo().id
+    }
+}
+
+
+//функция создает объект и записывает его в массив
 export function createBlock(p_id, n_id, type, in_lvl, content,
                             in_str_numb, param, com){
     let id = obj_array.length;
     obj_array[id] = object_block(id, p_id, n_id, type, in_lvl, content, in_str_numb, param, com);
 }
+
 
 //функция обновляет содержимое объекта-блока
 export function updateBlockContent(id, content){

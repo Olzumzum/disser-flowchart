@@ -32,7 +32,7 @@ export const cpp_action_operators = [
 
 export const cpp_single_line_comment = '//';
 export const cpp_multi_line_comment = ['/*', '*/'];
-
+export const cpp_unary_operator = ['++', '--'];
 export const cpp_data_in = "cin";
 export const cpp_data_out = "cout";
 export const cpp_input_construction = {
@@ -61,6 +61,7 @@ export function get_language_params(type, lang) {
     let data_in, data_out;
     let input_construction, output_construction;
     let string_symbols;
+    let unary_operator;
     switch (lang) {
         case 'cpp':
             inic_construction = cpp_inic_construction;
@@ -72,6 +73,7 @@ export function get_language_params(type, lang) {
             input_construction = cpp_input_construction;
             output_construction = cpp_output_construction;
             string_symbols = cpp_string_symbols;
+            unary_operator = cpp_unary_operator;
             break;
         default:
             break;
@@ -107,6 +109,7 @@ export function get_language_params(type, lang) {
         input_construction: input_construction,
         output_construction: output_construction,
         string_symbols: string_symbols,
+        unary_operator: unary_operator,
     }
     return params;
 
