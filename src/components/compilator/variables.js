@@ -55,7 +55,9 @@ export function search_init_construction(p_id, n_id, in_lvl) {
             return false;
     }
     block_start = safeCurrentPosition();
-    if (search_result(text[line], params.block_params[0])) {
+    if ((search_result(text[line], params.block_params[0])&&
+        ((!search_result(text[line], "="))||
+            ((search_result(text[line], "=")) && ((search(text[line], "=")) > search(text[line], params.block_params[0])))))) {
         if (!string_check(params.block_params[0], text, search(text, params.block_params[0]))) {
             let flag = true;
             for (let i = 0; i < function_list.length; i++) {

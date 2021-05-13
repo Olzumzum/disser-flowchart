@@ -83,12 +83,13 @@ function search_block(p_id, n_id, in_lvl) {
 
 
     let otladka = getCurrentPosition();
+    let otl = obj_array;
     let block_id = false;
 
     let params = get_language_params('', getTextInfo().lang);
     updateCurrentComment(search_comment());
     let comcheck = getCurrentComment();
-    let text_test =getTextInfo().text;
+    let text_test = getTextInfo().text;
 
 
     let in_str_numb = 0;
@@ -118,19 +119,62 @@ function search_block(p_id, n_id, in_lvl) {
                 let line = c_p.line;
                 text = text[line];
                 let pos = c_p.pos;
-                if (text.substring(pos, text.length) !=
-                    search_unary_operator(text.substring(pos, text.length))) {
-                    let content = "";
-                    if (pre_action.length != 0)
-                        content = pre_action.shift();
-                    else if (post_action.length != 0)
-                        content = post_action.shift();
-                    createBlock(p_id, n_id, "change_value", in_lvl, content, 0, "", getCurrentComment());
-                    block_id = getLastBlockInfo().id;
-                    updateCurrentPosition(getTextInfo().text[getCurrentPosition().line].length);
+
+                let pos_end = new_search(params.block_end);
+
+                if (pos_end == -1)
+                    pos_end = text.length;
+
+                let start = safeCurrentPosition();
+                updateCurrentPosition(pos_end);
+                let content = content_maker(start, true);
+                if (content.length != 0) {
+                    let pos_param = search(content, params.block_params[0])
+                    if (pos_param != -1) {
+                        let func_name = content.substring(0, pos_param).replaceAll(" ", "");
+                        updateCurrentPosition(start.pos, start.line);
+                        let ns = new_search(params.block_params[0]);
+                        updateCurrentPosition(ns);
+                        start = safeCurrentPosition();
+                        search_content(params.block_params);
+                        let parameter = content_maker(start);
+                        parameter = search_unary_operator(parameter);
+                        create(p_id, n_id, "function_call", in_lvl, func_name, 0, parameter, getCurrentComment());
+                        block_id = getLastBlockInfo().id;
+                        updateCurrentPosition(pos_end + 1);
+                    } else {
+                        search_unary_operator(content);
+                        if (pre_action.length != 0)
+                            content = pre_action.shift();
+                        else if (post_action.length != 0)
+                            content = post_action.shift();
+                        createBlock(p_id, n_id, "change_value", in_lvl, content, 0, "", getCurrentComment());
+                        block_id = getLastBlockInfo().id;
+                        updateCurrentPosition(pos_end + 1);
+                    }
+
+
+                    /*  } else {
+                          let text = getTextInfo().text;
+                          let c_p = getCurrentPosition();
+                          let line = c_p.line;
+                          text = text[line];
+                          let pos = c_p.pos;
+                          if (text.substring(pos, text.length) !=
+                              search_unary_operator(text.substring(pos, text.length))) {
+                              let content = "";
+                              if (pre_action.length != 0)
+                                  content = pre_action.shift();
+                              else if (post_action.length != 0)
+                                  content = post_action.shift();
+                              createBlock(p_id, n_id, "change_value", in_lvl, content, 0, "", getCurrentComment());
+                              block_id = getLastBlockInfo().id;
+                              updateCurrentPosition(getTextInfo().text[getCurrentPosition().line].length);
+                       */
                 }
                 //переход на следующую строку
                 else {
+
                     if (pos == text.length)
                         updateCurrentPosition(0, getCurrentPosition().line + 1);
                     return n_id;
@@ -170,6 +214,8 @@ export function switch_block_construction(p_id, n_id, in_lvl, construction) {
             block_start = safeCurrentPosition();
             search_content(params.block_params);
             parameter = content_maker(block_start, true);
+
+            parameter = ccc + "" + parameter;
             constr_type = construction_type_find(construction);
             block_start_finder(constr_type, params);
 
