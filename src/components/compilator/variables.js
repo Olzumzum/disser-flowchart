@@ -44,6 +44,7 @@ export function search_init_construction(p_id, n_id, in_lvl) {
     let type;
 
 
+
     for (var i = 0; i < i_c.length; i++) {
         if (search_result(text[line], i_c[i], pos)) {
             start_pos = search(text[line], i_c[i]);
@@ -87,12 +88,12 @@ export function search_init_construction(p_id, n_id, in_lvl) {
         pos: end_pos
     };
     updateCurrentPosition(end_pos, line);
-    return [block_start, i_c[i]];
+    return [block_start, type];
 
 }
 
 //основная функция по нахождению объявления, определению переменных и созданию объекта
-function variables_searcher(text, type, p_id, n_id, in_lvl) {
+export function variables_searcher(text, type, p_id, n_id, in_lvl) {
     let params = get_language_params("", getTextInfo().lang);
     let variable;
     let pos = 0, pos_equal = -1, pos_dat = -1, pos_s = 0;
