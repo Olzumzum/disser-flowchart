@@ -1,3 +1,5 @@
+import {getTextInfo} from "./text_searcher";
+
 export const constructions_list = [
     'while',
     'for',
@@ -45,6 +47,7 @@ export const cpp_output_construction = {
     middle_symb: "<<",
     end_symb: ";"
 };
+export const cpp_for_each_symbol = ":";
 export const cpp_string_symbols = ['"', "'", "`"];
 
 //выбор набора конструкций для ранзых ЯП и ЯК
@@ -62,6 +65,7 @@ export function get_language_params(type, lang) {
     let input_construction, output_construction;
     let string_symbols;
     let unary_operator;
+    let for_each_symbol;
     switch (lang) {
         case 'cpp':
             inic_construction = cpp_inic_construction;
@@ -74,6 +78,7 @@ export function get_language_params(type, lang) {
             output_construction = cpp_output_construction;
             string_symbols = cpp_string_symbols;
             unary_operator = cpp_unary_operator;
+            for_each_symbol = cpp_for_each_symbol;
             break;
         default:
             break;
@@ -110,8 +115,17 @@ export function get_language_params(type, lang) {
         output_construction: output_construction,
         string_symbols: string_symbols,
         unary_operator: unary_operator,
+        for_each_symbol: for_each_symbol,
     }
     return params;
 
 }
 
+export function get_array_size(array){
+    switch (getTextInfo().lang){
+        case "cpp":
+            return "sizeof(" + array +") / sizeof(" + array + "[0] )";
+
+            break;
+    }
+}

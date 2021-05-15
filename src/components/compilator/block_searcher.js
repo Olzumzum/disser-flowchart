@@ -1,6 +1,6 @@
 //пакет функций по нахождению блоков ЯК в тексте кода
 
-import {get_language_params, c_inic_construction, constructions_list} from "./constructions";
+import {get_language_params, c_inic_construction, constructions_list, get_array_size} from "./constructions";
 import {
     end_flag, get_end_flag,
     getCurrentComment,
@@ -199,6 +199,7 @@ function for_parameter(text, p_id, n_id, in_lvl) {
     let start_pos = 1;
     let end_pos = 0;
     let type = "";
+    let block;
     let i_c = params.inic_construction;
     let parameter;
     text = text.substring(search(text, params.block_params[0]) + params.block_params[0].length, text.length - 1);
@@ -207,8 +208,56 @@ function for_parameter(text, p_id, n_id, in_lvl) {
             break;
         default:
             let param_blocks = delitel_strok(text, params.block_end);
-            let inic_block = param_blocks.shift() + params.block_end;
-            if (inic_block.replaceAll(" ", "").length != 0) {
+            //если использован блок for
+            if (param_blocks.length > 1) {
+                let inic_block = param_blocks.shift() + params.block_end;
+                if (inic_block.replaceAll(" ", "").length != 0) {
+                    for (var i = 0; i < i_c.length; i++) {
+                        if (search_result(inic_block, i_c[i])) {
+                            start_pos = search(inic_block, i_c[i]);
+                            end_pos = start_pos + i_c[i].length;
+                            type = i_c[i];
+                            break;
+                        }
+                    }
+                    if (type != "") {
+                        variables_searcher(inic_block.substring(end_pos, inic_block.length), type, p_id, n_id, in_lvl);
+                        let tttt = obj_array;
+                    }
+                }
+                parameter = param_blocks.shift();
+
+                let action_blocks = delitel_strok(param_blocks.shift(), ',');
+                for (let i = 0; i < action_blocks.length; i++) {
+                    if (action_blocks[i] != search_unary_operator(action_blocks[i])) {
+                        if (post_action.length != 0)
+                            action_blocks[i] = post_action.pop();
+                        else if (pre_action.length != 0)
+                            action_blocks = pre_action.pop();
+                    }
+                }
+
+                block = {
+                    parameter: parameter,
+                    action_blocks: action_blocks
+                };
+            } else {
+                block = param_blocks.shift();
+                let inic_block = block.substring(0, search(block, params.for_each_symbol));
+                let arr_name = block.substring(search(block, params.for_each_symbol) + params.for_each_symbol.length, block.length).replaceAll(" ", "");
+
+                let var_name = "iteration_variable";
+                pre_action.push(var_name + " = 0");
+
+                let tttttttttt= pre_action;
+              //  createBlock(p_id, n_id, "initializing", in_lvl, var_name+ " = 0", 0, type, "");
+                inic_block = inic_block + " = " + arr_name + "[" + var_name + "]";
+                pre_action.push(inic_block);
+                let ttttttttttww= pre_action;
+                parameter = var_name + " < " + get_array_size(arr_name);
+                let action_blocks = [];
+                action_blocks.push(var_name + " = " + var_name + " + 1");
+
                 for (var i = 0; i < i_c.length; i++) {
                     if (search_result(inic_block, i_c[i])) {
                         start_pos = search(inic_block, i_c[i]);
@@ -217,27 +266,15 @@ function for_parameter(text, p_id, n_id, in_lvl) {
                         break;
                     }
                 }
-                if (type != "") {
-                    variables_searcher(inic_block.substring(end_pos, inic_block.length), type, p_id, n_id, in_lvl);
-                    let tttt = obj_array;
-                }
-            }
-            parameter = param_blocks.shift();
+                if (type != "")
+                    inic_block = inic_block.substring(search(inic_block, type) + type.length, inic_block.length);
 
-            let action_blocks = delitel_strok(param_blocks.shift(), ',');
-            for (let i = 0; i < action_blocks.length; i++) {
-                if (action_blocks[i] != search_unary_operator(action_blocks[i])) {
-                    if (post_action.length != 0)
-                        action_blocks[i] = post_action.pop();
-                    else if (pre_action.length != 0)
-                        action_blocks = pre_action.pop();
-                }
+                action_blocks.push(inic_block);
+                block = {
+                    parameter: parameter,
+                    action_blocks: action_blocks
+                };
             }
-
-            let block = {
-                parameter: parameter,
-                action_blocks: action_blocks
-            };
             return block;
     }
 }

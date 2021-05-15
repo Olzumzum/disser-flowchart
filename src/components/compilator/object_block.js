@@ -19,7 +19,6 @@ export function create(p_id, n_id, type, in_lvl, content,
                        in_str_numb, param, com){
 
     while (pre_action.length != 0){
-        let action_block = pre_action.shift();
         createBlock(p_id, n_id, "change_value", in_lvl, pre_action.shift(), 0, "", "");
         n_id = getLastBlockInfo().id
     }
