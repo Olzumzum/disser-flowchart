@@ -243,20 +243,11 @@ function for_parameter(text, p_id, n_id, in_lvl) {
                 };
             } else {
                 block = param_blocks.shift();
-                let inic_block = block.substring(0, search(block, params.for_each_symbol));
-                let arr_name = block.substring(search(block, params.for_each_symbol) + params.for_each_symbol.length, block.length).replaceAll(" ", "");
 
                 let var_name = "iteration_variable";
-                pre_action.push(var_name + " = 0");
+                createBlock(p_id, n_id, "initializing", in_lvl, var_name + " = 0", 0, params.integer_declaring, "");
 
-                let tttttttttt= pre_action;
-              //  createBlock(p_id, n_id, "initializing", in_lvl, var_name+ " = 0", 0, type, "");
-                inic_block = inic_block + " = " + arr_name + "[" + var_name + "]";
-                pre_action.push(inic_block);
-                let ttttttttttww= pre_action;
-                parameter = var_name + " < " + get_array_size(arr_name);
-                let action_blocks = [];
-                action_blocks.push(var_name + " = " + var_name + " + 1");
+                let inic_block = block.substring(0, search(block, params.for_each_symbol));
 
                 for (var i = 0; i < i_c.length; i++) {
                     if (search_result(inic_block, i_c[i])) {
@@ -266,9 +257,16 @@ function for_parameter(text, p_id, n_id, in_lvl) {
                         break;
                     }
                 }
-                if (type != "")
-                    inic_block = inic_block.substring(search(inic_block, type) + type.length, inic_block.length);
 
+                inic_block = inic_block.substring(end_pos, inic_block.length).replaceAll(" ", "");
+                let arr_name = block.substring(search(block, params.for_each_symbol) + params.for_each_symbol.length, block.length).replaceAll(" ", "");
+
+                inic_block = inic_block + " = " + arr_name + "[" + var_name + "]";
+                createBlock(p_id, n_id, "initializing", in_lvl, inic_block, 0, type, "");
+
+                parameter = var_name + " < " + get_array_size(arr_name);
+                let action_blocks = [];
+                action_blocks.push(var_name + " = " + var_name + " + 1");
                 action_blocks.push(inic_block);
                 block = {
                     parameter: parameter,

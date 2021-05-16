@@ -17,7 +17,6 @@ export const cpp_inic_construction = [
     'int',
     'double'
 ]
-
 export const cpp_action_operators = [
     '=',
     '+=',
@@ -31,7 +30,6 @@ export const cpp_action_operators = [
     '>>=',
     '<<='
 ]
-
 export const cpp_single_line_comment = '//';
 export const cpp_multi_line_comment = ['/*', '*/'];
 export const cpp_unary_operator = ['++', '--'];
@@ -49,6 +47,7 @@ export const cpp_output_construction = {
 };
 export const cpp_for_each_symbol = ":";
 export const cpp_string_symbols = ['"', "'", "`"];
+export const cpp_integer_declaring = "int";
 
 //выбор набора конструкций для ранзых ЯП и ЯК
 export function get_language_params(type, lang) {
@@ -66,6 +65,7 @@ export function get_language_params(type, lang) {
     let string_symbols;
     let unary_operator;
     let for_each_symbol;
+    let integer_declaring;
     switch (lang) {
         case 'cpp':
             inic_construction = cpp_inic_construction;
@@ -79,6 +79,7 @@ export function get_language_params(type, lang) {
             string_symbols = cpp_string_symbols;
             unary_operator = cpp_unary_operator;
             for_each_symbol = cpp_for_each_symbol;
+            integer_declaring = cpp_integer_declaring;
             break;
         default:
             break;
@@ -116,6 +117,7 @@ export function get_language_params(type, lang) {
         string_symbols: string_symbols,
         unary_operator: unary_operator,
         for_each_symbol: for_each_symbol,
+        integer_declaring: integer_declaring,
     }
     return params;
 
