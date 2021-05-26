@@ -1,4 +1,5 @@
 import {CSSProperties, FC} from "react";
+import {redrewCanvas} from "../canvas/CanvasPainter";
 
 interface ZoomButtonProps {
     img: string | undefined,
@@ -12,17 +13,17 @@ export const NAME_PLUS_BUTTON = "plus"
 const styleButton: CSSProperties = {
     width: "35px",
     height: "35px",
-    // border: "0.5px #a0a0a0",
 }
 let scale = 1;
 
 export const ZoomButton: FC<ZoomButtonProps> = ({img, name}) => {
 
-    const clickZoom = () =>{
+    const clickZoom = () => {
         console.log("ZoomClick " + name)
-        if(!name.localeCompare(NAME_MINUS_BUTTON)){
+        if (!name.localeCompare(NAME_MINUS_BUTTON)) {
             scale -= .2;
-           scale = zoom(scale)
+            scale = zoom(scale)
+            redrewCanvas()
         } else {
             scale += .2;
             scale = zoom(scale)
@@ -35,7 +36,7 @@ export const ZoomButton: FC<ZoomButtonProps> = ({img, name}) => {
     )
 }
 
-const zoom =(scale: number) =>{
+const zoom = (scale: number) => {
     const panel = document.getElementById("edit_panel")
     panel!!.style.transform = "scale(" + scale + ")"
     return scale

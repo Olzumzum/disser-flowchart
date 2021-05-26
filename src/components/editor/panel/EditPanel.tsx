@@ -21,8 +21,6 @@ const stylesEditPanel: CSSProperties = {
     float: "right",
     width: "100%",
     height: 600,
-    border: '1px solid black',
-    backgroundColor: 'aqua',
     marginRight: 6,
 }
 
@@ -236,7 +234,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  */
 function startClickPanel(col: number) {
     if (col === 0) {
-    redrewCanvas()
 
     document.getElementById("start_title")!!.style.display = "none"
     BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
