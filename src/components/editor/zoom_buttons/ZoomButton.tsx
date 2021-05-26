@@ -1,5 +1,7 @@
 import {CSSProperties, FC} from "react";
 import {redrewCanvas} from "../canvas/CanvasPainter";
+import {blocksTypedSelector} from "../hooks/blocksTypedSelector";
+import {useActions} from "../hooks/blockActions";
 
 interface ZoomButtonProps {
     img: string | undefined,
@@ -17,6 +19,8 @@ const styleButton: CSSProperties = {
 let scale = 1;
 
 export const ZoomButton: FC<ZoomButtonProps> = ({img, name}) => {
+    const {blocks} = blocksTypedSelector(state => state.blocks)
+    const {fetchBlocks} = useActions()
 
     const clickZoom = () => {
         console.log("ZoomClick " + name)
@@ -24,6 +28,8 @@ export const ZoomButton: FC<ZoomButtonProps> = ({img, name}) => {
             scale -= .2;
             scale = zoom(scale)
             redrewCanvas()
+            fetchBlocks()
+
         } else {
             scale += .2;
             scale = zoom(scale)
