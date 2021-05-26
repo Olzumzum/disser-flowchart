@@ -8,6 +8,8 @@ import {deleteConnect} from "../connections/ConnectionPainter";
 import {getBlockStyle} from "../blocks/primitives/bocks/Block";
 import {getConditionBlockStyle} from "../blocks/primitives/bocks/Condition";
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
+import {getLoopBlockStyle} from "../blocks/primitives/bocks/Loop";
+import {getInOutputBlockStyle} from "../blocks/primitives/bocks/InOutput";
 
 
 export const MIN_BLOCKS_DISTANCE = 15;
@@ -86,8 +88,12 @@ function getSizeBlockByType(typeBlock: string): number[] {
         case BlockTypes.CONDITION:
             styleBlock = getConditionBlockStyle()
             break;
-
-
+        case BlockTypes.LOOP:
+            styleBlock = getLoopBlockStyle()
+            break;
+        case BlockTypes.INOUTPUT:
+            styleBlock = getInOutputBlockStyle()
+            break;
     }
 
     size = [convertStyleToReadableFormat(styleBlock?.width),
@@ -175,14 +181,14 @@ function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighb
                 coor = [parentBlock.getLeft(), parentBlock.getTop()]
 
                 const heightContainerCondition = containerKeeper.getInnerLevelByParentId(parentBlock.getId())
-                coor[1] += convertStyleToReadableFormat(heightContainerCondition?.getStyle().height)!!*2
+                coor[1] += convertStyleToReadableFormat(heightContainerCondition?.getStyle().height)!! * 2
                 changedBlock.setLeft(coor[0])
                 changedBlock.setTop(coor[1])
 
                 neighborChangedBlock = undefined
                 break;
         }
-    }else neighborChangedBlock = undefined
+    } else neighborChangedBlock = undefined
     return neighborChangedBlock
 }
 

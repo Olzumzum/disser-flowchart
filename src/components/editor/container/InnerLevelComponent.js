@@ -18,7 +18,7 @@ export class InnerLevelComponent extends React.Component {
 
     constructor(props) {
         super(props);
-
+//ПОЧЕМУ 4 ЛЕВЕЛ
         this.state = {
             id: this.props.id,
             isOpened: this.props.isOpened,
@@ -35,7 +35,6 @@ export class InnerLevelComponent extends React.Component {
 
         })
     }
-
 
     render() {
         const {isOpened, id, level} = this.state

@@ -34,11 +34,7 @@ export function getBlock() {
 export const fetchBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            // dispatch({
-            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            // })
-
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
@@ -62,12 +58,11 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
 
             //установить соседей
-            settingUpNeighborhood(block.getParentId(), block.getId())
+            // settingUpNeighborhood(block.getParentId(), block.getId())
             //прерасчитать координаqты
             recalculationCoorByEvent(block.getId(), block.getParentId())
             containerKeeper.addBlockToInnerLevel(block)
-
-
+            
             // ff(block.getParentId(), block.getId())
 
         } catch (e) {

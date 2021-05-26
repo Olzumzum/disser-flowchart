@@ -7,6 +7,7 @@ export const BlockTypes = {
     CONDITION: 'condition',
     BLOCK_PARENT: 'block_parent',
     LOOP: 'loop',
-    BLOCK: 'block'
+    BLOCK: 'block',
+    INOUTPUT: 'inoutput'
 
 }

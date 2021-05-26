@@ -138,6 +138,66 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
         })
     }, [])
 
+    //добаввить цикл
+    useEffect(() => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.LOOP_FOR, (data: any) => {
+            //координаты добавляемого блока
+            const coor = calcCoordinates(null, BlockTypes.LOOP, data[1].idBlock)
+            let innerLevel = 0
+
+            // if (data[1].idBlock.localeCompare("-1")) {
+                const parent = getBlockById(data[1].idBlock)
+                innerLevel = parent?.getInnerLevel()!!
+            // }
+
+            const id = generateId()
+            const block = creator.createBlock(
+                id,
+                BlockTypes.LOOP,
+                coor[0],
+                coor[1],
+                data[1].idBlock,
+                innerLevel
+            )!!
+
+
+            addBlocks(
+                block, data[1].idBlock
+            )
+            ff("-1", block.getId())
+        })
+    }, [])
+
+    //добаввить вводы вывод
+    useEffect(() => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.INOUTPUT, (data: any) => {
+            //координаты добавляемого блока
+            const coor = calcCoordinates(null, BlockTypes.INOUTPUT, data[1].idBlock)
+            let innerLevel = 0
+
+            // if (data[1].idBlock.localeCompare("-1")) {
+            const parent = getBlockById(data[1].idBlock)
+            innerLevel = parent?.getInnerLevel()!!
+            // }
+
+            const id = generateId()
+            const block = creator.createBlock(
+                id,
+                BlockTypes.INOUTPUT,
+                coor[0],
+                coor[1],
+                data[1].idBlock,
+                innerLevel
+            )!!
+
+
+            addBlocks(
+                block, data[1].idBlock
+            )
+            ff("-1", block.getId())
+        })
+    }, [])
+
     /**
      * реакция на dnd
      */

@@ -21,8 +21,11 @@ export const BlockConversionManager  = (props: BlockConversionManagerProps) => {
             break;
 
         case BlockTransformationTypes.LOOP_FOR:
-            return BlocksEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR)
+            return BlocksEventEmitter.dispatch(BlockTransformationTypes.LOOP_FOR, [{isInit: false}, {idBlock: idBlock}])
+            break;
+        case BlockTransformationTypes.INOUTPUT:
+            return BlocksEventEmitter.dispatch(BlockTransformationTypes.INOUTPUT, [{isInit: false}, {idBlock: idBlock}])
+            break;
+
     }
-
-
 }
