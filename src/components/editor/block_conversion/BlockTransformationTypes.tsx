@@ -9,4 +9,5 @@ export enum BlockTransformationTypes {
     LOOP_UNTIL = "LOOP_UNTIL",
     ROLLED_UP_BLOCK = "ROLLED_UP",
     DEPLOYED_BLOCK = "DEPLOYED_BLOCK",
+    INOUTPUT = "INTOUTPUT"
 }

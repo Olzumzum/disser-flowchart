@@ -1,24 +1,23 @@
-import {IBlock} from "./IBlock";
-import {getStyleParentBlock, ParentBlock} from "./ParentBlock";
-import {BlockTypes} from "./BlockTypes";
 import {CSSProperties} from "react";
+import {IBlock} from "./IBlock";
+import {ParentBlock} from "./ParentBlock";
 import {LineCanvas} from "../../../canvas/LineCanvas";
-import {getBlockShape} from "../../factory/BlockShapePainter";
+import {getConditionShape, getInOutputShape} from "../../factory/BlockShapePainter";
+import {BlockTypes} from "./BlockTypes";
 
 const blockStyle: CSSProperties = {
     width: "120px",
     height: "120px",
-    margin: "10px",
 }
 
-export function getBlockStyle(){
-    return getStyleParentBlock()
+export function getInOutputBlockStyle(){
+    return blockStyle
 }
 
-export class Block implements IBlock {
+export class InOutput implements IBlock {
     private _parentBlock: ParentBlock | undefined
-    private _blockShape: LineCanvas[]
 
+    private _blockShape: LineCanvas[]
 
     constructor(id: string,
                 left: number,
@@ -28,7 +27,7 @@ export class Block implements IBlock {
     ) {
         this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(),
             parentId, innerLevel, blockStyle)
-        this._blockShape = getBlockShape(blockStyle, left, top)
+        this._blockShape = getInOutputShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
 
@@ -62,7 +61,7 @@ export class Block implements IBlock {
     }
 
     getStyleBlock(): React.CSSProperties {
-        return this._parentBlock?.getStyleBlock()!!;
+        return blockStyle;
     }
 
     getTop(): number {
@@ -70,7 +69,7 @@ export class Block implements IBlock {
     }
 
     getTypeBlock(): string {
-        return BlockTypes.BLOCK;
+        return BlockTypes.INOUTPUT;
     }
 
     render(): JSX.Element {
@@ -116,5 +115,4 @@ export class Block implements IBlock {
     setNeighbourId(id: string): void {
         this._parentBlock?.setNeighbourId(id)
     }
-
 }

@@ -9,6 +9,7 @@ import {ErrorMessage} from "./error/ErrorMessage";
 import Toolbar from "../Toolbar";
 import {EditPanel} from "./panel/EditPanel";
 import {CompilerOutputConsole} from "./panel/CompilerOutputConsole";
+import {OwnerZoomButtons} from "./zoom_buttons/OwnerZoomButtons";
 
 const styles: CSSProperties = {
     width: "100%",
@@ -41,6 +42,7 @@ export const EditorApp: FC = () => {
                         <EditPanel snapToGrid={snapToGridAfterDrop}/>
                         <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                         <ErrorMessage/>
+                        <OwnerZoomButtons/>
                     </Row>
                     {/*<Row>*/}
                     {/*    <CompilerOutputConsole/>*/}

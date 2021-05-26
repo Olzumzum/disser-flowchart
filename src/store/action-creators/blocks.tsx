@@ -34,11 +34,7 @@ export function getBlock() {
 export const fetchBlocks = () => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
-            // dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
-            // dispatch({
-            //     type: BlocksActionTypes.FETCH_BLOCKS_ERROR, payload: null
-            // })
-
+            dispatch({type: BlocksActionTypes.FETCH_BLOCKS})
             dispatch({
                 type: BlocksActionTypes.FETCH_BLOCKS_SUCCESS, payload: blocks
             })
@@ -54,7 +50,7 @@ export const fetchBlocks = () => {
  * добавление нового блока из панели компонентов
  * @param block
  */
-export const addBlocks = (block: IBlock, idParent: string) => {
+export const addBlocks = (block: IBlock) => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             blocks.push(block)
@@ -64,9 +60,8 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             //установить соседей
             settingUpNeighborhood(block.getParentId(), block.getId())
             //прерасчитать координаqты
-            recalculationCoorByEvent(block.getId(), block.getParentId())
+            // recalculationCoorByEvent(block.getId())
             containerKeeper.addBlockToInnerLevel(block)
-
 
             // ff(block.getParentId(), block.getId())
 
@@ -171,9 +166,10 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
 
         const parentBlock = getBlockById(idParentBlock)
         const newBlock = getBlockById(idNewBlock)
-        const idPastNeighborBlock = parentBlock?.getNeighborId()
+        //идентификатор прошлого соседа родителя
+        const idPastNeighborBlock = parentBlock?.getChildId()
         //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
-        parentBlock?.setNeighborId(idNewBlock)
+        parentBlock?.setChildId(idNewBlock)
 
         //если у блока были соседи до этого
         if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")
@@ -181,7 +177,7 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
 
             const pastNeihborBlock = getBlockById(idPastNeighborBlock)
 
-            newBlock?.setNeighborId(idPastNeighborBlock)
+            newBlock?.setChildId(idPastNeighborBlock)
             pastNeihborBlock?.setParentId(idNewBlock)
 
             searchBlockBeUpdate(pastNeihborBlock!!)

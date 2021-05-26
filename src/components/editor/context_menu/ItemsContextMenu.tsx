@@ -9,5 +9,6 @@ export const itemsContexMenu = [
     {id: BlockTransformationTypes.CONDITIONAL_OPERATOR, message: "Условный оператор"},
     {id: BlockTransformationTypes.LOOP_WHILE, message: "Цикл while"},
     {id: BlockTransformationTypes.LOOP_FOR, message: "Цикл for"},
-    {id: BlockTransformationTypes.LOOP_UNTIL, message: "Цикл until"}
+    {id: BlockTransformationTypes.LOOP_UNTIL, message: "Цикл until"},
+    {id: BlockTransformationTypes.INOUTPUT, message: "Блок ввода/вывода"},
 ]

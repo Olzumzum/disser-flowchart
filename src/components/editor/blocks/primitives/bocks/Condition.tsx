@@ -7,8 +7,9 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 
 const blockStyle: CSSProperties = {
-    width: "120px",
+    width: "200px",
     height: "120px",
+    margin: "10px",
 }
 
 export function getConditionBlockStyle(){
@@ -26,7 +27,8 @@ export class Condition implements IBlock {
                 parentId: string,
                 innerLevel: number
     ) {
-        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(), parentId, innerLevel)
+        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(),
+            parentId, innerLevel, blockStyle)
         this._blockShape = getConditionShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }
@@ -48,8 +50,8 @@ export class Condition implements IBlock {
         return this._parentBlock?.getLeft()!!;
     }
 
-    getNeighborId(): string {
-        return this._parentBlock?.getNeighborId()!!;
+    getChildId(): string {
+        return this._parentBlock?.getChildId()!!;
     }
 
     getParameterId(): string {
@@ -88,8 +90,8 @@ export class Condition implements IBlock {
         this._parentBlock?.setLeft(left)
     }
 
-    setNeighborId(neighbor: string): void {
-        this._parentBlock?.setNeighborId(neighbor)
+    setChildId(neighbor: string): void {
+        this._parentBlock?.setChildId(neighbor)
     }
 
     setParameterId(parameterId: string): void {
@@ -106,5 +108,13 @@ export class Condition implements IBlock {
 
     getBlockShape(): LineCanvas[] {
         return this._parentBlock?.getBlockShape()!!;
+    }
+
+    getNeighbourId(): string {
+        return this._parentBlock?.getNeighbourId()!!;
+    }
+
+    setNeighbourId(id: string): void {
+        this._parentBlock?.setNeighbourId(id)
     }
 }

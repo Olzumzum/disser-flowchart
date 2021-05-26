@@ -21,8 +21,6 @@ const stylesEditPanel: CSSProperties = {
     float: "right",
     width: "100%",
     height: 600,
-    border: '1px solid black',
-    backgroundColor: 'aqua',
     marginRight: 6,
 }
 
@@ -72,7 +70,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
             ff("-1", block.getId())
         })
@@ -96,10 +94,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             )!!
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
 
-            parent?.setNeighborId(block.getId())
+            parent?.setChildId(block.getId())
             searchBlockBeUpdate(parent!!)
 
 
@@ -116,10 +114,10 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block.getId(),
                 block.getInnerLevel() + 1
             )!!
-            block1.setNeighborId(idBlock2)
+            block1.setNeighbourId(idBlock2)
 
             addBlocks(
-                block1, block.getId()
+                block1
             )
 
             const block2 = creator.createBlock(
@@ -132,9 +130,69 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             )!!
 
             addBlocks(
-                block2, block.getId()
+                block2
             )
 
+        })
+    }, [])
+
+    //добаввить цикл
+    useEffect(() => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.LOOP_FOR, (data: any) => {
+            //координаты добавляемого блока
+            const coor = calcCoordinates(null, BlockTypes.LOOP, data[1].idBlock)
+            let innerLevel = 0
+
+            // if (data[1].idBlock.localeCompare("-1")) {
+                const parent = getBlockById(data[1].idBlock)
+                innerLevel = parent?.getInnerLevel()!!
+            // }
+
+            const id = generateId()
+            const block = creator.createBlock(
+                id,
+                BlockTypes.LOOP,
+                coor[0],
+                coor[1],
+                data[1].idBlock,
+                innerLevel
+            )!!
+
+
+            addBlocks(
+                block
+            )
+            ff("-1", block.getId())
+        })
+    }, [])
+
+    //добаввить вводы вывод
+    useEffect(() => {
+        BlocksEventEmitter.subscribe(BlockTransformationTypes.INOUTPUT, (data: any) => {
+            //координаты добавляемого блока
+            const coor = calcCoordinates(null, BlockTypes.INOUTPUT, data[1].idBlock)
+            let innerLevel = 0
+
+            // if (data[1].idBlock.localeCompare("-1")) {
+            const parent = getBlockById(data[1].idBlock)
+            innerLevel = parent?.getInnerLevel()!!
+            // }
+
+            const id = generateId()
+            const block = creator.createBlock(
+                id,
+                BlockTypes.INOUTPUT,
+                coor[0],
+                coor[1],
+                data[1].idBlock,
+                innerLevel
+            )!!
+
+
+            addBlocks(
+                block
+            )
+            ff("-1", block.getId())
         })
     }, [])
 
@@ -176,7 +234,6 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
  */
 function startClickPanel(col: number) {
     if (col === 0) {
-    redrewCanvas()
 
     document.getElementById("start_title")!!.style.display = "none"
     BlocksEventEmitter.dispatch(BlockTransformationTypes.ADD_TWO_BLOCKS, [{isInit: true}, {idBlock: "-1"}])
