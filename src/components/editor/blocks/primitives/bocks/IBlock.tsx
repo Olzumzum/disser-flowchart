@@ -17,8 +17,8 @@ export interface IBlock {
     getParentId(): string
     setParentId(parentId: string): void
 
-    getNeighborId(): string
-    setNeighborId(neighbor: string): void
+    getChildId(): string
+    setChildId(neighbor: string): void
 
     getInnerLevel(): number
     setInnerLevel(innerLevel: number): void
@@ -33,6 +33,8 @@ export interface IBlock {
 
     getBlockShape(): LineCanvas[]
 
+    getNeighbourId(): string
+    setNeighbourId(id: string): void
 
 
 }

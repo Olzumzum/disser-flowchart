@@ -4,7 +4,6 @@ import {BlockTypes} from "./BlockTypes";
 import {CSSProperties} from "react";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {getBlockShape} from "../../factory/BlockShapePainter";
-import {contextCanvas} from "../../../canvas/CanvasPainter";
 
 const blockStyle: CSSProperties = {
     width: "120px",
@@ -50,8 +49,8 @@ export class Block implements IBlock {
         return this._parentBlock?.getLeft()!!;
     }
 
-    getNeighborId(): string {
-        return this._parentBlock?.getNeighborId()!!;
+    getChildId(): string {
+        return this._parentBlock?.getChildId()!!;
     }
 
     getParameterId(): string {
@@ -90,8 +89,8 @@ export class Block implements IBlock {
         this._parentBlock?.setLeft(left)
     }
 
-    setNeighborId(neighbor: string): void {
-        this._parentBlock?.setNeighborId(neighbor)
+    setChildId(neighbor: string): void {
+        this._parentBlock?.setChildId(neighbor)
     }
 
     setParameterId(parameterId: string): void {
@@ -108,6 +107,14 @@ export class Block implements IBlock {
 
     getBlockShape(): LineCanvas[] {
         return this._parentBlock?.getBlockShape()!!;
+    }
+
+    getNeighbourId(): string {
+        return this._parentBlock?.getNeighbourId()!!;
+    }
+
+    setNeighbourId(id: string): void {
+        this._parentBlock?.setNeighbourId(id)
     }
 
 }

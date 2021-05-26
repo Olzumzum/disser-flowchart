@@ -60,9 +60,9 @@ export const addBlocks = (block: IBlock) => {
             //установить соседей
             settingUpNeighborhood(block.getParentId(), block.getId())
             //прерасчитать координаqты
-            recalculationCoorByEvent(block.getId())
+            // recalculationCoorByEvent(block.getId())
             containerKeeper.addBlockToInnerLevel(block)
-            
+
             // ff(block.getParentId(), block.getId())
 
         } catch (e) {
@@ -167,9 +167,9 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
         const parentBlock = getBlockById(idParentBlock)
         const newBlock = getBlockById(idNewBlock)
         //идентификатор прошлого соседа родителя
-        const idPastNeighborBlock = parentBlock?.getNeighborId()
+        const idPastNeighborBlock = parentBlock?.getChildId()
         //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
-        parentBlock?.setNeighborId(idNewBlock)
+        parentBlock?.setChildId(idNewBlock)
 
         //если у блока были соседи до этого
         if (idPastNeighborBlock !== undefined && idPastNeighborBlock.localeCompare("-1")
@@ -177,7 +177,7 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
 
             const pastNeihborBlock = getBlockById(idPastNeighborBlock)
 
-            newBlock?.setNeighborId(idPastNeighborBlock)
+            newBlock?.setChildId(idPastNeighborBlock)
             pastNeihborBlock?.setParentId(idNewBlock)
 
             searchBlockBeUpdate(pastNeihborBlock!!)

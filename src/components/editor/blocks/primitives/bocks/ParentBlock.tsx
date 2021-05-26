@@ -48,7 +48,7 @@ export function getStyleParentBlock(): CSSProperties {
 }
 
 
-export class ParentBlock implements IBlock {
+export class ParentBlock{
 
     //уникальный ключ
     private _id: string = ""
@@ -65,7 +65,10 @@ export class ParentBlock implements IBlock {
     //предыдущий блок
     private _parentId: string = DEFAULT_FOR_LINKS
     //последующий блок
-    private _neighborId: string = DEFAULT_FOR_LINKS
+    private _childId: string = DEFAULT_FOR_LINKS
+    //соседний блок
+    private _neighbourId: string = DEFAULT_FOR_LINKS
+
     //уровень вложенности блока
     private _innerLevel: number = 0
     //выражение, которое хранится в скобках
@@ -188,8 +191,8 @@ export class ParentBlock implements IBlock {
         return this._innerLevel;
     }
 
-    getNeighborId(): string {
-        return this._neighborId;
+    getChildId(): string {
+        return this._childId;
     }
 
     getParameterId(): string {
@@ -208,8 +211,8 @@ export class ParentBlock implements IBlock {
         this._innerLevel = innerLevel
     }
 
-    setNeighborId(neighbor: string): void {
-        this._neighborId = neighbor
+    setChildId(neighbor: string): void {
+        this._childId = neighbor
     }
 
     setParameterId(parameterId: string): void {
@@ -222,6 +225,13 @@ export class ParentBlock implements IBlock {
 
     getBlockShape(): LineCanvas[] {
         return this.blockShape
+    }
+
+    getNeighbourId(): string {
+        return "";
+    }
+
+    setNeighbourId(id: string): void {
     }
 
 }

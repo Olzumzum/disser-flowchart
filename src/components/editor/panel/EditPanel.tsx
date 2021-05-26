@@ -97,7 +97,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block
             )
 
-            parent?.setNeighborId(block.getId())
+            parent?.setChildId(block.getId())
             searchBlockBeUpdate(parent!!)
 
 
@@ -114,7 +114,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
                 block.getId(),
                 block.getInnerLevel() + 1
             )!!
-            block1.setNeighborId(idBlock2)
+            block1.setNeighbourId(idBlock2)
 
             addBlocks(
                 block1

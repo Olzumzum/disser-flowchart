@@ -35,11 +35,13 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
         }
 
         if (convertStyleToReadableFormat(item.getStyleBlock().width)!!
-            > convertStyleToReadableFormat(widthBlock.getStyleBlock().width)!!)
+            > convertStyleToReadableFormat(widthBlock.getStyleBlock().width)!!
+        )
             widthBlock = item
     })
 
-    if (widthBlock.getId().localeCompare(content[0].getId()))
+    if ( widthBlock.getLeft() > rightBlock.getLeft() &&
+        widthBlock.getId().localeCompare(content[0].getId()))
         width = convertStyleToReadableFormat(widthBlock.getStyleBlock().width)!!
             + (widthBlock.getLeft() - left)
     else

@@ -153,8 +153,8 @@ export class InnerLevelContainer {
         let resultId: string | null = null
         let block = getBlockById(idStart)
 
-        while (block?.getNeighborId().localeCompare(DEFAULT_FOR_LINKS)) {
-            let nextBlock = getBlockById(block?.getNeighborId())
+        while (block?.getChildId().localeCompare(DEFAULT_FOR_LINKS)) {
+            let nextBlock = getBlockById(block?.getChildId())
             resultId = nextBlock?.getId()!!
             block = nextBlock
         }
@@ -189,8 +189,6 @@ export class InnerLevelContainer {
             </div>
         )
     }
-
-
 
     /**
      * Проверка свернутости
@@ -281,7 +279,6 @@ export class InnerLevelContainer {
     set width(value: number) {
         this._width = value;
     }
-
 
     get height(): number {
         return this._height;

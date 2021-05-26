@@ -48,8 +48,8 @@ export class InOutput implements IBlock {
         return this._parentBlock?.getLeft()!!;
     }
 
-    getNeighborId(): string {
-        return this._parentBlock?.getNeighborId()!!;
+    getChildId(): string {
+        return this._parentBlock?.getChildId()!!;
     }
 
     getParameterId(): string {
@@ -88,8 +88,8 @@ export class InOutput implements IBlock {
         this._parentBlock?.setLeft(left)
     }
 
-    setNeighborId(neighbor: string): void {
-        this._parentBlock?.setNeighborId(neighbor)
+    setChildId(neighbor: string): void {
+        this._parentBlock?.setChildId(neighbor)
     }
 
     setParameterId(parameterId: string): void {
@@ -106,5 +106,13 @@ export class InOutput implements IBlock {
 
     getBlockShape(): LineCanvas[] {
         return this._parentBlock?.getBlockShape()!!;
+    }
+
+    getNeighbourId(): string {
+        return this._parentBlock?.getNeighbourId()!!;
+    }
+
+    setNeighbourId(id: string): void {
+        this._parentBlock?.setNeighbourId(id)
     }
 }

@@ -153,8 +153,8 @@ export function recalculationCoorByEvent(idChangedBlock: string) {
     let neighborChangedBlock: IBlock | undefined
 
     let parentBlock = lastParentBlock
-    while (changedBlock?.getNeighborId().localeCompare("-1") && changedBlock !== undefined) {
-        const idNeighbor = changedBlock?.getNeighborId()
+    while (changedBlock?.getChildId().localeCompare("-1") && changedBlock !== undefined) {
+        const idNeighbor = changedBlock?.getChildId()
         neighborChangedBlock = calcCoorByTypeBlock(parentBlock!!, changedBlock, idNeighbor)
 
         parentBlock = changedBlock
