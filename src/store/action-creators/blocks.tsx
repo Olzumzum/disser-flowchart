@@ -50,7 +50,7 @@ export const fetchBlocks = () => {
  * добавление нового блока из панели компонентов
  * @param block
  */
-export const addBlocks = (block: IBlock, idParent: string) => {
+export const addBlocks = (block: IBlock) => {
     return async (dispatch: Dispatch<BlocksAction>) => {
         try {
             blocks.push(block)
@@ -58,9 +58,9 @@ export const addBlocks = (block: IBlock, idParent: string) => {
             dispatch({type: BlocksActionTypes.ADD_BLOCK, payload: block})
 
             //установить соседей
-            // settingUpNeighborhood(block.getParentId(), block.getId())
+            settingUpNeighborhood(block.getParentId(), block.getId())
             //прерасчитать координаqты
-            recalculationCoorByEvent(block.getId(), block.getParentId())
+            recalculationCoorByEvent(block.getId())
             containerKeeper.addBlockToInnerLevel(block)
             
             // ff(block.getParentId(), block.getId())
@@ -166,6 +166,7 @@ export const settingUpNeighborhood = (idParentBlock: string, idNewBlock: string)
 
         const parentBlock = getBlockById(idParentBlock)
         const newBlock = getBlockById(idNewBlock)
+        //идентификатор прошлого соседа родителя
         const idPastNeighborBlock = parentBlock?.getNeighborId()
         //устанавливаем соседство между новым блоком и блоком, с которого вызывалось конекстное меню
         parentBlock?.setNeighborId(idNewBlock)

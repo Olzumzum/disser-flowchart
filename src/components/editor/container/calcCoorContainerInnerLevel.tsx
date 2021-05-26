@@ -1,8 +1,6 @@
 import {IBlock} from "../blocks/primitives/bocks/IBlock";
 import {convertStyleToReadableFormat} from "../calculat_coordinates/elementSizeCalc";
 import {InnerLevelContainer} from "./InnerLevelContainer";
-import {containerKeeper} from "../panel/EditPanel";
-import {getBlockById} from "../../../store/action-creators/blocks";
 
 /**
  * Рассчитать координаты и размеры контейнера
@@ -19,6 +17,7 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
     let right = content[0].getLeft()
     let bottom: number = content[0].getTop()
     let bottomBlock = content[0]
+    let widthBlock = content[0]
 
     content.forEach(item => {
         if (item.getTop() < top) left = item.getTop()
@@ -34,10 +33,18 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
             bottom = item.getTop()
             bottomBlock = item
         }
+
+        if (convertStyleToReadableFormat(item.getStyleBlock().width)!!
+            > convertStyleToReadableFormat(widthBlock.getStyleBlock().width)!!)
+            widthBlock = item
     })
 
-    width = convertStyleToReadableFormat(rightBlock.getStyleBlock().width)!!
-        + (rightBlock.getLeft() - left)
+    if (widthBlock.getId().localeCompare(content[0].getId()))
+        width = convertStyleToReadableFormat(widthBlock.getStyleBlock().width)!!
+            + (widthBlock.getLeft() - left)
+    else
+        width = convertStyleToReadableFormat(rightBlock.getStyleBlock().width)!!
+            + (rightBlock.getLeft() - left)
     height = convertStyleToReadableFormat(bottomBlock.getStyleBlock().height)!! + (bottomBlock.getTop() - top)
     const margin = convertStyleToReadableFormat(rightBlock.getStyleBlock().margin)!!
 

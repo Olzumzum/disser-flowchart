@@ -26,7 +26,8 @@ export class Loop implements IBlock {
                 parentId: string,
                 innerLevel: number
     ) {
-        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(), parentId, innerLevel)
+        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(),
+            parentId, innerLevel, blockStyle)
         this._blockShape = getLoopShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }

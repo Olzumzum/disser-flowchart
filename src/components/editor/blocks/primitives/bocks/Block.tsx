@@ -9,7 +9,7 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 const blockStyle: CSSProperties = {
     width: "120px",
     height: "120px",
-
+    margin: "10px",
 }
 
 export function getBlockStyle(){
@@ -27,7 +27,8 @@ export class Block implements IBlock {
                 parentId: string,
                 innerLevel: number
     ) {
-        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(), parentId, innerLevel)
+        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(),
+            parentId, innerLevel, blockStyle)
         this._blockShape = getBlockShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }

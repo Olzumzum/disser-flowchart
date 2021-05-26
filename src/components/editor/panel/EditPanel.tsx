@@ -70,7 +70,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
             ff("-1", block.getId())
         })
@@ -94,7 +94,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             )!!
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
 
             parent?.setNeighborId(block.getId())
@@ -117,7 +117,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             block1.setNeighborId(idBlock2)
 
             addBlocks(
-                block1, block.getId()
+                block1
             )
 
             const block2 = creator.createBlock(
@@ -130,7 +130,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
             )!!
 
             addBlocks(
-                block2, block.getId()
+                block2
             )
 
         })
@@ -160,7 +160,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
             ff("-1", block.getId())
         })
@@ -190,7 +190,7 @@ export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {
 
 
             addBlocks(
-                block, data[1].idBlock
+                block
             )
             ff("-1", block.getId())
         })

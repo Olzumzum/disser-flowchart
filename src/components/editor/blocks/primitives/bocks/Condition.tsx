@@ -7,8 +7,9 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 
 const blockStyle: CSSProperties = {
-    width: "120px",
+    width: "200px",
     height: "120px",
+    margin: "10px",
 }
 
 export function getConditionBlockStyle(){
@@ -26,7 +27,8 @@ export class Condition implements IBlock {
                 parentId: string,
                 innerLevel: number
     ) {
-        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(), parentId, innerLevel)
+        this._parentBlock = new ParentBlock(id, left, top, this.getTypeBlock(),
+            parentId, innerLevel, blockStyle)
         this._blockShape = getConditionShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
     }

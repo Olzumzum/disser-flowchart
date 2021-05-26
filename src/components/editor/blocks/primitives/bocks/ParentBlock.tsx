@@ -78,13 +78,16 @@ export class ParentBlock implements IBlock {
     //свернут ли блок
     private _isRolledUp: boolean = false
 
+    private _style: CSSProperties | undefined = undefined
+
 
     constructor(id: string,
                 left: number,
                 top: number,
                 type: string,
                 parentId: string,
-                innerLevel: number
+                innerLevel: number,
+                style: CSSProperties
     ) {
         this._id = id
         this._left = left
@@ -92,6 +95,7 @@ export class ParentBlock implements IBlock {
         this._typeBlock = type
         this._parentId = parentId
         this._innerLevel = innerLevel
+        this._style = style
     }
 
     public setBlockShape(shape: LineCanvas[]) {
@@ -99,7 +103,7 @@ export class ParentBlock implements IBlock {
     }
 
     getStyleBlock() {
-        return stylesParentBlock
+        return this.style
     }
 
 
@@ -126,7 +130,7 @@ export class ParentBlock implements IBlock {
                 drawBlockShape(contextCanvas!!,
                     this._blockShape!!,
                     this._typeBlock,
-                    stylesParentBlock, this._left!!, this._top!!)
+                    this._style!!, this._left!!, this._top!!)
 
         return <this.blockInstance title={this._typeBlock}/>;
     }

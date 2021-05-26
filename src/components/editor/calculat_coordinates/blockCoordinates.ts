@@ -20,7 +20,9 @@ export const MIN_BLOCKS_DISTANCE = 15;
  * @param typeBlock - тип блока. Может быть равен null, если блок не только что создан (ибо в таком случае тип не нужен)
  * @param parentId - предыдущий блок, относительно которого происходит расчет координат
  */
-export function calcCoordinates(idBlock: string | null, typeBlock: string | null, parentId: string): number[] {
+export function calcCoordinates(idBlock: string | null,
+                                typeBlock: string | null,
+                                parentId: string): number[] {
     let parent: number[] | null = null
 
     //если блок не первый
@@ -143,11 +145,11 @@ function calcDistanceBlocks(idBlock: string | null, typeBlock: string | null, pa
  * перерасчет координат при изменениях
  * @param idChangedBlock - id блока, который был изменен
  */
-export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlock: string) {
+export function recalculationCoorByEvent(idChangedBlock: string) {
 
     let changedBlock = getBlockById(idChangedBlock)
-    let lastParentBlock = getBlockById(idLastParentBlock)
-    let newCoor: number[]
+    let lastParentBlock = getBlockById(changedBlock?.getParentId()!!)
+
     let neighborChangedBlock: IBlock | undefined
 
     let parentBlock = lastParentBlock
@@ -162,7 +164,9 @@ export function recalculationCoorByEvent(idChangedBlock: string, idLastParentBlo
 }
 
 
-function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighbor: string): IBlock | undefined {
+function calcCoorByTypeBlock(parentBlock: IBlock,
+                             changedBlock: IBlock,
+                             idNeighbor: string): IBlock | undefined {
     let coor: number[]
     let neighborChangedBlock: IBlock | undefined
     if (parentBlock.getInnerLevel() === changedBlock.getInnerLevel()) {
@@ -172,7 +176,7 @@ function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighb
                 //подсчет новых координат соседа
                 coor = calcCoordinates(idNeighbor, null, changedBlock?.getId())
                 neighborChangedBlock = getBlockById(idNeighbor)
-                deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
+                // deleteConnect(changedBlock?.getId(), neighborChangedBlock?.getId()!!)
                 neighborChangedBlock?.setLeft(coor[0])
                 neighborChangedBlock?.setTop(coor[1])
                 break;
@@ -188,7 +192,8 @@ function calcCoorByTypeBlock(parentBlock: IBlock, changedBlock: IBlock, idNeighb
                 neighborChangedBlock = undefined
                 break;
         }
-    } else neighborChangedBlock = undefined
+    }
+    else neighborChangedBlock = undefined
     return neighborChangedBlock
 }
 
