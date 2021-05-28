@@ -249,7 +249,7 @@ export class ContainerKeeper {
      * Найти уровень вложенности, содержащий этот блок
      * @param blockId
      */
-    getInnerLevelByBlock(blockId: string) {
+    getInnerLevelByBlock(blockId: string): string | undefined {
         const block = getBlockById(blockId)!!
         let idInnerLevel: string | undefined
         this._members.forEach(level => {

@@ -6,16 +6,21 @@ const repulsiveForce = 50
 
 //проверка наложений уровней вложенности
 export function checkingInnerLevelOverlaps(levels: InnerLevelContainer[]) {
+    let changedInnerLevel: InnerLevelContainer | undefined
     levels.forEach(curLevel => {
+        if(changedInnerLevel !== undefined && !curLevel.id.localeCompare(changedInnerLevel.id)) {
+            curLevel = changedInnerLevel
+        }
         levels.forEach(l => {
             let levelWithNewCoor= checkAreasInnerLevels(curLevel, l)
             if(levelWithNewCoor !== null) {
                 curLevel = levelWithNewCoor[0]
                 l = levelWithNewCoor[1]
-                const lk = containerKeeper.getInnerLevelById(l.id)
-
+                changedInnerLevel = containerKeeper.getInnerLevelById(l.id)
             }
         })
+
+
     })
 }
 
@@ -86,7 +91,7 @@ function changeCoorInnerLevel(curLev: InnerLevelContainer, checkLev: InnerLevelC
             checkLev.left = coorMiddleParentContainer[0] - repulsiveForce - checkLev.width
 
             console.log("mooving " + movingBlocks)
-            changeCoorBlocksByInnerLevel(200, checkLev)
+            changeCoorBlocksByInnerLevel(movingBlocks, checkLev)
         // }
     }
 

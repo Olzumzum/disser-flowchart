@@ -48,10 +48,10 @@ export const DraggableBlock: FC<DraggableBlockProps> = (props) => {
 
 
     const block = getBlockById(id)
-    const innerLevel= containerKeeper.getInnerLevel(block?.getInnerLevel()!!)
-    // console.log("inner " + innerLevel)
+    const idInnerLevel= containerKeeper.getInnerLevelByBlock(block?.getId()!!)
+    const innerLevel = containerKeeper.getInnerLevelById(idInnerLevel!!)
     let coor: number[] = innerLevel?.getCoorForBlock(block?.getId()!!)!!
-    // console.log("coor " + coor)
+
     if (coor === undefined){
         coor = [left, top]
     }
