@@ -71,7 +71,9 @@ export class ContainerKeeper {
             this.createInnerLevel(block)
         }
 
-        checkingInnerLevelOverlaps(this._members)
+
+
+        checkingInnerLevelOverlaps(this.getInnerLevelByParentId(DEFAULT_FOR_LINKS)?.id!!)
     }
 
     /**
@@ -241,8 +243,6 @@ export class ContainerKeeper {
 
         if (!resultNeighbor?.id.localeCompare(DEFAULT_FOR_LINKS))
             child!!.neighboursId = idCurrentLevel
-
-        console.log("neighbor " + child?.neighboursId)
     }
 
     /**
