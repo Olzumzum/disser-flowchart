@@ -4,8 +4,9 @@ import React, {CSSProperties} from "react";
 import {ContainerKeeperComponent} from "./ContainerKeeperComponent";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {ContainerTypes} from "./ContainerTypes";
-import {getBlock, getBlockById} from "../../../store/action-creators/blocks";
+import {getBlockById} from "../../../store/action-creators/blocks";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
+import {checkingInnerLevelOverlaps} from "./calcCoorContainerKeeper";
 
 export const styleContainerKeeper: CSSProperties = {
     position: 'absolute',
@@ -41,7 +42,7 @@ export class ContainerKeeper {
                 //последний блок в родительском контейнере
                 const currentInnerLevel = this.getInnerLevelById(idInnerLevel)
                 const parentInnerLevel =
-                    this.getInnerLevelByLastNode(currentInnerLevel?.parentId!!, currentInnerLevel?.level!!)
+                    this.getInnerLevelByLastNode(currentInnerLevel?.parentBlockId!!, currentInnerLevel?.level!!)
 
                 if (parentInnerLevel !== undefined) {
                     parentInnerLevel!!.isNesting = true
@@ -56,8 +57,8 @@ export class ContainerKeeper {
     init(blocks: Array<IBlock>) {
         // const blocks = getBlock()
         // if (this._members.length === 0)
-            blocks.forEach(item =>
-                this.addBlockToInnerLevel(item))
+        blocks.forEach(item =>
+            this.addBlockToInnerLevel(item))
     }
 
     /**
@@ -67,9 +68,10 @@ export class ContainerKeeper {
     addBlockToInnerLevel(block: IBlock) {
 
         if (!this.innerLevelExists(block)) {
-            console.log("Не существует")
             this.createInnerLevel(block)
         }
+
+        checkingInnerLevelOverlaps(this._members)
     }
 
     /**
@@ -82,7 +84,7 @@ export class ContainerKeeper {
         if (this.members.length !== 0) {
             //ищем уже существующий уровень с такими данными
             this._members.forEach(memb => {
-                if (!memb.parentId?.localeCompare(block.getParentId())
+                if (!memb.parentBlockId?.localeCompare(block.getParentId())
                     && memb.level === block.getInnerLevel()) {
 
                     memb.addContent(block)
@@ -129,13 +131,14 @@ export class ContainerKeeper {
     }
 
     /**
-     * получить уровень вложенности, зная идентификатор родителя, который породил этот уровень
+     * получить уровень вложенности, зная идентификатор родительского блока,
+     * который породил этот уровень
      * @param parentId
      */
     getInnerLevelByParentId(parentId: string): InnerLevelContainer | undefined {
         let result: InnerLevelContainer | undefined = undefined
         this._members.forEach(item => {
-            if (result === undefined && !item.parentId?.localeCompare(parentId)) {
+            if (result === undefined && !item.parentBlockId?.localeCompare(parentId)) {
                 result = item;
             }
         })
@@ -202,6 +205,60 @@ export class ContainerKeeper {
         innerLevel.addContent(block)
         this._members.push(innerLevel)
 
+        if (block.getParentId().localeCompare(DEFAULT_FOR_LINKS)) {
+            //задать родителя в дереве
+            innerLevel.parentId = this.getInnerLevelByBlock(block.getParentId())!!
+            const parentInnerLevel = this.getInnerLevelById(innerLevel.parentId)
+
+            //задать дите родителю, если его еще нет
+            if (!parentInnerLevel?.childId.localeCompare(DEFAULT_FOR_LINKS)) {
+                parentInnerLevel!!.childId = innerLevel.id
+
+            } else {
+                //задать соседа
+                this.getInnerLevelNeighbour(parentInnerLevel?.id, innerLevel.id)
+            }
+        }
+    }
+
+    /**
+     * Задать соседство в дереве уровней вложенности
+     * @param idParentLevel
+     * @param idCurrentLevel
+     */
+    getInnerLevelNeighbour(idParentLevel: string, idCurrentLevel: string){
+        const parent = this.getInnerLevelById(idParentLevel)
+        const child = this.getInnerLevelById(parent?.childId!!)
+        let resultNeighbor: InnerLevelContainer | undefined
+        let neighborId = child?.neighboursId
+
+        while (neighborId?.localeCompare(DEFAULT_FOR_LINKS)) {
+            const neighbor = this.getInnerLevelById(child?.neighboursId!!)
+            neighborId = neighbor?.id
+            if(neighborId?.localeCompare(DEFAULT_FOR_LINKS))
+                resultNeighbor = neighbor
+        }
+
+        if (!resultNeighbor?.id.localeCompare(DEFAULT_FOR_LINKS))
+            child!!.neighboursId = idCurrentLevel
+
+        console.log("neighbor " + child?.neighboursId)
+    }
+
+    /**
+     * Найти уровень вложенности, содержащий этот блок
+     * @param blockId
+     */
+    getInnerLevelByBlock(blockId: string) {
+        const block = getBlockById(blockId)!!
+        let idInnerLevel: string | undefined
+        this._members.forEach(level => {
+            level.content.forEach(b => {
+                if (!b.getId().localeCompare(block.getId()))
+                    idInnerLevel = level.id
+            })
+        })
+        return idInnerLevel
     }
 
 

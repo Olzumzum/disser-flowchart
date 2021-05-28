@@ -10,8 +10,7 @@ import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {clearLines} from "../canvas/LinePainter";
 import {contextCanvas} from "../canvas/CanvasPainter";
-import {LineCanvas} from "../canvas/LineCanvas";
-import {containerKeeper} from "../panel/EditPanel";
+import {checkingInnerLevelOverlaps} from "./calcCoorContainerKeeper";
 
 /**
  * Сущность, отвечающая за определенный уровень равный для всех блоков,
@@ -25,7 +24,14 @@ export class InnerLevelContainer {
     //уровень вложенности
     private _level: number = 0;
     //идентификатор родителя, породившего данный уровень
-    private _parentId: string = ""
+    private _parentBlockId: string = ""
+
+    //ссылка на контейнер-родитель
+    private _parentId: string = DEFAULT_FOR_LINKS
+    //ссылка на соседа справа
+    private _neighboursId: string = DEFAULT_FOR_LINKS
+    //ссылка на крайнего левого потомка
+    private _childId: string = DEFAULT_FOR_LINKS
 
     //координаты и размеры
     private _top: number = 0
@@ -42,7 +48,7 @@ export class InnerLevelContainer {
 
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
-        this._parentId = parentId
+        this._parentBlockId = parentId
 
         BlockEventEmitter.subscribe(ContextMenuActionType.OVERLAP_CONTEXT_MENU,
             () => {
@@ -94,20 +100,13 @@ export class InnerLevelContainer {
 
     addContent(value: IBlock) {
         this._content.push(value)
-        const coor = calcCoorInnerLevelContainer(this.content, this.parentId!!)
+        const coor = calcCoorInnerLevelContainer(this.content, this.parentBlockId!!)
         this._left = coor[0]
         this._top = coor[1]
         this._width = coor[2]
         this._height = coor[3]
 
-        // containerKeeper.members.forEach(item => {
-        //     const c = calcCoorInnerLevelContainer(item.content, item.parentId)
-        //     item.left = c[0]
-        //     item.top = c[1]
-        //     item.width = c[2]
-        //     item.height = c[3]
-        //     item.render("")
-        // })
+
     }
 
     /**
@@ -116,7 +115,7 @@ export class InnerLevelContainer {
     getFirstNode(): string | null {
         let result: string | null = null
         this.content.forEach(item => {
-            if (!item.getParentId().localeCompare(this._parentId))
+            if (!item.getParentId().localeCompare(this._parentBlockId))
                 result = item.getId()
         })
         return result
@@ -242,8 +241,8 @@ export class InnerLevelContainer {
         return this._id;
     }
 
-    get parentId(): string | undefined {
-        return this._parentId;
+    get parentBlockId(): string | undefined {
+        return this._parentBlockId;
     }
 
 
@@ -286,5 +285,31 @@ export class InnerLevelContainer {
 
     set height(value: number) {
         this._height = value;
+    }
+
+
+    get neighboursId(): string {
+        return this._neighboursId;
+    }
+
+    set neighboursId(value: string) {
+        this._neighboursId = value;
+    }
+
+    get childId(): string {
+        return this._childId;
+    }
+
+    set childId(value: string) {
+        this._childId = value;
+    }
+
+
+    get parentId(): string {
+        return this._parentId;
+    }
+
+    set parentId(value: string) {
+        this._parentId = value;
     }
 }

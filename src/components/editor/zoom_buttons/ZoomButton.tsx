@@ -19,11 +19,9 @@ const styleButton: CSSProperties = {
 let scale = 1;
 
 export const ZoomButton: FC<ZoomButtonProps> = ({img, name}) => {
-    const {blocks} = blocksTypedSelector(state => state.blocks)
     const {fetchBlocks} = useActions()
 
     const clickZoom = () => {
-        console.log("ZoomClick " + name)
         if (!name.localeCompare(NAME_MINUS_BUTTON)) {
             scale -= .2;
             scale = zoom(scale)

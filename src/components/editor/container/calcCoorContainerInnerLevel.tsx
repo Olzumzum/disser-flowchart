@@ -55,23 +55,6 @@ export function calcCoorInnerLevelContainer(content: Array<IBlock>, parentId: st
         height += margin * 2
     }
 
-    // const lastBlock = getBlockById(parentId)
-    //
-    // let nextInnerLevel = containerKeeper.getInnerLevelByParentId(parentId)
-    // let currentLevel = nextInnerLevel?.level!! - 1
-    // // while (nextInnerLevel !== undefined) {
-    // console.log("next " + nextInnerLevel + " curlev " + currentLevel)
-    // if (nextInnerLevel?.level!! > currentLevel) {
-    //     left = nextInnerLevel?.left!!
-    //     top = nextInnerLevel?.top!!
-    //     if (nextInnerLevel?.width!! > width)
-    //         width = nextInnerLevel?.width!!
-    //     if (nextInnerLevel?.height!! > height)
-    //         height += nextInnerLevel?.height!!
-    // }
-    // nextInnerLevel = containerKeeper.getInnerLevelByParentId(nextInnerLevel?.parentId!!)
-    // }
-
 
     return [left, top, width, height]
 }
