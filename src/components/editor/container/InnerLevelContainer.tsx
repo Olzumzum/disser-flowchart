@@ -10,7 +10,6 @@ import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {clearLines} from "../canvas/LinePainter";
 import {contextCanvas} from "../canvas/CanvasPainter";
-import {checkingInnerLevelOverlaps} from "./calcCoorContainerKeeper";
 
 /**
  * Сущность, отвечающая за определенный уровень равный для всех блоков,
@@ -130,10 +129,12 @@ export class InnerLevelContainer {
             if (this.isContext) {
                 this.isContext = false
             } else {
+                //проверка клика на родителя
                 if (this._isNesting){
                     BlocksEventEmitter.dispatch(ContainerTypes.CLICK_BY_PARENT,
                         this._id)
                     this._isNesting = false
+                    //проверка свертки
                 } else if(!this.isRolledUp) {
                     this._isRolledUp = !this._isRolledUp
 
@@ -200,7 +201,7 @@ export class InnerLevelContainer {
         })
 
         if (idILRolledUp !== undefined && idILRolledUp.localeCompare("empty")) {
-
+            // console.log("idR " + this.id + " " + this.isRolledUp)
             if (!this.id.localeCompare(idILRolledUp) && this.isRolledUp) {
 
                 // renderContent.push(getBlockById(this.getFirstNode()!!)!!)
@@ -212,7 +213,7 @@ export class InnerLevelContainer {
             // console.log("Дэфолтное значение")
             this.content.forEach(item => renderContent.push(item))
         }
-
+        // console.log("renderCon " + idILRolledUp)
         return renderContent
     }
 

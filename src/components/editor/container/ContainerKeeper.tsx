@@ -73,7 +73,6 @@ export class ContainerKeeper {
         }
 
 
-
         checkingInnerLevelOverlaps(this._members)
     }
 
@@ -232,7 +231,7 @@ export class ContainerKeeper {
      * @param idParentLevel
      * @param idCurrentLevel
      */
-    getInnerLevelNeighbour(idParentLevel: string, idCurrentLevel: string){
+    getInnerLevelNeighbour(idParentLevel: string, idCurrentLevel: string) {
         const parent = this.getInnerLevelById(idParentLevel)
         const child = this.getInnerLevelById(parent?.childId!!)
         let resultNeighbor: InnerLevelContainer | undefined
@@ -241,7 +240,7 @@ export class ContainerKeeper {
         while (neighborId?.localeCompare(DEFAULT_FOR_LINKS)) {
             const neighbor = this.getInnerLevelById(child?.neighboursId!!)
             neighborId = neighbor?.id
-            if(neighborId?.localeCompare(DEFAULT_FOR_LINKS))
+            if (neighborId?.localeCompare(DEFAULT_FOR_LINKS))
                 resultNeighbor = neighbor
         }
 
@@ -275,26 +274,37 @@ export class ContainerKeeper {
         )
     }
 
+    /**
+     * Пометить все контейнеры свернутыми, являющиеся потомками для того контейнера,
+     * на который кликнули,
+     * @param idInnerLevel
+     * @param isRolledUp
+     */
     traversingNestingTree(idInnerLevel: string, isRolledUp: boolean) {
         //контейнер, на который кликнули
         let innerLevelRolledUp = this.getInnerLevelById(idInnerLevel)
         //уровень контейнера на который кликнули, выше него или на том же уровне не скрывать элементы
         const rolledUpLevel = innerLevelRolledUp?.level
-        console.log("rolledUpInnerLevel " + rolledUpLevel)
-        // console.log("сворачиваем " + innerLevelRolledUp?.id + " isRo " + innerLevelRolledUp?.isRolledUp)
-        while (innerLevelRolledUp !== undefined) {
-            //его последний элемент
-            const lastBlock = innerLevelRolledUp?.getLastNodeId()
-            //получаем следующий контейнер по значению родителя
-            innerLevelRolledUp = this.getInnerLevelByParentId(lastBlock!!)
-            // console.log("контейнер " + innerLevelRolledUp?.id)
-            if (innerLevelRolledUp !== undefined && innerLevelRolledUp.level > rolledUpLevel!!) {
-                innerLevelRolledUp!!.isRolledUp = !innerLevelRolledUp!!.isRolledUp
-                // console.log("в состоянии " + innerLevelRolledUp!!.isRolledUp)
-            }
-        }
+
+        if(innerLevelRolledUp?.childId.localeCompare(DEFAULT_FOR_LINKS))
+            this.nodest(this.getInnerLevelById(innerLevelRolledUp.childId)!!, rolledUpLevel!!)
 
 
     }
 
+    /**
+     * рекурсивный обход дерева и задание значения флагу сворачивания
+     * @param node - проверяемый и сворачиваемый или несворачиваемый контейнер
+     * @param rolledUpLevel - уровень контейнера, по которому кликнули
+     */
+    nodest(node: InnerLevelContainer, rolledUpLevel: number) {
+        console.log("node " + node.id + " " + node.isRolledUp + " rl " + rolledUpLevel + " " + node.level)
+        if (node.level > rolledUpLevel) {
+            node!!.isRolledUp = !node?.isRolledUp
+            if (node.neighboursId.localeCompare(DEFAULT_FOR_LINKS))
+                this.nodest(this.getInnerLevelById(node.neighboursId)!!, rolledUpLevel)
+            if (node.childId.localeCompare(DEFAULT_FOR_LINKS))
+                this.nodest(this.getInnerLevelById(node.childId)!!, rolledUpLevel)
+        }
+    }
 }
