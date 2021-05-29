@@ -8,6 +8,7 @@ import {getBlockById} from "../../../store/action-creators/blocks";
 import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 import {checkingInnerLevelOverlaps} from "./calcCoorContainerKeeper";
 
+
 export const styleContainerKeeper: CSSProperties = {
     position: 'absolute',
     backgroundColor: "green"
@@ -73,7 +74,7 @@ export class ContainerKeeper {
 
 
 
-        checkingInnerLevelOverlaps(this.getInnerLevelByParentId(DEFAULT_FOR_LINKS)?.id!!)
+        checkingInnerLevelOverlaps(this._members)
     }
 
     /**
@@ -215,12 +216,15 @@ export class ContainerKeeper {
             //задать дите родителю, если его еще нет
             if (!parentInnerLevel?.childId.localeCompare(DEFAULT_FOR_LINKS)) {
                 parentInnerLevel!!.childId = innerLevel.id
-
             } else {
                 //задать соседа
                 this.getInnerLevelNeighbour(parentInnerLevel?.id, innerLevel.id)
             }
+
+            const n = this.getInnerLevelById(parentInnerLevel?.childId!!)
         }
+
+
     }
 
     /**

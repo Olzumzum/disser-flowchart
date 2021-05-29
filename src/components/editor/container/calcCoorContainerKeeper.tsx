@@ -6,30 +6,26 @@ import {DEFAULT_FOR_LINKS} from "../blocks/primitives/bocks/ParentBlock";
 const repulsiveForce = 50
 
 //проверка наложений уровней вложенности
-export function checkingInnerLevelOverlaps(startNodeId: string) {
-    //узлы на одном уровне
-    let nodes: Array<InnerLevelContainer> = new Array<InnerLevelContainer>()
-    let startNode = containerKeeper.getInnerLevelById(startNodeId)
+export function checkingInnerLevelOverlaps(levels: Array<InnerLevelContainer>) {
 
-    let curNode = startNode
-    let curLevel = curNode?.level
+    let queue: Array<InnerLevelContainer> = new Array<InnerLevelContainer>()
+    let level = 0
+    let fullness = true
 
-    while (curNode?.childId.localeCompare(DEFAULT_FOR_LINKS)) {
-        console.log("Тут " + curNode?.neighboursId)
-        while (curNode?.neighboursId.localeCompare(DEFAULT_FOR_LINKS)) {
-            console.log("сосед")
-            const neighbour = containerKeeper.getInnerLevelById(curNode?.neighboursId)
-            console.log("neighbour " + neighbour!!.id)
-            nodes.push(neighbour!!)
-            curNode = neighbour
-        }
-        curNode = containerKeeper.getInnerLevelById(curNode!!.childId)
+    while(fullness) {
+        levels.forEach(l => {
+            if (level == l.level)
+                queue.push(l)
+        })
+        level++;
+        if(queue.length === 0)
+            fullness = false
+
+        queue.forEach(() => checkLevel(queue))
+        queue = new Array<InnerLevelContainer>()
     }
 
 
-    // if (startNode?.parentId.localeCompare(DEFAULT_FOR_LINKS)) {
-    //     let parentNode = containerKeeper.getInnerLevelById(startNode?.parentId!!)
-    // }
 }
 
 function bypassingNodesAtSameLevel(nodes: InnerLevelContainer[]) {
@@ -37,18 +33,19 @@ function bypassingNodesAtSameLevel(nodes: InnerLevelContainer[]) {
 }
 
 //проходим по одному уровню для данного родителя
-function checkLevel(curLevel: InnerLevelContainer) {
-    while (curLevel.neighboursId.localeCompare(DEFAULT_FOR_LINKS)) {
-        let neighbourLevel = containerKeeper.getInnerLevelById(curLevel.neighboursId)!!
-        //два уровня с новыми координатами
-        let levelWithNewCoor = checkAreasInnerLevels(curLevel, neighbourLevel)
-        if (levelWithNewCoor !== null) {
-            curLevel = levelWithNewCoor[0]
-            neighbourLevel = levelWithNewCoor[1]
-        }
-
-        curLevel = neighbourLevel
-    }
+function checkLevel(queue: Array<InnerLevelContainer>) {
+    queue.forEach( curLevel => {
+        queue.forEach(neighbourLevel => {
+            //два уровня с новыми координатами
+            if (curLevel.id.localeCompare(neighbourLevel.id)) {
+                let levelWithNewCoor = checkAreasInnerLevels(curLevel, neighbourLevel)
+                if (levelWithNewCoor !== null) {
+                    curLevel = levelWithNewCoor[0]
+                    neighbourLevel = levelWithNewCoor[1]
+                }
+            }
+        })
+    })
 }
 
 /**
