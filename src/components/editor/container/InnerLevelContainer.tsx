@@ -45,6 +45,8 @@ export class InnerLevelContainer {
     //вложено ли что-то в блок (вложен - если мы свернули детали реализации)
     private _isNesting: boolean = false
 
+    private _isParameterClick: boolean = false
+
     constructor(level: number, parentId: string, left: number, top: number) {
         this._level = level
         this._parentBlockId = parentId
@@ -53,7 +55,15 @@ export class InnerLevelContainer {
             () => {
                 this.isContext = true
             })
+
+        BlockEventEmitter.subscribe(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
+            (isParameterClick: boolean) => {
+            console.log("подписка " + isParameterClick)
+            this._isParameterClick = Boolean(isParameterClick)
+        })
     }
+
+
 
     //возвращает стиль блока
     getStyle(): CSSProperties {
@@ -127,17 +137,20 @@ export class InnerLevelContainer {
     click = (e: React.MouseEvent<HTMLElement>) => {
         if (e.button === 0) {
             if (this.isContext) {
+
                 this.isContext = false
             } else {
+                console.log("контекст " + this._isParameterClick)
                 //проверка клика на родителя
                 if (this._isNesting){
+                    console.log("тут нест")
                     BlocksEventEmitter.dispatch(ContainerTypes.CLICK_BY_PARENT,
                         this._id)
                     this._isNesting = false
                     //проверка свертки
-                } else if(!this.isRolledUp) {
+                } else if(!this.isRolledUp && !this._isParameterClick) {
+                    console.log("тут")
                     this._isRolledUp = !this._isRolledUp
-
                     BlocksEventEmitter.dispatch(ContainerTypes.IS_ROLLED, [this._isRolledUp, this._id])
                 }
             }

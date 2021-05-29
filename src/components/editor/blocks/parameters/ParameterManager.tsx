@@ -8,6 +8,11 @@ export class ParameterManager {
         this._parameterMass = new Array<ParametersKeeper>()
     }
 
+    createParameter(): string{
+        const par = new ParametersKeeper()
+        return par.id
+    }
+
     getParameter(id: string) : Array<Parameter> | undefined{
         let parameters: Array<Parameter> | undefined
         this._parameterMass?.forEach(par => {

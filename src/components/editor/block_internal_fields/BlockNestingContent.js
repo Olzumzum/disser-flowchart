@@ -5,7 +5,6 @@ import {ContextMenu} from "../context_menu/BlockContextMenu";
 import {itemsContexMenu} from "../context_menu/ItemsContextMenu";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
-import {BlockTransformationTypes} from "../block_conversion/BlockTransformationTypes";
 import {BlockFields} from "./BlockFields";
 
 
@@ -20,7 +19,11 @@ export class BlockNestingContent extends React.Component{
             top: props.top,
             isRollingUp: props.isRolledUp,
             style: props.style,
+            idParameters: props.idParameters,
+            isParametersClik: false,
         }
+
+
     }
 
     /**
@@ -28,35 +31,38 @@ export class BlockNestingContent extends React.Component{
      * @param e
      */
     mouseDownClick = (e) => {
-        if (e.button === 2)
+        if (e.button === 2) {
             BlocksEventEmitter.dispatch(ContextMenuActionType.SHOW_CONTEXT_MENU,
                 {idBlock: this.state.idBlock})
-    }
 
+        }
 
-    render() {
-        const {idBlock, typeBlock, left, top, isRollingUp, style} = this.state
-        return (
-            <div>
-                <OverlayTrigger
-                    placement={"right"}
-                    delay={{show: 250, hide: 400}}
-                    style={{zIndex:11}}
-                    overlay={renderConvertPrompt}>
-                    <div
-                        id={idBlock}
-                        style={style}
-                        onMouseDown={this.mouseDownClick}
-                        onClick={this.rolleUpContent}
-                    >
-                        <BlockFields id={idBlock}
-                                      type={typeBlock}
-                                      isRolledUp={isRollingUp}
-                        />
-                    </div>
-                </OverlayTrigger>
-                <ContextMenu menu={itemsContexMenu} idBlock={idBlock}/>
-            </div>
-        )
     }
-}
+        render()
+        {
+            const {idBlock, typeBlock, left, top, isRollingUp, style, idParameters} = this.state
+            return (
+                <div>
+                    <OverlayTrigger
+                        placement={"right"}
+                        delay={{show: 250, hide: 400}}
+                        style={{zIndex: 11}}
+                        overlay={renderConvertPrompt}>
+                        <div
+                            id={idBlock}
+                            style={style}
+                            onMouseDown={this.mouseDownClick}
+
+                        >
+                            <BlockFields id={idBlock}
+                                         type={typeBlock}
+                                         isRolledUp={isRollingUp}
+                                         idParameters={idParameters}
+                            />
+                        </div>
+                    </OverlayTrigger>
+                    <ContextMenu menu={itemsContexMenu} idBlock={idBlock}/>
+                </div>
+            )
+        }
+    }

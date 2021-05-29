@@ -5,6 +5,7 @@ import {LineCanvas} from "../../../canvas/LineCanvas";
 import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {drawBlockShape} from "../../factory/BlockShapePainter";
 import {BlockNestingContent} from "../../../block_internal_fields/BlockNestingContent";
+import {ParameterManager} from "../../parameters/ParameterManager";
 
 /**
  * Родитель всех блоков
@@ -47,6 +48,7 @@ export function getStyleParentBlock(): CSSProperties {
     return stylesParentBlock
 }
 
+export const parameterManager = new ParameterManager()
 
 export class ParentBlock{
 
@@ -99,6 +101,7 @@ export class ParentBlock{
         this._parentId = parentId
         this._innerLevel = innerLevel
         this._style = style
+        this._parameterId = parameterManager.createParameter()
     }
 
     public setBlockShape(shape: LineCanvas[]) {
@@ -121,6 +124,7 @@ export class ParentBlock{
                     top={this._top}
                     isRollingUp={this._isRolledUp}
                     style={stylesParentBlock}
+                    idParameters={this._parameterId}
                 />
             )
         }
