@@ -12,13 +12,13 @@ export function checkingInnerLevelOverlaps(levels: Array<InnerLevelContainer>) {
     let level = 0
     let fullness = true
 
-    while(fullness) {
+    while (fullness) {
         levels.forEach(l => {
             if (level == l.level)
                 queue.push(l)
         })
         level++;
-        if(queue.length === 0)
+        if (queue.length === 0)
             fullness = false
 
         queue.forEach(() => checkLevel(queue))
@@ -34,15 +34,11 @@ function bypassingNodesAtSameLevel(nodes: InnerLevelContainer[]) {
 
 //проходим по одному уровню для данного родителя
 function checkLevel(queue: Array<InnerLevelContainer>) {
-    queue.forEach( curLevel => {
+    queue.forEach(curLevel => {
         queue.forEach(neighbourLevel => {
             //два уровня с новыми координатами
             if (curLevel.id.localeCompare(neighbourLevel.id)) {
-                let levelWithNewCoor = checkAreasInnerLevels(curLevel, neighbourLevel)
-                if (levelWithNewCoor !== null) {
-                    curLevel = levelWithNewCoor[0]
-                    neighbourLevel = levelWithNewCoor[1]
-                }
+                checkAreasInnerLevels(curLevel, neighbourLevel)
             }
         })
     })
@@ -59,25 +55,22 @@ function checkAreasInnerLevels(curLev: InnerLevelContainer, checkLev: InnerLevel
         // console.log("Nen " + curLev.id + " " + curLev.top + " and " + checkLev.id + " " + checkLev.top)
         if (checkCoor(curLev.top, curLev.left, checkLev.top, checkLev.left, checkLev.height, checkLev.width)) {
             result = true
-            // console.log("Пересечение в верхней правой")
         }
         if (checkCoor(curLev.top + curLev.height, curLev.left,
             checkLev.top, checkLev.left, checkLev.height, checkLev.width)) {
             result = true
-            // console.log("Пересечение в нижней правой")
         }
         if (checkCoor(curLev.top, curLev.left + curLev.width, checkLev.top,
             checkLev.left, checkLev.height, checkLev.width)) {
             result = true
-            // console.log("Пересечение в верхней левой")
         }
         if (checkCoor(curLev.top + curLev.height, curLev.left + curLev.width,
             checkLev.top,
             checkLev.left, checkLev.height, checkLev.width)) {
             result = true
-            // console.log("Пересечение в нижней левой")
         }
     }
+
     if (result)
         return changeCoorInnerLevel(curLev, checkLev)
     else return null
@@ -121,14 +114,31 @@ function changeCoorInnerLevel(curLev: InnerLevelContainer, checkLev: InnerLevelC
     } else {
         let idCurParent: string = curLev.parentId
         let idCheckPar: string = checkLev.parentId
+
+        const queue = new Array<InnerLevelContainer>()
+
         while (idCurParent.localeCompare(idCheckPar)) {
             const curpar = containerKeeper.getInnerLevelById(idCurParent)
             idCurParent = curpar?.parentId!!
 
             const checkpar = containerKeeper.getInnerLevelById(idCheckPar)
             idCheckPar = checkpar?.parentId!!
+
+            queue.push(curpar!!)
+            queue.push(checkpar!!)
         }
         idParentLevel = idCurParent
+
+        queue.forEach(cont => {
+            if (!cont.neighboursId.localeCompare(DEFAULT_FOR_LINKS)) {
+                cont.left -= repulsiveForce
+                changeCoorBlocksByInnerLevel(50, cont)
+            } else {
+                cont.left += repulsiveForce
+                changeCoorBlocksByInnerLevel(-50, cont)
+            }
+
+        })
     }
 
     if (idParentLevel !== undefined)
