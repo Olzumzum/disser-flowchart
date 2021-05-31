@@ -7,7 +7,7 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 
 const blockStyle: CSSProperties = {
-    width: "200px",
+    width: "300px",
     height: "120px",
     margin: "10px",
 }

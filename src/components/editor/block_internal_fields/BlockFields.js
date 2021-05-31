@@ -6,12 +6,14 @@ import {FormControl, InputBase, InputLabel, NativeSelect, withStyles} from "@mat
 import {CHOICE_PARAMETER_TYPE, NAME_PARAMETER, VALUE_PARAMETER} from "../../../assets/strings/blockStrings";
 import {styleContainer as classes} from "../panel/StartTitleComp";
 import {Row} from "react-bootstrap";
+import {ParameterTypes} from "../blocks/parameters/ParameterTypes";
 
-const options = [
-    'Chocolate',
-    'Strawberry',
-    'Vanilla',
-]
+
+const paramTypes = {
+    boolean: ParameterTypes.boolean,
+    string: ParameterTypes.string,
+    number: ParameterTypes.number
+}
 
 const styleInputPanel = {
     margin: "25px",
@@ -87,9 +89,11 @@ export class BlockFields extends Component {
         BlocksEventEmitter.dispatch(ContextMenuActionType.CANCELING_PARAMETER)
     }
 
-    handleChange = selectParameterTypes => {
-        this.setState({selectParameterTypes});
-
+    handleChange = (event) => {
+        console.log("Выбранное значение " + event.target.value)
+        const name_param = document.getElementById(this.props.idParameters + "name")
+        const value_param = document.getElementById(this.props.idParameters + "value")
+        console.log("Выбранное значение " + value_param.value)
     }
 
 
@@ -112,28 +116,31 @@ export class BlockFields extends Component {
                         <FormControl className={classes.margin}>
                             <InputLabel htmlFor="demo-customized-textbox" style={{width: 20}}
                             >{NAME_PARAMETER}</InputLabel>
-                            <BootstrapInput id="demo-customized-textbox"/>
+                            <BootstrapInput id={this.props.idParameters + "name"}/>
                         </FormControl>
                     </Row>
-                    <Row >
+                    <Row>
                         <FormControl className={classes.margin} style={{width: "80px", marginLeft: "2px"}}>
                             <InputLabel htmlFor="demo-customized-textbox">{VALUE_PARAMETER}</InputLabel>
-                            <BootstrapInput id="demo-customized-textbox"/>
+                            <BootstrapInput id={this.props.idParameters + "value"}/>
                         </FormControl>
 
                         <FormControl className={classes.margin}>
                             <InputLabel htmlFor="demo-customized-select-native">
                                 {CHOICE_PARAMETER_TYPE}</InputLabel>
                             <NativeSelect
-                                id="demo-customized-select-native"
+                                id={this.props.idParameters + "parType"}
                                 value={selectParameterTypes}
                                 onChange={this.handleChange}
                                 input={<BootstrapInput/>}
                             >
                                 <option aria-label="None" value=""/>
-                                <option value={10}>Ten</option>
-                                <option value={20}>Twenty</option>
-                                <option value={30}>Thirty</option>
+                                {Object.keys(paramTypes).map((v, i) => {
+                                    return (
+                                        <option value={v}>{paramTypes[v]}</option>
+                                    )
+                                })}
+
                             </NativeSelect>
                         </FormControl>
                     </Row>
