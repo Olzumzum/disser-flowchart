@@ -29,24 +29,24 @@ interface StyleBlockBuilder {
 export const DEFAULT_FOR_LINKS: string = "-1"
 
 //общий стиль для блоков
-const stylesParentBlock: CSSProperties = {
-    border: '1px dashed gray',
-    padding: '1',
-    cursor: 'move',
-    width: "120px",
-    height: "100px",
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'contain',
-    display: "flex",
-    justifyContent: "center",
-    margin: "10px",
-    position: "absolute",
-}
+// const stylesParentBlock: CSSProperties = {
+//     border: '1px dashed gray',
+//     padding: '1',
+//     cursor: 'move',
+//     width: "120px",
+//     height: "100px",
+//     backgroundSize: 'cover',
+//     backgroundRepeat: 'no-repeat',
+//     backgroundPosition: 'contain',
+//     display: "flex",
+//     justifyContent: "center",
+//     margin: "10px",
+//     position: "absolute",
+// }
 
-export function getStyleParentBlock(): CSSProperties {
-    return stylesParentBlock
-}
+// export function getStyleParentBlock(): CSSProperties {
+//     return stylesParentBlock
+// }
 
 export const parameterManager = new ParameterManager()
 
@@ -123,7 +123,7 @@ export class ParentBlock{
                     left={this._left}
                     top={this._top}
                     isRollingUp={this._isRolledUp}
-                    style={stylesParentBlock}
+                    style={this._style}
                     idParameters={this._parameterId}
                 />
             )
@@ -152,7 +152,7 @@ export class ParentBlock{
     }
 
     get style(): CSSProperties {
-        return stylesParentBlock
+        return this._style!!
     }
 
     get blockShape(): LineCanvas[] {

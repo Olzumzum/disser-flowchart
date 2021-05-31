@@ -1,14 +1,14 @@
 import {ParameterTypes} from "./ParameterTypes";
+import {generateId} from "../factory/CreatorBlock";
 
 export class Parameter {
+    private _id: string = ""
     private _variable: string | undefined
     private _value: string | undefined
     private _type: ParameterTypes | undefined
 
-    constructor(variable: string, value: string, type: ParameterTypes) {
-        this._variable = variable
-        this._value = value
-        this._type = type
+    constructor() {
+        this.id = generateId()
     }
 
 
@@ -34,5 +34,14 @@ export class Parameter {
 
     set type(value: ParameterTypes | undefined) {
         this._type = value;
+    }
+
+
+    get id(): string {
+        return this._id;
+    }
+
+    set id(value: string) {
+        this._id = value;
     }
 }

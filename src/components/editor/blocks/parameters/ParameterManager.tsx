@@ -1,24 +1,34 @@
-import {ParametersKeeper} from "./ParametersKeeper";
 import {Parameter} from "./Parameter";
+import {ParameterTypes} from "./ParameterTypes";
 
 export class ParameterManager {
-    private _parameterMass: Array<ParametersKeeper> | undefined
+    private _parameterMass: Array<Parameter> | undefined
 
     constructor() {
-        this._parameterMass = new Array<ParametersKeeper>()
+        this._parameterMass = new Array<Parameter>()
     }
 
     createParameter(): string{
-        const par = new ParametersKeeper()
+        const par = new Parameter()
         return par.id
     }
 
-    getParameter(id: string) : Array<Parameter> | undefined{
-        let parameters: Array<Parameter> | undefined
-        this._parameterMass?.forEach(par => {
-            if(!par.id.localeCompare(id))
-                parameters = par.parameters
+
+    setParameter(id: string,variable: string, value: string, type: ParameterTypes){
+        const param = this.searchParameter(id)
+        if(param !== undefined){
+            param.variable = variable
+            param.value = value
+            param.type = type
+        }
+    }
+
+    searchParameter(id: string): Parameter | undefined{
+        let result: Parameter | undefined
+        this._parameterMass?.forEach(param => {
+            if(!param.id.localeCompare(id))
+                result =  param
         })
-        return parameters
+        return result
     }
 }

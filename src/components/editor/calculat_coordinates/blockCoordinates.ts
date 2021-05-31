@@ -1,7 +1,6 @@
 import {containerKeeper, getStyleEditPanel} from "../panel/EditPanel";
 import {getBlockById} from "../../../store/action-creators/blocks";
 import {convertStyleToReadableFormat} from "./elementSizeCalc";
-import {getStyleParentBlock} from "../blocks/primitives/bocks/ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {deleteConnect} from "../connections/ConnectionPainter";
@@ -81,9 +80,9 @@ function getSizeBlockByType(typeBlock: string): number[] {
     let styleBlock: CSSProperties | undefined
 
     switch (typeBlock) {
-        case BlockTypes.BLOCK_PARENT:
-            styleBlock = getStyleParentBlock()
-            break;
+        // case BlockTypes.BLOCK_PARENT:
+        //     styleBlock = getStyleParentBlock()
+        //     break;
         case BlockTypes.BLOCK:
             styleBlock = getBlockStyle()
             break;
