@@ -208,9 +208,9 @@ export function calcCoorBlockWithTwoBranches(idBlock: string) {
     const block = getBlockById(idBlock)!!
 
     return [
-        /** left **/block?.getLeft()!! - (sizeBlock[0] / 2) - sizeBlock[0],
+        /** left **/block?.getLeft()!! - (sizeBlock[0] / 4) - sizeBlock[0],
         /** top **/block?.getTop()!! + sizeBlock[1] + MIN_BLOCKS_DISTANCE,
-        /** left **/block?.getLeft()!! + sizeBlock[0] + (sizeBlock[0] / 2),
+        /** left **/block?.getLeft()!! + sizeBlock[0] + (sizeBlock[0] / 4),
         /** top **/block?.getTop()!! + sizeBlock[1] + MIN_BLOCKS_DISTANCE
     ]
 

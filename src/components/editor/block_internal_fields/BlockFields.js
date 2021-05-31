@@ -15,13 +15,14 @@ export class BlockFields extends Component {
 
     clickParametersField = () => {
         console.log("Параметр кликнут")
+
         BlocksEventEmitter.dispatch(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
             {isParametersClick: true})
     }
 
     lossFocusParameterField = () => {
         console.log("onchage")
-        BlocksEventEmitter.dispatch(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
+        BlocksEventEmitter.dispatch(ContextMenuActionType.CANCELING_PARAMETER,
             {isParameterClick: false})
     }
 
@@ -33,9 +34,9 @@ export class BlockFields extends Component {
                 {/*<div>*/}
                 {/*    {id}*/}
                 {/*</div>*/}
-                {/*<div>*/}
-                {/*    {type}*/}
-                {/*</div>*/}
+                <div>
+                    {type}
+                </div>
                 {/*<div>*/}
                 {/*    какие-то параметры*/}
                 {/*</div>*/}

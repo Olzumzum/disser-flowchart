@@ -28,9 +28,6 @@ export function checkingInnerLevelOverlaps(levels: Array<InnerLevelContainer>) {
 
 }
 
-function bypassingNodesAtSameLevel(nodes: InnerLevelContainer[]) {
-
-}
 
 //проходим по одному уровню для данного родителя
 function checkLevel(queue: Array<InnerLevelContainer>) {

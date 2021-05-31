@@ -58,9 +58,15 @@ export class InnerLevelContainer {
 
         BlockEventEmitter.subscribe(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
             (isParameterClick: boolean) => {
-            console.log("подписка " + isParameterClick)
-            this._isParameterClick = Boolean(isParameterClick)
+            console.log("подписка " + Boolean(isParameterClick))
+            this._isParameterClick = true
         })
+
+        BlockEventEmitter.subscribe(ContextMenuActionType.CANCELING_PARAMETER,
+            (isParameterClick: boolean) => {
+                console.log("отписка " + Boolean(isParameterClick))
+                this._isParameterClick = false
+            })
     }
 
 
