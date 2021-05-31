@@ -1,10 +1,16 @@
 import {ParameterTypes} from "./ParameterTypes";
 import {generateId} from "../factory/CreatorBlock";
 
+/**
+ * Переменная-параметр
+ */
 export class Parameter {
     private _id: string = ""
+    //имя переменной
     private _variable: string | undefined
+    //значение переменной
     private _value: string | undefined
+    //тип переменной
     private _type: ParameterTypes | undefined
 
     constructor() {

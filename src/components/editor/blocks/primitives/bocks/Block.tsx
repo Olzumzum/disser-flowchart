@@ -6,8 +6,8 @@ import {LineCanvas} from "../../../canvas/LineCanvas";
 import {getBlockShape} from "../../factory/BlockShapePainter";
 
 const blockStyle: CSSProperties = {
-    width: "200px",
-    height: "150px",
+    width: "210px",
+    height: "210px",
     margin: "10px",
 }
 
