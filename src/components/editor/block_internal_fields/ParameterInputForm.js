@@ -1,17 +1,19 @@
 import React from "react";
 import {Row} from "react-bootstrap";
-import {Button, FormControl, InputBase, InputLabel, NativeSelect, withStyles} from "@material-ui/core";
+import {FormControl, InputLabel, NativeSelect} from "@material-ui/core";
 import {styleContainer as classes} from "../panel/StartTitleComp";
 import {
-    BUTTONBLOCK_LABEL,
     CHOICE_PARAMETER_TYPE,
+    LABEL_BUTTONBLOCK,
     NAME_PARAMETER,
     VALUE_PARAMETER
 } from "../../../assets/strings/blockStrings";
 import {ParameterTypes} from "../blocks/parameters/ParameterTypes";
 import {BlocksEventEmitter} from "../BlocksEmitter";
 import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
-import {ParameterManager} from "../blocks/parameters/ParameterManager";
+import {BlockButton} from "./BlockButton";
+import {BootstrapInput} from "./BootstrapInput";
+import {parameterManager} from "../panel/EditPanel";
 
 
 const paramTypes = {
@@ -25,67 +27,36 @@ const styleInputPanel = {
     marginTop: 0
 }
 
-const BlockButton = withStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-        },
-        margin: "8px",
-    },
-}))(Button);
-
-const BootstrapInput = withStyles((theme) => ({
-    root: {
-        'label + &': {
-            marginTop: theme.spacing(3),
-        },
-    },
-    input: {
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 14,
-        padding: '8px 8px 8px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        fontFamily: [
-            '-apple-system',
-            'BlinkMacSystemFont',
-            '"Segoe UI"',
-            'Roboto',
-            '"Helvetica Neue"',
-            'Arial',
-            'sans-serif',
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-        ].join(','),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);
-
 export class ParameterInputForm extends React.Component {
-//менеджер записи параметров
-    parameterManager = new ParameterManager()
 
     state = {
-        selectParameterTypes: null
+        selectParameterTypes: null,
+        nameParam: null,
+        valueParam: null,
     }
 
     constructor(props) {
         super(props);
         this.state = {
-            idParameters: props.idParameters,
+            idParameters: this.props.idParameters,
         }
+
+        const param = parameterManager.getParameter(this.state.idParameters)
+
+        if (param !== undefined
+            && param.variable !== undefined
+            && param.value !== undefined
+            && param.type !== undefined) {
+        }
+        this.state.nameParam = param.variable;
+        this.state.valueParam = param.value;
+        this.state.selectParameterTypes = param.type;
     }
 
 
-    clickParametersField = () => {
+    clickParametersField = (event) => {
         BlocksEventEmitter.dispatch(ContextMenuActionType.PARAMETERS_FIELD_CLICK)
+        event.target.focus()
     }
 
 
@@ -102,18 +73,15 @@ export class ParameterInputForm extends React.Component {
         const value_param = document.getElementById(idParameters + "value")
         const type_param = selectParameterTypes
 
-        let param = this.parameterManager.getParameter(idParameters)
-        if (param === undefined
-            && name_param !== undefined
+        if (name_param !== undefined
             && value_param !== undefined
             && type_param !== undefined) {
-            //создать параметр и получить его id
-            let idParam = this.parameterManager.createParameter()
+
             //задать занчения параметра
-            this.parameterManager.setParameter(idParam, name_param.value, value_param.value,
+            parameterManager.setParameter(idParameters, name_param.value, value_param.value,
                 type_param)
             //получить успешно созданный параметр из хранилища
-            const param = this.parameterManager.getParameter(idParam)
+            const param = parameterManager.getParameter(idParameters)
 
             if (param !== undefined)
                 this.setState({
@@ -127,7 +95,7 @@ export class ParameterInputForm extends React.Component {
 
 
     render() {
-        const {idParameters, selectParameterTypes} = this.state;
+        const {idParameters, selectParameterTypes, nameParam, valueParam, typeParam} = this.state;
 
         return (
             <div
@@ -139,7 +107,9 @@ export class ParameterInputForm extends React.Component {
                             {NAME_PARAMETER}
                         </InputLabel>
                         <BootstrapInput id={idParameters + "name"}
-                                        onClick={this.clickParametersField}/>
+                                        onClick={this.clickParametersField}
+                                        value={nameParam}
+                        />
                     </FormControl>
                 </Row>
                 <Row>
@@ -149,7 +119,9 @@ export class ParameterInputForm extends React.Component {
                             {VALUE_PARAMETER}
                         </InputLabel>
                         <BootstrapInput id={idParameters + "value"}
-                                        onClick={this.clickParametersField}/>
+                                        onClick={this.clickParametersField}
+                                        value={valueParam}
+                        />
                     </FormControl>
 
                     <FormControl className={classes.margin}>
@@ -172,7 +144,7 @@ export class ParameterInputForm extends React.Component {
                     </FormControl>
                 </Row>
                 <BlockButton variant="outlined" onClick={this.click}>
-                    {BUTTONBLOCK_LABEL}
+                    {LABEL_BUTTONBLOCK}
                 </BlockButton>
             </div>
         );

@@ -48,6 +48,7 @@ export class ParameterManager {
             if(!param.id.localeCompare(id))
                 result =  param
         })
+
         return result
     }
 }

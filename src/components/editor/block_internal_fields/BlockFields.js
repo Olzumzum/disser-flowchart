@@ -4,7 +4,7 @@ import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {ParameterManager} from "../blocks/parameters/ParameterManager";
 import {Button, FormControl, InputBase, InputLabel, NativeSelect, withStyles} from "@material-ui/core";
 import {
-    BUTTONBLOCK_LABEL,
+    LABEL_BUTTONBLOCK,
     CHOICE_PARAMETER_TYPE,
     NAME_PARAMETER,
     VALUE_PARAMETER
@@ -69,7 +69,9 @@ export class BlockFields extends Component {
                                 <DisplayParameterValue
                                     nameParam={nameParam}
                                     valueParam={valueParam}
-                                    typeParam={typeParam}/>
+                                    typeParam={typeParam}
+                                    updateData={this.updateData}
+                                />
                             )}
                         </>
 

@@ -14,6 +14,7 @@ import {IConnect} from "../../components/editor/blocks/primitives/connects/IConn
 import {containerKeeper} from "../../components/editor/panel/EditPanel";
 import {recalculationCoorByEvent} from "../../components/editor/calculat_coordinates/blockCoordinates";
 import {ff} from "../../components/editor/connections/ConnectionPainter";
+import {ParameterManager} from "../../components/editor/blocks/parameters/ParameterManager";
 
 const blocks = new Array<IBlock>()
 const connects = new Array<IConnect>()

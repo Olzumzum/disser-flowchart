@@ -1,4 +1,7 @@
 import React from "react";
+import Card from 'react-bootstrap/Card'
+import {Chip, makeStyles} from "@material-ui/core";
+
 
 export class DisplayParameterValue extends React.Component {
 
@@ -17,14 +20,31 @@ export class DisplayParameterValue extends React.Component {
         }
     }
 
+    click = () => {
+        this.props.updateData(true)
+    }
+
     render() {
         const {nameParam, valueParam, typeParam} = this.state;
 
-        return(
+        return (
             <div>
-                <label>{nameParam}</label>
-                <label>{valueParam}</label>
-                <label>{typeParam}</label>
+                <Card style={{margin: '7px 7px 0px 0px'}}>
+                    <Card.Text>
+                        <label>{nameParam}</label>
+                        <label>{valueParam}</label>
+                        <Chip
+                            label={typeParam}
+                            onClick={this.click}
+                        />
+                    </Card.Text>
+                </Card>
+
+                {/*<BlockButton variant="outlined"*/}
+                {/*             onClick={this.click}*/}
+                {/*             color="secondary">*/}
+                {/*    {EDIT_BUTTONBLOCK}*/}
+                {/*</BlockButton>*/}
             </div>
         )
     }

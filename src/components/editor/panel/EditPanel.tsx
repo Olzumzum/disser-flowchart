@@ -16,6 +16,7 @@ import {StartTitleComp} from "./StartTitleComp";
 import {ContainerKeeper} from "../container/ContainerKeeper";
 import {BlockTypes} from "../blocks/primitives/bocks/BlockTypes";
 import {ff} from "../connections/ConnectionPainter";
+import {ParameterManager} from "../blocks/parameters/ParameterManager";
 
 const stylesEditPanel: CSSProperties = {
     float: "right",
@@ -31,7 +32,9 @@ export function getStyleEditPanel() {
 interface EditPanelProps {
     snapToGrid: boolean
 }
-
+//менеджер записи параметров
+export const parameterManager = new ParameterManager()
+//хранитель всех уровней вложенности
 export const containerKeeper = new ContainerKeeper()
 
 export const EditPanel: FC<EditPanelProps> = ({snapToGrid}) => {

@@ -6,6 +6,7 @@ import {contextCanvas} from "../../../canvas/CanvasPainter";
 import {drawBlockShape} from "../../factory/BlockShapePainter";
 import {BlockNestingContent} from "../../../block_internal_fields/BlockNestingContent";
 import {ParameterManager} from "../../parameters/ParameterManager";
+import {parameterManager} from "../../../panel/EditPanel";
 
 /**
  * Родитель всех блоков
@@ -48,7 +49,6 @@ export const DEFAULT_FOR_LINKS: string = "-1"
 //     return stylesParentBlock
 // }
 
-export const parameterManager = new ParameterManager()
 
 export class ParentBlock{
 
