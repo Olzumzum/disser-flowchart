@@ -1,7 +1,5 @@
 import React from "react";
-import {Row} from "react-bootstrap";
 import {FormControl, InputLabel, NativeSelect} from "@material-ui/core";
-import {styleContainer as classes} from "../panel/StartTitleComp";
 import {
     CHOICE_PARAMETER_TYPE,
     LABEL_BUTTONBLOCK,
@@ -14,6 +12,7 @@ import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 import {BlockButton} from "./BlockButton";
 import {BootstrapInput} from "./BootstrapInput";
 import {parameterManager} from "../panel/EditPanel";
+import {Row} from "react-bootstrap";
 
 
 const paramTypes = {
@@ -22,10 +21,6 @@ const paramTypes = {
     number: ParameterTypes.number
 }
 
-const styleInputPanel = {
-    margin: "25px",
-    marginTop: 0
-}
 
 export class ParameterInputForm extends React.Component {
 
@@ -97,50 +92,48 @@ export class ParameterInputForm extends React.Component {
         const {idParameters, selectParameterTypes, nameParam, valueParam, typeParam} = this.state;
 
         return (
-            <div
-                style={styleInputPanel}
-            >
+            <div>
                 <Row>
-                    <FormControl className={classes.margin}>
-                        <InputLabel htmlFor="labelParName" style={{width: 20}}>
-                            {NAME_PARAMETER}
-                        </InputLabel>
-                        <BootstrapInput id={idParameters + "name"}
-                                        onClick={this.clickParametersField}
-                                        value={nameParam}
-                        />
-                    </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="labelParName" style={{width: 60}}>
+                        {NAME_PARAMETER}
+                    </InputLabel>
+                    <BootstrapInput id={idParameters + "name"}
+                                    onClick={this.clickParametersField}
+                                    value={nameParam}
+                    />
+                </FormControl>
                 </Row>
                 <Row>
-                    <FormControl className={classes.margin}
-                                 style={{width: "80px", marginLeft: "2px"}}>
-                        <InputLabel htmlFor="labelParVal">
-                            {VALUE_PARAMETER}
-                        </InputLabel>
-                        <BootstrapInput id={idParameters + "value"}
-                                        onClick={this.clickParametersField}
-                                        value={valueParam}
-                        />
-                    </FormControl>
+                <FormControl
+                    style={{width: "80px", marginLeft: "2px"}}>
+                    <InputLabel htmlFor="labelParVal">
+                        {VALUE_PARAMETER}
+                    </InputLabel>
+                    <BootstrapInput id={idParameters + "value"}
+                                    onClick={this.clickParametersField}
+                                    value={valueParam}
+                    />
+                </FormControl>
 
-                    <FormControl className={classes.margin}>
-                        <InputLabel htmlFor="lableParType">{CHOICE_PARAMETER_TYPE}
-                        </InputLabel>
-                        <NativeSelect
-                            id={idParameters + "parType"}
-                            value={selectParameterTypes}
-                            onChange={this.handleChange}
-                            input={<BootstrapInput/>}
-                            onClick={this.clickParametersField}
-                        >
-                            <option aria-label="None" value=""/>
-                            {Object.keys(paramTypes).map((v, i) => {
-                                return (
-                                    <option value={v}>{paramTypes[v]}</option>
-                                )
-                            })}
-                        </NativeSelect>
-                    </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="lableParType">{CHOICE_PARAMETER_TYPE}
+                    </InputLabel>
+                    <NativeSelect
+                        id={idParameters + "parType"}
+                        value={selectParameterTypes}
+                        onChange={this.handleChange}
+                        input={<BootstrapInput/>}
+                        onClick={this.clickParametersField}
+                    >
+                        <option aria-label="None" value=""/>
+                        {Object.keys(paramTypes).map((v, i) => {
+                            return (
+                                <option value={v}>{paramTypes[v]}</option>
+                            )
+                        })}
+                    </NativeSelect>
+                </FormControl>
                 </Row>
                 <BlockButton variant="outlined" onClick={this.click}>
                     {LABEL_BUTTONBLOCK}

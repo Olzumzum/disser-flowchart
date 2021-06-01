@@ -1,21 +1,10 @@
 import {Component} from "react";
-import {BlocksEventEmitter} from "../BlocksEmitter";
-import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
-import {ParameterManager} from "../blocks/parameters/ParameterManager";
-import {Button, FormControl, InputBase, InputLabel, NativeSelect, withStyles} from "@material-ui/core";
-import {
-    LABEL_BUTTONBLOCK,
-    CHOICE_PARAMETER_TYPE,
-    NAME_PARAMETER,
-    VALUE_PARAMETER
-} from "../../../assets/strings/blockStrings";
-import {styleContainer as classes} from "../panel/StartTitleComp";
-import {Row} from "react-bootstrap";
-import {ParameterTypes} from "../blocks/parameters/ParameterTypes";
+
 import spring from "react-motion/lib/spring";
 import Motion from "react-motion/lib/Motion";
 import {DisplayParameterValue} from "./DisplayParameterValue";
 import {ParameterInputForm} from "./ParameterInputForm";
+import Card from "react-bootstrap/Card";
 
 /**
  * Содержит в себе все конструкции для отображения и введения данных о блоке
@@ -46,43 +35,41 @@ export class BlockFields extends Component {
 
 
     render() {
-        const { idParameters, nameParam, valueParam, typeParam, typeBlock, isShowInputForm} = this.state
+        const {idParameters, nameParam, valueParam, typeParam, typeBlock, isShowInputForm} = this.state
         return (
 
-            <div className="menu-container">
-                <div>
-                    {typeBlock}
-                </div>
+            <Card className="menu-container" style={{width:"98%", height: "98%"}}>
+                <Card.Body >
+                    <Card.Title style={{marginBottom: 0, paddingBottom: 0}}>{typeBlock}</Card.Title>
 
-                <Motion
-                    defaultStyle={{opacity: 0}}
-                    style={{opacity: !isShowInputForm ? spring(1) : spring(0)}}
-                >
-                    {() => (
-                        <>
-                            {isShowInputForm ? (
-                              <ParameterInputForm
-                                  idParameters={idParameters}
-                                  updateData={this.updateData}
-                              />
-                            ) : (
-                                <DisplayParameterValue
-                                    nameParam={nameParam}
-                                    valueParam={valueParam}
-                                    typeParam={typeParam}
-                                    updateData={this.updateData}
-                                />
+                    <Card.Text style={{marginTop: 0, paddingTop: 0}}>
+                        <Motion
+                            defaultStyle={{opacity: 0}}
+                            style={{opacity: !isShowInputForm ? spring(1) : spring(0)}}
+                        >
+                            {() => (
+                                <>
+                                    {isShowInputForm ? (
+                                        <ParameterInputForm
+                                            idParameters={idParameters}
+                                            updateData={this.updateData}
+                                        />
+                                    ) : (
+                                        <DisplayParameterValue
+                                            nameParam={nameParam}
+                                            valueParam={valueParam}
+                                            typeParam={typeParam}
+                                            updateData={this.updateData}
+                                        />
+                                    )}
+                                </>
+
                             )}
-                        </>
 
-                    )}
-
-                </Motion>
-                <div>
-
-                    <h6>{}</h6>
-                </div>
-            </div>
+                        </Motion>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
 
         )
     }

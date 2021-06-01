@@ -36,8 +36,16 @@ export class DisplayParameterValue extends React.Component {
             <div>
                 <Card style={{margin: '7px 7px 0px 0px'}}>
                     <Card.Text>
-                        <label>{nameParam}</label>
-                        <label>{valueParam}</label>
+                        <Chip
+                            label={nameParam}
+                            onClick={this.click}
+                        />
+                       =
+                        <Chip
+                            label={valueParam}
+                            onClick={this.click}
+                        />
+
                         <Chip
                             label={typeParam}
                             onClick={this.click}
