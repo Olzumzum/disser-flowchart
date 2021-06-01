@@ -8,7 +8,7 @@ import {LineCanvas} from "../../../canvas/LineCanvas";
 
 const blockStyle: CSSProperties = {
     width: "300px",
-    height: "120px",
+    height: "200px",
     margin: "10px",
 }
 

@@ -28,8 +28,8 @@ export const CanvasPainter: FC =
         useEffect(() => {
             contextCanvas = canvasRef.current!!.getContext('2d')!!
 
-            contextCanvas.canvas.width = getWidthEditPanel()!!
-            contextCanvas.canvas.height = getHeightEditPanel()!!
+            contextCanvas.canvas.width = getWidthEditPanel()!! * 4
+            contextCanvas.canvas.height = getHeightEditPanel()!! * 4
         }, [])
 
         return (

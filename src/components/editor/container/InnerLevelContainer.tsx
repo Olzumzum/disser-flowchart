@@ -116,7 +116,7 @@ export class InnerLevelContainer {
         const coor = calcCoorInnerLevelContainer(this.content, this.parentBlockId!!)
         this._left = coor[0]
         this._top = coor[1]
-        this._width = coor[2]
+        this._width = coor[2]+ 100
         this._height = coor[3]
 
 
@@ -144,16 +144,13 @@ export class InnerLevelContainer {
 
                 this.isContext = false
             } else {
-                console.log("контекст " + this._isParameterClick)
                 //проверка клика на родителя
                 if (this._isNesting){
-                    console.log("тут нест")
                     BlocksEventEmitter.dispatch(ContainerTypes.CLICK_BY_PARENT,
                         this._id)
                     this._isNesting = false
                     //проверка свертки
                 } else if(!this.isRolledUp && !this._isParameterClick) {
-                    console.log("тут")
                     this._isRolledUp = !this._isRolledUp
                     BlocksEventEmitter.dispatch(ContainerTypes.IS_ROLLED, [this._isRolledUp, this._id])
                 }
