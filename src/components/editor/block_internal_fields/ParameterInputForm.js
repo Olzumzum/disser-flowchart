@@ -90,7 +90,6 @@ export class ParameterInputForm extends React.Component {
             this.props.updateData(isShowInputForm, param.variable, param.value, param.type)
         }
 
-        // BlocksEventEmitter.dispatch(ContextMenuActionType.CANCELING_PARAMETER)
     }
 
 

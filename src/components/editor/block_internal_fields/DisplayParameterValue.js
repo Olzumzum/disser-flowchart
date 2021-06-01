@@ -1,6 +1,8 @@
 import React from "react";
 import Card from 'react-bootstrap/Card'
-import {Chip, makeStyles} from "@material-ui/core";
+import {Chip} from "@material-ui/core";
+import {BlocksEventEmitter} from "../BlocksEmitter";
+import {ContextMenuActionType} from "../context_menu/ContextMenuActionType";
 
 
 export class DisplayParameterValue extends React.Component {
@@ -18,11 +20,14 @@ export class DisplayParameterValue extends React.Component {
             valueParam: this.props.valueParam,
             typeParam: this.props.typeParam,
         }
+        BlocksEventEmitter.dispatch(ContextMenuActionType.CANCELING_PARAMETER)
     }
 
     click = () => {
+        BlocksEventEmitter.dispatch(ContextMenuActionType.PARAMETERS_FIELD_CLICK)
         this.props.updateData(true)
     }
+
 
     render() {
         const {nameParam, valueParam, typeParam} = this.state;
