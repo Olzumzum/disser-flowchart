@@ -6,9 +6,9 @@ import {contextCanvas} from "./CanvasPainter";
  * @param ctx
  * @param lines - массив рисуемых линий
  */
-export function drawLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]){
+export function drawLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[], color: string){
     lines.forEach(item => {
-        drawLine(ctx, item)
+        drawLine(ctx, item, color)
     })
 }
 
@@ -18,11 +18,12 @@ export function drawLines(ctx: CanvasRenderingContext2D, lines: LineCanvas[]){
  * @param line - объект, хранящий координаты одной линии
  */
 export function drawLine(ctx: CanvasRenderingContext2D,
-                         line: LineCanvas){
+                         line: LineCanvas, color: string){
 
 
     if (ctx !== null && ctx !== undefined){
-        ctx.fillStyle = '#000000'
+        // ctx.fillStyle = color
+        ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.moveTo(line.x,line.y);
         ctx.lineTo(line.x2, line.y2);

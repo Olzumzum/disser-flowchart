@@ -2,9 +2,11 @@ import {IBlock} from "./IBlock";
 import {ParentBlock} from "./ParentBlock";
 import {CSSProperties} from "react";
 import {BlockTypes} from "./BlockTypes";
-import {getBlockShape, getConditionShape} from "../../factory/BlockShapePainter";
-import {contextCanvas} from "../../../canvas/CanvasPainter";
+import {getConditionShape} from "../../factory/BlockShapePainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
+import {BlocksEventEmitter} from "../../../BlocksEmitter";
+import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
+import {redrewCanvas} from "../../../canvas/CanvasPainter";
 
 const blockStyle: CSSProperties = {
     width: "300px",
@@ -12,7 +14,7 @@ const blockStyle: CSSProperties = {
     margin: "10px",
 }
 
-export function getConditionBlockStyle(){
+export function getConditionBlockStyle() {
     return blockStyle
 }
 
@@ -20,6 +22,7 @@ export class Condition implements IBlock {
     private _parentBlock: ParentBlock | undefined
 
     private _blockShape: LineCanvas[]
+    private _colorShape: string = '#000000'
 
     constructor(id: string,
                 left: number,
@@ -31,6 +34,14 @@ export class Condition implements IBlock {
             parentId, innerLevel, blockStyle)
         this._blockShape = getConditionShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
+        BlocksEventEmitter.subscribe(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
+            (data: any) => {
+            console.log("Получити " + data.type)
+                if(!data.type.localeCompare(this.getTypeBlock())){
+                    this._parentBlock!!.colorShape = data.color
+                    // redrewCanvas()
+                }
+            })
     }
 
 

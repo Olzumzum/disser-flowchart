@@ -16,7 +16,7 @@ export function getInOutputBlockStyle(){
 
 export class InOutput implements IBlock {
     private _parentBlock: ParentBlock | undefined
-
+    private _colorShape: string = '#000000'
     private _blockShape: LineCanvas[]
 
     constructor(id: string,

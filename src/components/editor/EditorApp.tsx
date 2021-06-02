@@ -6,10 +6,11 @@ import {Container, Row} from "react-bootstrap";
 import {Provider} from "react-redux";
 import {store} from "../../store";
 import {ErrorMessage} from "./error/ErrorMessage";
-import Toolbar from "../Toolbar";
+import  {ToolbarEditor} from "../ToolbarEditor";
 import {EditPanel} from "./panel/EditPanel";
-import {CompilerOutputConsole} from "./panel/CompilerOutputConsole";
+
 import {OwnerZoomButtons} from "./zoom_buttons/OwnerZoomButtons";
+
 
 const styles: CSSProperties = {
     width: "100%",
@@ -36,9 +37,10 @@ export const EditorApp: FC = () => {
             <DndProvider backend={HTML5Backend}>
                 <Container fluid style={styles}>
                     <Row>
-                        <Toolbar/>
+                        <ToolbarEditor/>
                     </Row>
                     <Row>
+
                         <EditPanel snapToGrid={snapToGridAfterDrop}/>
                         <CustomDragLayer snapToGrid={snapToGridWhileDragging}/>
                         <ErrorMessage/>

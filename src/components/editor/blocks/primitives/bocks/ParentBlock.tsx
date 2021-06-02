@@ -84,7 +84,7 @@ export class ParentBlock{
     private _isRolledUp: boolean = false
 
     private _style: CSSProperties | undefined = undefined
-
+    private _colorShape: string = '#000000'
 
     constructor(id: string,
                 left: number,
@@ -113,7 +113,21 @@ export class ParentBlock{
     }
 
 
-    //создать экземпляр
+    get colorShape(): string {
+        return this._colorShape;
+    }
+
+    set colorShape(value: string) {
+        this._colorShape = value;
+        console.log("colorShape " + this._colorShape)
+        drawBlockShape(contextCanvas!!,
+            this._blockShape!!,
+            this._typeBlock,
+            this._style!!, this._left!!, this._top!!, this._colorShape)
+
+    }
+
+//создать экземпляр
     createBlock() {
         this._blockInstance = () => {
             return (
@@ -137,7 +151,7 @@ export class ParentBlock{
                 drawBlockShape(contextCanvas!!,
                     this._blockShape!!,
                     this._typeBlock,
-                    this._style!!, this._left!!, this._top!!)
+                    this._style!!, this._left!!, this._top!!, this._colorShape)
 
         return <this.blockInstance title={this._typeBlock}/>;
     }

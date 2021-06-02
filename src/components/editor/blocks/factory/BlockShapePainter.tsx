@@ -15,7 +15,8 @@ export function drawBlockShape(ctx: CanvasRenderingContext2D,
                                typeBlock: string,
                                styleBlock: CSSProperties,
                                left: number,
-                               top: number
+                               top: number,
+                               color: string
 ): LineCanvas[] {
 
     clearLines(ctx, blockShape)
@@ -35,9 +36,11 @@ export function drawBlockShape(ctx: CanvasRenderingContext2D,
             break;
     }
 
-    drawLines(ctx, blockShape)
+    drawLines(ctx, blockShape, color)
     return blockShape
 }
+
+
 
 /**
  * Подсчитывает координаты линий блока

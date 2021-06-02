@@ -38,7 +38,9 @@ export class BlockFields extends Component {
         const {idParameters, nameParam, valueParam, typeParam, typeBlock, isShowInputForm} = this.state
         return (
 
-            <Card className="menu-container" style={{width:"98%", height: "98%"}}>
+            <Card className="menu-container" style={{width:"98%", height: "98%",
+                backgroundColor: "transparent"
+            }}>
                 <Card.Body >
                     <Card.Title style={{marginBottom: 0, paddingBottom: 0}}>{typeBlock}</Card.Title>
 

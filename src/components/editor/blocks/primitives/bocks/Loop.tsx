@@ -19,6 +19,7 @@ export class Loop implements IBlock {
     private _parentBlock: ParentBlock | undefined
 
     private _blockShape: LineCanvas[]
+    private _colorShape: string = '#000000'
 
     constructor(id: string,
                 left: number,
