@@ -15,6 +15,8 @@ import {ColorValue} from "./ColorValue";
 import {BlocksEventEmitter} from "../../editor/BlocksEmitter";
 import {ContextMenuActionType} from "../../editor/context_menu/ContextMenuActionType";
 
+
+
 export class ColorPaletteBlocks extends React.Component {
 
     constructor(props) {
@@ -38,6 +40,7 @@ export class ColorPaletteBlocks extends React.Component {
     choiceBlockColor = (event) => {
         this.state.colorBlock = event.target.value
         console.log("просшушивание блока")
+        this.props.updateDate(event.target.value)
         BlocksEventEmitter.dispatch(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
             {type: BlockTypes.BLOCK, color: this.colorchoicer(this.state.colorBlock)})
     }

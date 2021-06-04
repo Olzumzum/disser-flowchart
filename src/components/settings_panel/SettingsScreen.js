@@ -19,8 +19,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+export let COLOR_BLOCK = '#000000'
+export let COLOR_CONDITION = '#000000'
+export let COLOR_LOOP = '#000000'
+export let COLOR_INOUTPUT = '#000000'
 
 export class SettingsScreen extends React.Component{
+    conditionColor = ""
 
     constructor(props) {
         super(props);
@@ -28,15 +33,21 @@ export class SettingsScreen extends React.Component{
             isOpenSettings: this.props.isOpenSettings
         }
         this.handleClose = this.handleClose.bind(this)
+        this.onSave = this.onSave.bind(this)
     }
 
     handleClose = () => {
-
         this.state.isOpenSettings = false
     };
 
-    onChange = (value) => {
-        console.log("срабатывает " + value)
+    onSave = () =>{
+        COLOR_CONDITION = this.conditionColor
+        this.state.isOpenSettings = false
+    }
+
+    updateDate(condColor){
+        this.conditionColor = condColor
+        COLOR_CONDITION = this.conditionColor
     }
 
     render() {
@@ -72,7 +83,7 @@ export class SettingsScreen extends React.Component{
                     </Toolbar>
                 </AppBar>
                 <List>
-                    <ColorPaletteBlocks/>
+                    <ColorPaletteBlocks updateDate={this.updateDate}/>
                    <Divider />
                     <ListItem button>
                         <ListItemText primary="Default notification ringtone" secondary="Tethys" />

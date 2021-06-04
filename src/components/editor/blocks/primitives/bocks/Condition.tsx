@@ -6,7 +6,8 @@ import {getConditionShape} from "../../factory/BlockShapePainter";
 import {LineCanvas} from "../../../canvas/LineCanvas";
 import {BlocksEventEmitter} from "../../../BlocksEmitter";
 import {ContextMenuActionType} from "../../../context_menu/ContextMenuActionType";
-import {redrewCanvas} from "../../../canvas/CanvasPainter";
+import {COLOR_CONDITION} from "../../../../settings_panel/SettingsScreen";
+
 
 const blockStyle: CSSProperties = {
     width: "300px",
@@ -22,7 +23,7 @@ export class Condition implements IBlock {
     private _parentBlock: ParentBlock | undefined
 
     private _blockShape: LineCanvas[]
-    private _colorShape: string = '#000000'
+    private _colorShape: string = COLOR_CONDITION
 
     constructor(id: string,
                 left: number,
@@ -34,6 +35,8 @@ export class Condition implements IBlock {
             parentId, innerLevel, blockStyle)
         this._blockShape = getConditionShape(blockStyle, left, top)
         this._parentBlock.setBlockShape(this._blockShape)
+        this._colorShape = COLOR_CONDITION
+        console.log("color " + COLOR_CONDITION)
         BlocksEventEmitter.subscribe(ContextMenuActionType.PARAMETERS_FIELD_CLICK,
             (data: any) => {
             console.log("Получити " + data.type)

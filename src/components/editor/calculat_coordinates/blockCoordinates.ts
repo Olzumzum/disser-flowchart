@@ -11,7 +11,7 @@ import {getLoopBlockStyle} from "../blocks/primitives/bocks/Loop";
 import {getInOutputBlockStyle} from "../blocks/primitives/bocks/InOutput";
 
 
-export const MIN_BLOCKS_DISTANCE = 25;
+export const MIN_BLOCKS_DISTANCE = 40;
 
 /**
  * функция, в которую передаются все входные параметры для расчета
