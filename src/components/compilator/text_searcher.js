@@ -6,13 +6,13 @@ import {create, getLastBlockInfo, obj_array} from "./object_block";
 import {arr_list, var_list} from "./var_list";
 import {search_unary_operator} from "./variables";
 
-let end_flag=false;
+let end_flag = false;
 
-export function get_end_flag(){
+export function get_end_flag() {
     return end_flag;
 }
 
-export function set_end_flag(bool){
+export function set_end_flag(bool) {
     end_flag = bool;
 }
 
@@ -22,7 +22,7 @@ export const text_info = {
     text: "",
 }
 
-export function updateText(line, text){
+export function updateText(line, text) {
     text_info.text[line] = text;
 }
 
@@ -45,7 +45,7 @@ export function getCurrentPosition() {
     return CurrentPosition;
 }
 
-export function updateCurrentPosition(pos, line) {
+export function setCurrentPosition(pos, line) {
     let sub, test;
     let t_i = getTextInfo();
 
@@ -64,12 +64,12 @@ export function updateCurrentPosition(pos, line) {
         sub = t_i.text[line].substring(pos, t_i.text[line].length);
         test = sub.replaceAll(" ", "");
         if (test.length < 1) {
-            updateCurrentPosition(0, line + 1);
+            setCurrentPosition(0, line + 1);
         } else
             CurrentPosition.pos = pos;
 
     } else
-        updateCurrentPosition(0, line + 1);
+        setCurrentPosition(0, line + 1);
 }
 
 function check_line(line) {
@@ -98,12 +98,9 @@ export function updateCurrentComment(comment) {
 
 //функция отображения результата поиска символа в тексте
 export function search_result(text, c, i) {
-    if (typeof i !== "undefined") {
-        if (search(text, c, i) != -1)
-            return true;
-        else
-            return false;
-    } else if (search(text, c) != -1)
+    if (typeof i === "undefined")
+        i = 0;
+    if (search(text, c, i) != -1)
         return true;
     else
         return false;
@@ -111,19 +108,16 @@ export function search_result(text, c, i) {
 
 //функция нахождения позиции символа в тексте
 export function search(text, c, i) {
-    if (typeof i !== "undefined") {
-        return text.indexOf(c, i);
-    } else
-        return text.indexOf(c);
+    if (typeof i === "undefined")
+        i = 0;
+    return text.indexOf(c, i);
 }
 
-export function new_search(c, p) {
-    let tmp;
+export function text_search(c, p) {
     let text = getTextInfo().text[getCurrentPosition().line];
     if (typeof p === "undefined")
         p = getCurrentPosition().pos;
-    tmp = text.indexOf(c, p);
-    return tmp;
+    return text.indexOf(c, p);
 }
 
 //функция отображения результата нахождения ЯК в строке
@@ -145,7 +139,7 @@ export function search_construction() {
         if (search_result(lines[line], constructions_list[i], l)) {
             start_pos = search(lines[line], constructions_list[i], l);
             end_pos = start_pos + constructions_list[i].length;
-            updateCurrentPosition(end_pos);
+            setCurrentPosition(end_pos);
             return constructions_list[i];
         }
 
@@ -174,51 +168,51 @@ export function search_content(symb_block, text) {
             end_pos = search(text[line], symb2, pos);
             start_pos = search(text[line], symb1, pos);
             if (start_pos < end_pos) {
-                updateCurrentPosition(start_pos + symb1.length);
+                setCurrentPosition(start_pos + symb1.length);
                 while (search_content(symb_block))
                     ;
                 return true;
 
             } else {
-                updateCurrentPosition(end_pos + symb2.length);
+                setCurrentPosition(end_pos + symb2.length);
                 return false;
             }
         } else {
             start_pos = search(text[line], symb1, pos);
-            updateCurrentPosition(start_pos + symb1.length);
+            setCurrentPosition(start_pos + symb1.length);
             while (search_content(symb_block))
                 ;
             return true;
         }
     else if (search_result(text[line], symb2, pos)) {
         let end_pos = search(text[line], symb2, pos);
-        updateCurrentPosition(end_pos + symb2.length);
+        setCurrentPosition(end_pos + symb2.length);
         return false;
     } else {
-        updateCurrentPosition(0, getCurrentPosition().line + 1);
+        setCurrentPosition(0, getCurrentPosition().line + 1);
         return true;
     }
 }
 
 export function search_comment() {
-    let params = get_language_params("",getTextInfo().lang);
+    let params = get_language_params("", getTextInfo().lang);
     let text = getTextInfo().text;
     let c_p = safeCurrentPosition();
     let comment_start;
     let comment = "";
-    let comment_pos = new_search(params.single_line_comment, c_p.pos)
+    let comment_pos = text_search(params.single_line_comment, c_p.pos)
     if (comment_pos != -1) {
         let block_start = safeCurrentPosition();
         comment_start = {
             pos: comment_pos,
             line: c_p.line
         };
-        updateCurrentPosition(text[c_p.line].length);
+        setCurrentPosition(text[c_p.line].length);
         comment = content_maker(comment_start);
         updateText(c_p.line, text[c_p.line].substring(0, comment_start.pos));
-        updateCurrentPosition(block_start.pos, block_start.line);
+        setCurrentPosition(block_start.pos, block_start.line);
     } else {
-        comment_pos = new_search(params.multi_line_comment[0], c_p.pos);
+        comment_pos = text_search(params.multi_line_comment[0], c_p.pos);
         if (comment_pos != -1) {
             comment_start = {
                 pos: comment_pos,
@@ -236,11 +230,11 @@ export function search_in_out_result() {
     let data_in = params.data_in;
     let data_out = params.data_out;
 
-    if (new_search(data_in) != -1) {
-        updateCurrentPosition(getCurrentPosition().pos + data_in.length);
+    if (text_search(data_in) != -1) {
+        setCurrentPosition(getCurrentPosition().pos + data_in.length);
         return "input";
-    } else if (new_search(data_out) != -1) {
-        updateCurrentPosition(getCurrentPosition().pos + data_out.length);
+    } else if (text_search(data_out) != -1) {
+        setCurrentPosition(getCurrentPosition().pos + data_out.length);
         return "output";
     } else
         return false;
@@ -262,42 +256,42 @@ export function in_out_block_param(type, p_id, n_id, in_lvl) {
             end_symb = params.output_construction.end_symb;
             break;
     }
-    let start_pos = new_search(start_symb);
+    let start_pos = text_search(start_symb);
 
     if (start_pos != -1) {
-        start_pos = new_search(start_symb) + start_symb.length;
-        updateCurrentPosition(start_pos);
+        start_pos = text_search(start_symb) + start_symb.length;
+        setCurrentPosition(start_pos);
         start_block = safeCurrentPosition();
         while (true) {
-            let middle_pos = new_search(middle_symb);
+            let middle_pos = text_search(middle_symb);
             if (middle_pos != -1) {
                 if (!string_check(middle_symb, text_info.text[getCurrentPosition().line].substring(start_pos, middle_pos + middle_symb.length))) {
-                    updateCurrentPosition(middle_pos);
+                    setCurrentPosition(middle_pos);
                     tmp = content_maker(start_block);
                     tmp = search_unary_operator(tmp);
                     create(p_id, n_id, type, in_lvl, tmp,
                         0, "", getCurrentComment());
 
                     n_id = getLastBlockInfo().id;
-                    updateCurrentPosition(middle_pos + middle_symb.length);
+                    setCurrentPosition(middle_pos + middle_symb.length);
                     start_block = safeCurrentPosition();
                 } else
-                    updateCurrentPosition(middle_pos + middle_symb.length);
+                    setCurrentPosition(middle_pos + middle_symb.length);
             } else {
-                let end_pos = new_search(end_symb);
+                let end_pos = text_search(end_symb);
                 if (end_pos != -1) {
                     if (!string_check(end_symb, text_info.text[getCurrentPosition().line].substring(start_pos, end_pos + end_symb.length))) {
-                        updateCurrentPosition(end_pos);
+                        setCurrentPosition(end_pos);
                         tmp = content_maker(start_block);
                         tmp = search_unary_operator(tmp);
                         create(p_id, n_id, type, in_lvl, tmp,
                             0, "", getCurrentComment());
 
                         n_id = getLastBlockInfo().id;
-                        updateCurrentPosition(end_pos + end_symb.length);
+                        setCurrentPosition(end_pos + end_symb.length);
                         return true;
                     } else
-                        updateCurrentPosition(end_pos + end_symb.length);
+                        setCurrentPosition(end_pos + end_symb.length);
                 } else
                     return false; //chto-to
             }
@@ -306,7 +300,7 @@ export function in_out_block_param(type, p_id, n_id, in_lvl) {
 
         let string_test = false;
         for (let i = 0; i < params.string_symbols.let; i++)
-            if (new_search(params.string_symbols[i] == -1)) {
+            if (text_search(params.string_symbols[i] == -1)) {
             }
     } else return false;
 

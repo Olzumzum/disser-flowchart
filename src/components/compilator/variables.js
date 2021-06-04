@@ -6,11 +6,11 @@ import {
     getTextInfo,
     search, search_content,
     search_result, string_check,
-    updateCurrentPosition
+    setCurrentPosition
 } from "./text_searcher";
 import {content_maker, safeCurrentPosition} from "./block_creator";
 import {arr_list, function_list, newArr, newFunction, newVar, post_action, pre_action, var_list} from "./var_list"
-import {object_block, obj_array, create, getLastBlockInfo} from "./object_block";
+import {object_block, obj_array, create, getLastBlockInfo, createBlock} from "./object_block";
 import {switch_block_construction} from "./block_searcher"
 
 
@@ -33,7 +33,7 @@ export function search_init_construction(p_id, n_id, in_lvl) {
     let block_start, block_end;
     var start_pos, end_pos;
 
-
+    let f = function_list;
     let text = getTextInfo().text;
     let line = getCurrentPosition().line;
     let pos = getCurrentPosition().pos;
@@ -44,22 +44,21 @@ export function search_init_construction(p_id, n_id, in_lvl) {
     let type;
 
 
-
     for (var i = 0; i < i_c.length; i++) {
         if (search_result(text[line], i_c[i], pos)) {
             start_pos = search(text[line], i_c[i]);
             end_pos = start_pos + i_c[i].length;
             type = i_c[i];
-            updateCurrentPosition(start_pos + i_c[i].length)
+            setCurrentPosition(start_pos + i_c[i].length)
             break;
         } else if (i == i_c.length - 1)
             return false;
     }
     block_start = safeCurrentPosition();
-    if ((search_result(text[line], params.block_params[0])&&
-        ((!search_result(text[line], "="))||
+    if ((search_result(text[line], params.block_params[0]) &&
+        ((!search_result(text[line], "=")) ||
             ((search_result(text[line], "=")) && ((search(text[line], "=")) > search(text[line], params.block_params[0])))))) {
-        if (!string_check(params.block_params[0], text, search(text, params.block_params[0]))) {
+        if (!string_check(params.block_params[0], text, search(text[line], params.block_params[0]))) {
             let flag = true;
             for (let i = 0; i < function_list.length; i++) {
                 if (search_result(text[line], function_list[i].name)) {
@@ -87,7 +86,7 @@ export function search_init_construction(p_id, n_id, in_lvl) {
         line: line,
         pos: end_pos
     };
-    updateCurrentPosition(end_pos, line);
+    setCurrentPosition(end_pos, line);
     return [block_start, type];
 
 }
@@ -127,6 +126,9 @@ export function variables_searcher(text, type, p_id, n_id, in_lvl) {
         }
         if (pos_equal < pos_dat) {
             //определение переменной
+
+            if (special_function(text, p_id, n_id, in_lvl, type))
+                return false;
             block = equal_finder(text, pos_equal, pos_dat, pos_s);
             variable = text.substring(block[0].start, block[0].end);
 
@@ -146,8 +148,9 @@ export function variables_searcher(text, type, p_id, n_id, in_lvl) {
             let equal = search_unary_operator(text.substring(block[1].start, block[1].end));
 
             //ТУТ ВСТАВИТЬ ФУНКЦИЮ create_content()
-            let content = variable + " = " + equal;
-
+            let content = variable + " =" + equal;
+            //ТУТ ДОБАВИЛ
+            //pos = block[1].end;
             //создание объекта блока инициализации переменной
             create(p_id, n_id, "initializing", in_lvl, content, 0, type, getCurrentComment());
         } else {
@@ -235,17 +238,13 @@ function dat_check(text, pos) {
                 if ((first_symb_pos < pos) && (sec_symb_pos > pos)) {
                     return false;
                 }
-                if ((first_symb_pos < pos) && (sec_symb_pos < pos)){
-                    first_symb_pos +=1;
-                    sec_symb_pos +=1;
+                if ((first_symb_pos < pos) && (sec_symb_pos < pos)) {
+                    first_symb_pos += 1;
+                    sec_symb_pos += 1;
                 }
-                if ((first_symb_pos > pos) && (sec_symb_pos > pos)){
+                if ((first_symb_pos > pos) && (sec_symb_pos > pos)) {
                     return true;
-                }
-
-
-
-                else {
+                } else {
                     if (first_symb_pos > pos)
                         return true;
                     else
@@ -263,7 +262,6 @@ function dat_check(text, pos) {
 
 //функция нахождения унарных операций
 export function search_unary_operator(text) {
-    //можно добавить функцию удаления пробела из строки, чтобы находить конструкции типа test ++
     let test = var_list;
     let operators = get_language_params('', getTextInfo().lang).unary_operator;
     for (let i = 0; i < operators.length; i++) {
@@ -293,10 +291,23 @@ export function search_unary_operator(text) {
                     }
                 }
             }
-            //здесь можно добавить цикл на поиск элементов массива
             oper_pos = search(text, operators[i], oper_pos + operators[i].length);
         }
     }
     return text;
 }
 
+function special_function(text, p_id, n_id, in_lvl, type) {
+    let s_f = get_language_params("", getTextInfo().lang).data_in;
+    if (search_result(text, s_f)) {
+        let content = text.substring(0, search(text, "=")).replaceAll(" ","");
+        var_list.push(newVar(content, type));
+        var_list.sort(function (a, b) {
+            return b.name.length - a.name.length;
+        })
+        createBlock(p_id, n_id, "input", in_lvl, content, 0, type, getCurrentComment());
+        return true;
+    }
+    return false;
+
+}

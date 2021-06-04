@@ -1,21 +1,131 @@
 import {getTextInfo} from "./text_searcher";
 
+
+
+
+export const cpp_params = {
+    inic_construction : [
+        'void',
+        'int',
+        'double'
+    ],
+    action_operators : [
+        '=',
+        '+=',
+        '-=',
+        '*=',
+        '/=',
+        '%=',
+        '&=',
+        '|=',
+        '^=',
+        '>>=',
+        '<<='
+    ],
+    single_line_comment : '//',
+    multi_line_comment : ['/*', '*/'],
+    data_in : "cin",
+    data_out : "cout",
+    input_construction : {
+        start_symb: ">>",
+        middle_symb: ">>",
+        end_symb: ";"
+    },
+    output_construction : {
+        start_symb: "<<",
+        middle_symb: "<<",
+        end_symb: ";"
+    },
+    string_symbols : ['"', "'", "`"],
+    unary_operator : ['++', '--'],
+    for_each_symbol : ":",
+    integer_declaring : "int",
+    constructions_list: [
+        'while',
+        'for',
+        'do',
+        'if',
+        'else',
+        'switch',
+        'case',
+        'default',
+        'break',
+        'return',
+        'continue'
+    ],
+
+}
+
+export const js_params = {
+    inic_construction : [
+        'let'
+    ],
+    action_operators : [
+        '=',
+        '+=',
+        '-=',
+        '*=',
+        '/=',
+        '%=',
+        '&=',
+        '|=',
+        '^=',
+        '>>=',
+        '<<='
+    ],
+    single_line_comment : '//',
+    multi_line_comment : ['/*', '*/'],
+    data_in : "prompt",
+    data_out : "alert",
+    input_construction : {
+        start_symb: "(",
+        middle_symb: "~~~",
+        end_symb: ")"
+    },
+    output_construction : {
+        start_symb: "(",
+        middle_symb: "+",
+        end_symb: ")"
+    },
+    string_symbols : ['"', "'", "`"],
+    unary_operator : ['++', '--'],
+    for_each_symbol : ":",
+    integer_declaring : "int",
+    constructions_list: [
+        'while',
+        'for',
+        'do',
+        'if',
+        'else',
+        'switch',
+        'case',
+        'default',
+        'break',
+        'return',
+        'continue'
+    ],
+
+}
+
 export const constructions_list = [
     'while',
     'for',
     'do',
-    'if',
     'else',
+    'if',
     'switch',
     'case',
-    'break',
     'default',
-    'return'
+    'break',
+    'return',
+    'function',
 ]
 
 export const cpp_inic_construction = [
+    'void',
     'int',
-    'double'
+    'double',
+    'string'
 ]
 export const cpp_action_operators = [
     '=',
@@ -68,18 +178,32 @@ export function get_language_params(type, lang) {
     let integer_declaring;
     switch (lang) {
         case 'cpp':
-            inic_construction = cpp_inic_construction;
-            action_operators = cpp_action_operators;
-            single_line_comment = cpp_single_line_comment;
-            multi_line_comment = cpp_multi_line_comment;
-            data_in = cpp_data_in;
-            data_out = cpp_data_out;
-            input_construction = cpp_input_construction;
-            output_construction = cpp_output_construction;
-            string_symbols = cpp_string_symbols;
-            unary_operator = cpp_unary_operator;
-            for_each_symbol = cpp_for_each_symbol;
-            integer_declaring = cpp_integer_declaring;
+            inic_construction = cpp_params.inic_construction;
+            action_operators = cpp_params.action_operators;
+            single_line_comment = cpp_params.single_line_comment;
+            multi_line_comment = cpp_params.multi_line_comment;
+            data_in = cpp_params.data_in;
+            data_out = cpp_params.data_out;
+            input_construction = cpp_params.input_construction;
+            output_construction = cpp_params.output_construction;
+            string_symbols = cpp_params.string_symbols;
+            unary_operator = cpp_params.unary_operator;
+            for_each_symbol = cpp_params.for_each_symbol;
+            integer_declaring = cpp_params.integer_declaring;
+            break;
+        case 'js':
+            inic_construction = js_params.inic_construction;
+            action_operators = js_params.action_operators;
+            single_line_comment = js_params.single_line_comment;
+            multi_line_comment = js_params.multi_line_comment;
+            data_in = js_params.data_in;
+            data_out = js_params.data_out;
+            input_construction = js_params.input_construction;
+            output_construction = js_params.output_construction;
+            string_symbols = js_params.string_symbols;
+            unary_operator = js_params.unary_operator;
+            for_each_symbol = js_params.for_each_symbol;
+            integer_declaring = js_params.integer_declaring;
             break;
         default:
             break;
@@ -88,7 +212,6 @@ export function get_language_params(type, lang) {
     switch (type) {
         case 'case':
             block_params = ':';
-           // block_construction = [' ', ':'];
             block_construction = ['{', '}']; //заменить
             break;
         case 'default':

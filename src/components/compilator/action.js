@@ -7,7 +7,7 @@ import {
     getTextInfo,
     search,
     search_result,
-    updateCurrentPosition
+    setCurrentPosition
 } from "./text_searcher";
 import {create, obj_array, object_block} from "./object_block";
 import {arr_list, var_list} from "./var_list";
@@ -20,7 +20,7 @@ export function search_action_block(p_id, n_id, in_lvl) {
     if (block != false) {
         content = content_maker(block[0]);
         let type = block[1];
-        create(p_id, n_id, "prisvoation", in_lvl, content,
+        create(p_id, n_id, "change_value", in_lvl, content,
             0, type, getCurrentComment());
         return type;
     } else return false;
@@ -81,6 +81,6 @@ export function search_action_construction() {
         line: line,
         pos: end_pos
     };
-    updateCurrentPosition(end_pos, line);
+    setCurrentPosition(end_pos, line);
     return [block_start, type];
 }

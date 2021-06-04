@@ -1,6 +1,6 @@
 //пакет функции, которые помогают формировать код
 
-import {getCurrentPosition, getTextInfo, updateCurrentPosition} from "./text_searcher";
+import {getCurrentPosition, getTextInfo, setCurrentPosition} from "./text_searcher";
 import {obj_array} from "./object_block";
 
 //функция по формированию текста содержимого блока
@@ -16,19 +16,19 @@ export function content_maker(block, space_check) {
             content += t_i.text[c_p.line].substring(0, c_p.pos);
     } else if (c_p.pos != 0)
         content = t_i.text[block.line].substring(block.pos, c_p.pos);
-    if ((typeof space_check !== "undefined") &&((space_check == true)))
+    if ((typeof space_check !== "undefined") && ((space_check == true)))
         content = content.replaceAll(' ', '');
     return content;
 }
 
-export function CreateBlockContent(block_start, c_t){
+export function CreateBlockContent(block_start, c_t) {
     let content = content_maker(block_start);
     if (c_t == 1)
-            updateCurrentPosition(getCurrentPosition().pos+1);
+        setCurrentPosition(getCurrentPosition().pos + 1);
     return content;
 }
 
-export function safeCurrentPosition(){
+export function safeCurrentPosition() {
     let c_p = getCurrentPosition();
     let block = {
         line: c_p.line,
@@ -37,9 +37,29 @@ export function safeCurrentPosition(){
     return block;
 }
 
-export function neighbour_search(in_lvl){
-    for (let i = obj_array.length-1; i >= 0; i--){
-        if (obj_array[i].inner_lvl == in_lvl+1)
+export function neighbour_search(in_lvl, parent) {
+    for (let i = obj_array.length - 1; i >= 0; i--)
+        if ((obj_array[i].inner_lvl == in_lvl + 1) && (obj_array[i].parent_id == parent))
+            return obj_array[i].id;
+        else if (obj_array[i].id == parent)
+            return obj_array[i].id;
+    return -1;
+}
+
+export function parent_search(construction) {
+    for (let i = obj_array.length - 1; i >= 0; i--) {
+        if (obj_array[i].type == construction)
             return obj_array[i].id;
     }
+}
+
+export function inner_structure_numb(in_lvl, parent) {
+    let numb = 0;
+    let test = obj_array;
+    for (let i = obj_array.length - 1; i >= 0; i--)
+        if ((obj_array[i].inner_lvl == in_lvl + 1) && (obj_array[i].parent_id == parent))
+            numb++;
+        else if (obj_array[i].id == parent)
+            return numb;
+
 }
